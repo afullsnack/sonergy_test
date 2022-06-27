@@ -24,5 +24,22 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: [
+      "light",
+      "dark",
+      {
+        light: {
+          ...require("daisyui/src/colors/themes")["[data-theme=light]"],
+          primary: "rgba(0, 89, 172, 1)",
+          "primary-focus": "mediumblue",
+        },
+        mytheme: {
+          primary: "rgba(0, 89, 172, 1)",
+          secondary: "rgba(247, 250, 252, 1)",
+        },
+      },
+    ],
+  },
 };
