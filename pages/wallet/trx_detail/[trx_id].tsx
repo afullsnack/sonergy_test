@@ -13,7 +13,7 @@ function TrxDetail() {
   return (
     <div className="w-full">
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
-        <div className="flex items-center justify-start space-x-1 mb-3" onClick={e => router.back()}>
+        <div className="flex items-center justify-start space-x-1 mb-3 hover:cursor-pointer" onClick={e => router.back()}>
           <AiFillLeftCircle />
           <span className="text-sm font-medium text-gray-800">Transaction details</span>
         </div>

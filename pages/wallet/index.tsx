@@ -22,25 +22,25 @@ function Wallet() {
           <span className="text-xs text-white font-light mb-2">$42,356.40</span>
         </div>
         <div className="w-full flex flex-row items-center justify-center space-x-8 px-6">
-          <div className="flex flex-col items-center justify-evenly" onClick={e => router.push('/wallet/deposit')}>
+          <div className="flex flex-col items-center justify-evenly hover:cursor-pointer" onClick={e => router.push('/wallet/deposit')}>
             <div className="shrink-0 rounded-xl border-solid border-green-200 border-[.9px] p-3 mb-2">
               <FaArrowCircleUp size={18} color="#27C079" />
             </div>
             <span className="text-xs text-slate-800 font-medium">Deposit</span>
           </div>
-          <div className="flex flex-col items-center justify-evenly" onClick={e => router.push('/wallet/withdraw')}>
+          <div className="flex flex-col items-center justify-evenly hover:cursor-pointer" onClick={e => router.push('/wallet/withdraw')}>
             <div className="shrink-0 rounded-xl border-solid border-red-200 border-[.9px] p-3 mb-2">
               <FaArrowCircleDown size={18} color="red" />
             </div>
             <span className="text-xs text-slate-800 font-medium">Withdraw</span>
           </div>
-          <div className="flex flex-col items-center justify-evenly" onClick={e => router.push('/wallet/buy')}>
+          <div className="flex flex-col items-center justify-evenly hover:cursor-pointer" onClick={e => router.push('/wallet/buy')}>
             <div className="shrink-0 rounded-xl border-solid border-orange-200 border-[.9px] p-3 mb-2">
               <FaTag size={18} color="orange" />
             </div>
             <span className="text-xs text-slate-800 font-medium">Buy</span>
           </div>
-          <div className="flex flex-col items-center justify-evenly" onClick={e => router.push('/wallet/stake')}>
+          <div className="flex flex-col items-center justify-evenly hover:cursor-pointer" onClick={e => router.push('/wallet/stake')}>
             <div className="shrink-0 rounded-xl border-solid border-blue-200 border-[.9px] p-3 mb-2">
               <FaPercentage size={18} color="#62B2FD" />
             </div>
@@ -53,7 +53,7 @@ function Wallet() {
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
         <div className="w-full flex items-center justify-between">
           <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">Wallet transactions</span>
-          <span className="text-sm desktop:text-lg font-medium text-blue-600 mb-2" onClick={e => router.push('/wallet/trx_list/7days')}>See all</span>
+          <span className="text-sm desktop:text-lg font-medium text-blue-600 mb-2 hover:cursor-pointer" onClick={e => router.push('/wallet/trx_list/7days')}>See all</span>
         </div>
         <TransactionsList router={router} data={[]} />
       </div>
@@ -76,7 +76,7 @@ const NoTransaction = () => (
 const TransactionsList = ({ router, data }) => {
 
   const TransactionIn = ({title, subText, amount, onClick}) => (
-    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4" onClick={onClick}>
+    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer" onClick={onClick}>
       <div className="shrink-0 rounded-xl border-solid bg-green-50 p-3">
         <IoArrowDown size={18} className="rotate-45" color="rgba(0, 190, 112, 1)" />
       </div>
@@ -92,7 +92,7 @@ const TransactionsList = ({ router, data }) => {
   );
 
   const TransactionOut = ({title, subText, amount, onClick}) => (
-    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4" onClick={onClick}>
+    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer" onClick={onClick}>
       <div className="shrink-0 rounded-xl bg-red-50 p-3">
         <IoArrowUp size={18} className="rotate-45" color="rgba(238, 29, 35, 1)" />
       </div>

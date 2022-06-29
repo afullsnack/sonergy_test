@@ -55,7 +55,7 @@ function Account() {
 const MenuItem = ({ onClick, title, subText, icon, extra }) => {
 
   return (
-    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4" onClick={onClick}>
+    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer" onClick={onClick}>
       <div className="shrink-0 rounded-xl border-solid bg-gray-100 p-3">
         {icon}
       </div>

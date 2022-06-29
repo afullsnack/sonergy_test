@@ -41,7 +41,7 @@ function TransactionMoreList() {
 const TransactionsList = ({ router, data }) => {
 
   const TransactionIn = ({title, subText, amount, onClick}) => (
-    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4" onClick={onClick}>
+    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer" onClick={onClick}>
       <div className="shrink-0 rounded-xl border-solid bg-green-50 p-3">
         <IoArrowDown size={18} className="rotate-45" color="rgba(0, 190, 112, 1)" />
       </div>
@@ -57,7 +57,7 @@ const TransactionsList = ({ router, data }) => {
   );
 
   const TransactionOut = ({title, subText, amount, onClick}) => (
-    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4" onClick={onClick}>
+    <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer" onClick={onClick}>
       <div className="shrink-0 rounded-xl bg-red-50 p-3">
         <IoArrowUp size={18} className="rotate-45" color="rgba(238, 29, 35, 1)" />
       </div>
