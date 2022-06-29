@@ -30,6 +30,9 @@ module.exports = {
       "light",
       "dark",
       {
+        primary: "rgba(0, 89, 172, 1)",
+      },
+      {
         light: {
           ...require("daisyui/src/colors/themes")["[data-theme=light]"],
           primary: "rgba(0, 89, 172, 1)",

@@ -72,7 +72,7 @@ const AccountType = () => (
         <div>
           <div className="text-sm font-medium text-black">Merchant</div>
           <p className="text-slate-500 text-sm">
-            I am an institution / organisation, I want to integrate Sonergy’s
+            I am an institution / organization, I want to integrate Sonergy’s
             API on my application.
           </p>
         </div>

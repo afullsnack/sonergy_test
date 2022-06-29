@@ -3,7 +3,7 @@ import { AiFillAppstore } from "react-icons/ai";
 import { FaBell, FaMoon, FaShoppingBag, FaUserAlt, FaWallet } from "react-icons/fa";
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '../tailwind.config'; // Fix the path
-import Button from "./Button";
+import { ButtonPrimary } from "./Button";
 import Logo from "./Logo";
 
 const fullConfig = resolveConfig(tailwindConfig);
@@ -89,15 +89,15 @@ export default function withLayout(BaseComp: React.ElementType) {
                 <FaMoon color="#8895A7" size={'14px'} />
               </div>
             )}
-            <Button text="Connect wallet" type="small" onClick={e => console.log(e, "Connect wallet clicked")} />
+            <ButtonPrimary text="Connect wallet" type="small" onClick={e => console.log(e, "Connect wallet clicked")} icon={null} iconPosition={null} block={false} />
           </div>
         </div>
-        <div className="w-[100%] mobile:p-3 h-auto flex flex-col items-start justify-center my-0 mx-auto scroll-smooth">
+        <div className="w-[100%] mobile:pb-[112px] p-0 h-auto flex flex-col items-start justify-center my-0 mx-auto scroll-smooth">
           <BaseComp {...props} />
         </div>
         {
           isMobile && (
-            <div className="w-[100%] bg-white desktop:hidden flex items-center mobile:justify-between justify-center py-4 px-2 absolute bottom-0 left-0 right-0">
+            <div className="w-[100%] bg-white desktop:hidden flex items-center mobile:justify-between justify-center py-4 px-2 fixed bottom-0 left-0 right-0">
               <div className="w-[100%] h-20 flex py-1 items-stretch justify-center rounded-sm bg-transparent">
                 <div className="flex-1 flex flex-col items-center justify-between py-2">
                   <AiFillAppstore size={24} color="#0059AC" />
