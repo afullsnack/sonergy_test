@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { AiOutlineRight } from "react-icons/ai";
 import { ButtonGhost } from "../../components/Button";
 import withLayout from "../../components/Layout";
@@ -5,6 +6,8 @@ import OnboardCard from "../../components/OnboardCard";
 
 
 function Account() {
+
+  const router = useRouter();
 
   return (
     <div className="w-full">
@@ -26,9 +29,15 @@ function Account() {
         <div className="w-full mb-4">
           <span className="text-gray-700 text-left text-lg font-medium">Profile</span>
           <OnboardCard>
-            <MenuItem title="Update biodata" subText="Complete your profile" extra={null} icon={<img src="/profile/user_square_icon.svg" alt="Update bio data" />} onClick={e => console.log(e, 'Update biodata clicked')} />
+            <MenuItem title="Update biodata" subText="Complete your profile" extra={null} icon={<img src="/profile/user_square_icon.svg" alt="Update bio data" />} onClick={(e) => {
+              console.log(e, 'Update biodata clicked');
+              router.push('/account/biodata');
+            }} />
             <div className="divider my-2"></div> 
-            <MenuItem title="Verification status" subText="Supply KYC information" extra={(<div className="badge bg-green-600 text-white font-light border-none mt-0 mr-2 mx-auto">Verified</div>)} icon={<img src="/profile/verification_icon.svg" alt="Verification status" />} onClick={e => console.log(e, 'verification status clicked')} />
+            <MenuItem title="Verification status" subText="Supply KYC information" extra={(<div className="badge bg-green-600 text-white font-light border-none mt-0 mr-2 mx-auto">Verified</div>)} icon={<img src="/profile/verification_icon.svg" alt="Verification status" />} onClick={e => {
+              console.log(e, 'verification status clicked');
+              router.push('/account/verification');
+            }} />
             <div className="divider my-2"></div> 
             <MenuItem title="My collections" subText="View your purchased NFTs" extra={null} icon={<img src="/profile/box_icon.svg" alt="My Collection" />} onClick={e => console.log(e, 'My Collections clicked')} />
           </OnboardCard>
@@ -36,11 +45,20 @@ function Account() {
         <div className="w-full mb-4">
           <span className="text-gray-700 text-left text-lg font-medium">Settings</span>
           <OnboardCard>
-            <MenuItem title="Transaction PIN" subText="Set / change your transaction PIN" extra={null} icon={<img src="/settings/trx_pin_icon.svg" alt="Transaction PIN" />} onClick={e => console.log(e, 'Trx pin clicked')} />
+            <MenuItem title="Transaction PIN" subText="Set / change your transaction PIN" extra={null} icon={<img src="/settings/trx_pin_icon.svg" alt="Transaction PIN" />} onClick={e => {
+              console.log(e, 'Trx pin clicked');
+              router.push('/account/trx_pin');
+            }} />
             <div className="divider my-2"></div> 
-            <MenuItem title="Theme" subText="Set theme" extra={(<span className="text-xs text-center text-gray-600 font-light mr-2">Light mode</span>)} icon={<img src="/settings/theme_icon.svg" alt="Theme icon" />} onClick={e => console.log(e, 'theme data clicked')} />
+            <MenuItem title="Theme" subText="Set theme" extra={(<span className="text-xs text-center text-gray-600 font-light mr-2">Light mode</span>)} icon={<img src="/settings/theme_icon.svg" alt="Theme icon" />} onClick={e => {
+              console.log(e, 'theme data clicked');
+              router.push('/account/theme');
+            }} />
             <div className="divider my-2"></div> 
-            <MenuItem title="Change Password" subText="Update or change your password" extra={null} icon={<img src="/settings/change_pass_icon.svg" alt="Change password" />} onClick={e => console.log(e, 'change password clicked')} />
+            <MenuItem title="Change Password" subText="Update or change your password" extra={null} icon={<img src="/settings/change_pass_icon.svg" alt="Change password" />} onClick={e => {
+              console.log(e, 'change password clicked');
+              router.push('/account/change_password');
+            }} />
           </OnboardCard>
         </div>
       </div>
