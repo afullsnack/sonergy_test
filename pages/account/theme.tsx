@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useRouter } from "next/router";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
@@ -12,15 +11,15 @@ function Theme() {
     <div className="w-full">
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-5">
         <OnboardCard>
-          <MenuItem title="Light mode" subText="Set theme to light mode" extra={null} icon={<Image src="/settings/light_mode_icon.svg" alt="Light mode icon" />} onClick={(e) => {
+          <MenuItem title="Light mode" subText="Set theme to light mode" extra={null} icon={<img src="/settings/light_mode_icon.svg" alt="Light mode icon" />} onClick={(e) => {
             console.log(e, 'Set light mode icon clicked');
           }} />
           <div className="divider my-2"></div> 
-          <MenuItem title="Dark mode" subText="Set theme to dark mode" extra={null} icon={<Image src="/settings/dark_mode_icon.svg" alt="Dark mode icon" />} onClick={e => {
+          <MenuItem title="Dark mode" subText="Set theme to dark mode" extra={null} icon={<img src="/settings/dark_mode_icon.svg" alt="Dark mode icon" />} onClick={e => {
             console.log(e, 'verification status clicked');
           }} />
           <div className="divider my-2"></div> 
-          <MenuItem title="Sunset / Sunrise" subText="Auto switch by time of the day" extra={null} icon={<Image src="/settings/theme_icon.svg" alt="Auto switch" />} onClick={e => console.log(e, 'Auto switch clicked')} />
+          <MenuItem title="Sunset / Sunrise" subText="Auto switch by time of the day" extra={null} icon={<img src="/settings/theme_icon.svg" alt="Auto switch" />} onClick={e => console.log(e, 'Auto switch clicked')} />
         </OnboardCard>
       </div>
     </div>
