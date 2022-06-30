@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { AiFillLeftCircle } from "react-icons/ai";
 import { ButtonPrimary } from "../../components/Button";
@@ -100,7 +101,7 @@ const SurveyFinished = ({ router }) => {
     <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
       <OnboardCard>
         <div className="py-24 flex flex-col items-center justify-center">
-          <img src="/surveys/completed-survey.svg" alt="Survey done" />
+          <Image src="/surveys/completed-survey.svg" alt="Survey done" />
           <span className="text-center text-slate-800 text-lg font-semibold mb-2">Congratulations!</span>
           <span className="text-center text-slate-400 text-sm font-light">Your survey is complete and you will earn <b className="text-slate-800 font-medium">500</b> SNEGY once your answers have been verified if applicable.</span>
         </div>

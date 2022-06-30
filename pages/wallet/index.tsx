@@ -1,10 +1,10 @@
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { AiOutlineRight } from "react-icons/ai";
 import { FaArrowCircleDown, FaArrowCircleUp, FaEye, FaPercentage, FaTag } from "react-icons/fa";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
-
 
 function Wallet() {
   const router = useRouter();
@@ -65,7 +65,7 @@ const NoTransaction = () => (
   <OnboardCard>
     <div className="w-full flex flex-col items-center justify-around">
       <div className="p-4 rounded-full bg-slate-100 mb-4">
-        <img src="/empty_state_icon.svg" width={70} alt="No transaction" />
+        <Image src="/empty_state_icon.svg" width={70} alt="No transaction" />
       </div>
       <h2 className="text-gray-700 text-md desktop:text-md font-semibold mb-1">You’ve not made any transactions</h2>
       <span className="text-gray-500 text-sm text-center">No transactions yet, your transactions will show up here once you’ve got any.</span>

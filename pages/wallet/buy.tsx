@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { AiOutlineLink } from "react-icons/ai";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
@@ -71,7 +72,7 @@ const CEXList = () => (
       </div> */}
       <div className="flex items-center justify-between space-x-2">
         <div className="border-[#E2EDF6] border-[0.5px] px-4 py-2 rounded-md">
-          <img src="/cex/binance.png" width={50} alt="Binance CEX" />
+          <Image src="/cex/binance.png" width={50} alt="Binance CEX" />
           {/* <p className="text-sm text-gray-600 font-normal">Swap sonergy token on decentralized exchanges.</p> */}
         </div>
           <div className="text-[16px] font-semibold text-gray-700">Binance</div>
@@ -84,7 +85,7 @@ const CEXList = () => (
       </div> */}
       <div className="flex items-center justify-between space-x-2">
         <div className="border-[#E2EDF6] border-[0.5px] px-4 py-2 rounded-md">
-          <img src="/cex/coinbase.png" width={50} alt="Coinbase CEX" />
+          <Image src="/cex/coinbase.png" width={50} alt="Coinbase CEX" />
           {/* <p className="text-sm text-gray-600 font-normal">Swap sonergy token on decentralized exchanges.</p> */}
         </div>
           <div className="text-[16px] font-semibold text-gray-700">Coinbase</div>

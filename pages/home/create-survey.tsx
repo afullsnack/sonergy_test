@@ -21,7 +21,7 @@ const SurveyPlans = (props) => {
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
         <div className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
           <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-            {/* <img class="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
+            {/* <Image class="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
             <AiFillCheckSquare color="#0059AC" />
           </div>
           <div>
@@ -37,7 +37,7 @@ const SurveyPlans = (props) => {
         </div>
         <div className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
           <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-            {/* <img class="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
+            {/* <Image class="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
             <AiFillCheckSquare color="#0059AC" />
           </div>
           <div>
@@ -53,7 +53,7 @@ const SurveyPlans = (props) => {
         </div>
         <div className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
           <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-            {/* <img class="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
+            {/* <Image class="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
             <AiFillCheckSquare color="#0059AC" />
           </div>
           <div>

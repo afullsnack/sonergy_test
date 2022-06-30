@@ -51,7 +51,7 @@ const AccountType = () => (
 
       <div className="p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-[#E2EDF6] hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
         <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-          {/* <img className="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
+          {/* <Image className="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
           <FaUserCircle color="#0059AC" />
         </div>
         <div>
@@ -66,7 +66,7 @@ const AccountType = () => (
       </div>
       <div className="p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-[#E2EDF6] hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
         <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#01AAF0]">
-          {/* <img className="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
+          {/* <Image className="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
           <FaHome color="#01AAF0" />
         </div>
         <div>
