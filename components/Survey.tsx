@@ -12,8 +12,8 @@ export const MySurveyList = ({ title, count, onClick }) => {
       <div className="shrink-0 rounded-2xl border-solid border-primary border-[.9px] p-3">
         <FaCheck size={18} />
       </div>
-      <div className="flex items-center justify-between space-x-16">
-        <div>
+      <div className="flex w-full items-center justify-between">
+        <div className="flex-[4]">
           <div className="text-sm font-light text-gray-600">{title}</div>
           <p className="text-[16px] text-gray-700 font-medium">{count}</p>
         </div>
