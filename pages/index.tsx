@@ -6,16 +6,16 @@ import {
   FaHome,
   FaLock,
   FaUser,
-  FaUserCircle,
+  FaUserCircle
 } from "react-icons/fa";
-import Button from "../components/Button";
+import { ButtonPrimary } from "../components/Button";
 import Logo from "../components/Logo";
 import OnboardCard from "../components/OnboardCard";
 
 export default function Home() {
   const router = useRouter();
   // Params
-  const { params, query } = router;
+  const { query } = router;
   const [stage, setStage] = useState();
 
   return (
@@ -51,7 +51,7 @@ const AccountType = () => (
 
       <div className="p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-[#E2EDF6] hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
         <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-          {/* <img class="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
+          {/* <img className="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
           <FaUserCircle color="#0059AC" />
         </div>
         <div>
@@ -66,7 +66,7 @@ const AccountType = () => (
       </div>
       <div className="p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-[#E2EDF6] hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
         <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#01AAF0]">
-          {/* <img class="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
+          {/* <img className="h-12 w-12" src="/img/logo.svg" alt="User logo" /> */}
           <FaHome color="#01AAF0" />
         </div>
         <div>
@@ -77,10 +77,13 @@ const AccountType = () => (
           </p>
         </div>
       </div>
-      <Button
+      <ButtonPrimary
         text="Continue"
+        icon={null}
+        iconPosition={null}
         onClick={(e) => console.info("Button comp clicked", e)}
-      />
+        type={"normal"}
+        block={false}      />
     </OnboardCard>
     <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
       <span className="text-slate-500 text-sm">Already have an account?</span>
@@ -99,9 +102,9 @@ const NewAccount = () => {
         </p>
         <br />
 
-        <div class="form-control mb-2">
-          <label class="label">
-            <span class="label-text text-slate-700 font-medium">Username</span>
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">Username</span>
           </label>
           <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
             <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -115,9 +118,9 @@ const NewAccount = () => {
             {/* <span>USD</span> */}
           </label>
         </div>
-        <div class="form-control mb-2">
-          <label class="label">
-            <span class="label-text text-slate-700 font-medium">
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">
               Email Address
             </span>
           </label>
@@ -133,9 +136,9 @@ const NewAccount = () => {
             {/* <span>USD</span> */}
           </label>
         </div>
-        <div class="form-control mb-2">
-          <label class="label">
-            <span class="label-text text-slate-700 font-medium">Password</span>
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">Password</span>
           </label>
           <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
             <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -154,24 +157,28 @@ const NewAccount = () => {
             </span>
           </label>
         </div>
-        <div class="form-control">
-          <label class="cursor-pointer label">
+        <div className="form-control">
+          <label className="cursor-pointer label">
             <input
               type="checkbox"
               // checked="checked"
               onChange={(e) => console.log(e, "Checkbox changed")}
-              class="checkbox checkbox-sm rounded-md checkbox-primary"
+              className="checkbox checkbox-sm rounded-md checkbox-primary"
             />
-            <span class="label-text text-xs ml-2">
+            <span className="label-text text-xs ml-2">
               By creating an account, you agree to our
               <b>Terms & conditions</b> and <b>Privacy policy</b>
             </span>
           </label>
         </div>
 
-        <Button
+        <ButtonPrimary
           text="Create account"
+          icon={null}
+          iconPosition={null}
           onClick={(e) => console.info("Button comp clicked", e)}
+          type={"normal"}
+          block={false}
         />
       </OnboardCard>
       <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
@@ -194,9 +201,9 @@ const Login = () => {
         </p>
         <br />
 
-        <div class="form-control mb-2">
-          <label class="label">
-            <span class="label-text text-slate-700 font-medium">
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">
               Email Address
             </span>
           </label>
@@ -212,9 +219,9 @@ const Login = () => {
             {/* <span>USD</span> */}
           </label>
         </div>
-        <div class="form-control mb-2">
-          <label class="label">
-            <span class="label-text text-slate-700 font-medium">Password</span>
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">Password</span>
           </label>
           <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
             <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -234,9 +241,13 @@ const Login = () => {
           </label>
         </div>
 
-        <Button
+        <ButtonPrimary
           text="Log in"
+          icon={null}
+          iconPosition={null}
           onClick={(e) => console.info("Button comp clicked", e)}
+          type={"small"}
+          block={false}
         />
       </OnboardCard>
       <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
@@ -265,9 +276,9 @@ const ForgotPassword = () => {
         </p>
         <br />
 
-        <div class="form-control mb-2">
-          <label class="label">
-            <span class="label-text text-slate-700 font-medium">
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">
               Email Address
             </span>
           </label>
@@ -284,10 +295,11 @@ const ForgotPassword = () => {
           </label>
         </div>
 
-        <Button
+        <ButtonPrimary
           text="Reset password"
-          onClick={(e) => console.info("Button comp clicked", e)}
-        />
+          icon={null}
+          iconPosition={null}
+          onClick={(e) => console.info("Button comp clicked", e)} type={"small"} block={false}        />
       </OnboardCard>
       <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
         <span className="text-slate-500 text-sm">Remember your password?</span>
@@ -315,9 +327,9 @@ const SetNewPassword = () => {
         </p>
         <br />
 
-        <div class="form-control mb-2">
-          <label class="label">
-            <span class="label-text text-slate-700 font-medium">
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">
               New Password
             </span>
           </label>
@@ -338,9 +350,9 @@ const SetNewPassword = () => {
             </span>
           </label>
         </div>
-        <div class="form-control mb-2">
-          <label class="label">
-            <span class="label-text text-slate-700 font-medium">
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">
               Confirm Password
             </span>
           </label>
@@ -362,10 +374,11 @@ const SetNewPassword = () => {
           </label>
         </div>
 
-        <Button
+        <ButtonPrimary
           text="Change password"
-          onClick={(e) => console.info("Button comp clicked", e)}
-        />
+          icon={null}
+          iconPosition={null}
+          onClick={(e) => console.info("Button comp clicked", e)} type={"small"} block={false}        />
       </OnboardCard>
       <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
         <span className="text-slate-500 text-sm">Remember your password?</span>
