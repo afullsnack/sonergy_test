@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useState } from "react";
 import { FaEnvelope, FaEyeSlash, FaLock } from "react-icons/fa";
 import { ButtonPrimary } from "../components/Button";
 import Logo from "../components/Logo";
@@ -6,6 +7,11 @@ import OnboardCard from "../components/OnboardCard";
 
 
 function Login() {
+
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  const [isHidden, setIsHidden] = useState<boolean>(false);
+
   return (
     <div className="container">
       <div className="w-[100%] mobile:bg-white desktop:bg-transparent flex items-center mobile:justify-between desktop:justify-center justify-center pr-4 mb-2">
@@ -34,8 +40,14 @@ function Login() {
             </span>
             <input
               type="text"
+              data-test="username"
               placeholder="example@gmail.com"
               className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+              value={email}
+              onChange={(e) => {
+                console.info('Email address', e.target.value);
+                setEmail(e.target.value);
+              }}
             />
             {/* <span>USD</span> */}
           </label>
@@ -49,13 +61,17 @@ function Login() {
               <FaLock color="#B8C4CE" />
             </span>
             <input
-              type="text"
+              type={`${isHidden? 'password' : 'text'}`}
               placeholder="Enter password"
               className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+              value={password}
             />
             <span
               className="flex items-center justify-center pr-4 pl-1 bg-transparent"
-              onClick={(e) => console.log(e, "Eye slash click")}
+              onClick={(e) => {
+                console.log(e, "Eye slash click");
+                setIsHidden(!isHidden);
+              }}
             >
               <FaEyeSlash color="#8895A7" />
             </span>

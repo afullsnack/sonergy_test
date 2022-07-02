@@ -1,9 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import {
-  FaHome, FaUserCircle
-} from "react-icons/fa";
 import { ButtonPrimary } from "../components/Button";
 import Logo from "../components/Logo";
 import OnboardCard from "../components/OnboardCard";
@@ -45,13 +42,13 @@ const AccountType = ({ accountType, setAccountType }) => (
       </p>
       <br />
 
-      <div className="p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-[#E2EDF6] hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all" onClick={(e) => {
+      <div className={`w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] ${accountType === 'researcher'? 'border-[#0059AC]' : 'border-[#E2EDF6]'} border-solid hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all`} onClick={(e) => {
         setAccountType('researcher');
         console.log(accountType);
       }}>
         <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
           {/* <Image className="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
-          <FaUserCircle color="#0059AC" />
+          <img src="/onboarding/researcher_icon.svg" alt="Researcher account type logo" />
         </div>
         <div>
           <div className="text-sm font-medium text-black">
@@ -63,13 +60,13 @@ const AccountType = ({ accountType, setAccountType }) => (
           </p>
         </div>
       </div>
-      <div className="p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-[#E2EDF6] hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all" onClick={(e) => {
+      <div className={`w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid ${accountType === 'merchant'? 'border-[#0059AC]' : 'border-[#E2EDF6]'} hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all`} onClick={(e) => {
         setAccountType('merchant');
         console.log(accountType);
       }}>
         <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#01AAF0]">
           {/* <Image className="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
-          <FaHome color="#01AAF0" />
+          <img src="/onboarding/merchant_icon.svg" alt="Merchant account type logo" />
         </div>
         <div>
           <div className="text-sm font-medium text-black">Merchant</div>
