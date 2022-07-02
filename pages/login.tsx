@@ -22,7 +22,7 @@ function Login() {
   const [password, setPassword] = useState<string>();
   const [isHidden, setIsHidden] = useState<boolean>(true);
 
-  // TODO: setup useMutation
+  // DONE: setup useMutation
   const { mutate, isLoading, data } = useMutation(loginUser, {
     onSuccess: data => {
       console.log(data, "Returned login data");
@@ -128,6 +128,8 @@ function Login() {
               email: email,
               password: password
             };
+
+            console.info("Form Data", data);
 
             mutate(data);
 
