@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { FaEnvelope } from "react-icons/fa";
 import { ButtonPrimary } from "../components/Button";
+import Logo from "../components/Logo";
 import OnboardCard from "../components/OnboardCard";
 
 function ForgotPassword () {
   return (
-    <>
+    <div className="container">
+      <div className="w-[100%] mobile:bg-white desktop:bg-transparent flex items-center mobile:justify-between desktop:justify-center justify-center pr-4 mb-2">
+        <Logo />
+        <div className="bg-primary rounded-md w-8 h-8 desktop:hidden"></div>
+      </div>
+      <div className="w-[100%] desktop:max-w-screen-desktop mobile:max-w-screen-mobile mobile:p-2 h-auto flex flex-col items-start justify-center my-0 mx-auto">
       <OnboardCard>
         <h3 className="text-black text-lg font-medium">Forgot password?</h3>
         <p className="text-slate-500 font-normal text-sm">
@@ -50,7 +56,16 @@ function ForgotPassword () {
           </span>
         </a>
       </div> */}
-    </>
+    <div className="w-[100%] flex flex-col items-center justify-end mt-14">
+          <span className="text-gray-600 text-xs font-normal mb-2">
+            © 2022 - Sonergy.io
+          </span>
+          <span className="text-gray-600 text-xs font-normal mb-2">
+            Terms & conditions - Privacy policy
+          </span>
+        </div>
+      </div>
+    </div>
   );
 };
 
