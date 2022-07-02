@@ -94,6 +94,7 @@ function NewAccount () {
           icon={null}
           iconPosition={null}
           onClick={(e) => console.info("Button comp clicked", e)}
+          isLoading={null}
           type={"normal"}
           block={false}
         />

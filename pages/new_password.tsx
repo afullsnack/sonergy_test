@@ -71,6 +71,7 @@ function SetNewPassword() {
           text="Change password"
           icon={null}
           iconPosition={null}
+          isLoading={null}
           onClick={(e) => console.info("Button comp clicked", e)} type={"small"} block={false}        />
       </OnboardCard>
       <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
