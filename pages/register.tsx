@@ -1,46 +1,61 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { FaEnvelope, FaEyeSlash, FaLock, FaUser } from "react-icons/fa";
+import { useState } from "react";
+import {
+  FaCaretRight,
+  FaEnvelope,
+  FaEyeSlash,
+  FaLock,
+  FaUser,
+} from "react-icons/fa";
 import { useMutation, useQueryClient } from "react-query";
 import { ButtonPrimary } from "../components/Button";
 import Logo from "../components/Logo";
 import { useModal } from "../components/Modal";
 import OnboardCard from "../components/OnboardCard";
 import OTPInput from "../components/OTPInput";
-import { RegisterData, registerUser } from "../lib/mutations";
+import {
+  RegisterData,
+  registerUser,
+  resendEmailOTP,
+  verifyEmailOTP,
+  VerifyEmailOTPData,
+} from "../lib/mutations";
 // import {Modal} from "flowbite-react/lib/esm/components/Modal";
 
 function NewAccount() {
+  const queryClient = useQueryClient();
   /**
    * @Page => Register page
    * @States => username, email, password, isHidden, isTOCChecked
    * @Event => Call loginUser() mutation function and store the user token in localStorage/cookie
    */
-  const queryClient = useQueryClient();
 
   /* States */
-  const [username, setUsername] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isHidden, setIsHidden] = useState<boolean>(true);
   const [isTOCChecked, setIsTOCChecked] = useState<boolean>(false);
 
-  // TODO: setup modal
+  // DONE: setup modal
   const [otpModal, OTPModal] = useModal({
     title: "Enter OTP Code",
-    content: <RegisterOTPModal />,
+    content: <RegisterOTPModal email={email} />,
   });
 
   // DONE: setup useMutation
   const { mutate, isLoading, data } = useMutation(registerUser, {
     onSuccess: (data) => {
       console.log(data, "Returned register data");
+      if (data?.message === "User with the email already exist") {
+        otpModal.show();
+      } else if (data?.success) {
+        otpModal.show();
+      }
     },
     onError: () => console.error("There was an error trying to register"),
     onSettled: () => queryClient.invalidateQueries("register"),
   });
-
-  useEffect(() => {}, []);
 
   return (
     <div className="container">
@@ -244,12 +259,31 @@ function NewAccount() {
   );
 }
 
-const RegisterOTPModal = () => {
+const RegisterOTPModal = ({ email }) => {
+  const queryClient = useQueryClient();
+  const resendOTPMutation = useMutation(resendEmailOTP, {
+    onSuccess: (data) => {
+      console.log(data, "Returned resend OTP data");
+    },
+    onError: () => console.error("There was an error trying to resend OTP"),
+    // onSettled: () => queryClient.invalidateQueries("resend_otp"),
+  });
+
+  const confirmOTPMutation = useMutation(verifyEmailOTP, {
+    onSuccess: (data) => {
+      console.log(data, "Returned verify OTP data");
+    },
+    onError: () => console.error("There was an error trying to verify OTP"),
+    // onSettled: () => queryClient.invalidateQueries("verify"),
+  });
+
+  const [otp, setOTP] = useState<string | undefined>();
+
   return (
     <>
       <div className="flex flex-col mt-4 items-center">
         <span>Enter the OTP you received at</span>
-        <span className="font-bold">+91 ******876</span>
+        <span className="font-bold">{email}</span>
       </div>
       <OTPInput
         autoFocus
@@ -257,15 +291,42 @@ const RegisterOTPModal = () => {
         length={6}
         onChangeOTP={function (otp: string) {
           console.log(otp, "OTP String", otp.length);
+          setOTP(otp);
         }}
         className="flex flex-row justify-center text-center px-2 mt-5"
         inputClassName="m-2 border h-10 w-10 text-center form-control rounded"
       />
       <div className="flex justify-center text-center mt-5">
-        <a className="flex items-center text-blue-700 hover:text-blue-900 cursor-pointer">
-          <span className="font-bold">Resend OTP</span>
-          <i className="bx bx-caret-right ml-1"></i>
-        </a>
+        {!resendOTPMutation.isLoading && (
+          <a
+            className="flex items-center text-blue-700 hover:text-blue-900 cursor-pointer"
+            onClick={async (e) => {
+              const data = await resendOTPMutation.mutateAsync(email);
+              console.log(data, "Resend OTP data");
+            }}
+          >
+            <span className="font-bold">Resend OTP</span>
+            <FaCaretRight />
+          </a>
+        )}
+        {resendOTPMutation.isLoading && (
+          <svg
+            role="status"
+            className="inline w-4 h-4 mr-3 text-white animate-spin"
+            viewBox="0 0 100 101"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="#E5E7EB"
+            />
+            <path
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+              fill="currentColor"
+            />
+          </svg>
+        )}
       </div>
       <ButtonPrimary
         text="Confirm OTP"
@@ -273,10 +334,16 @@ const RegisterOTPModal = () => {
         iconPosition={null}
         onClick={async (e) => {
           console.info("Button comp clicked", e);
+          const data: VerifyEmailOTPData = {
+            code: otp,
+            email: email,
+          };
+          const confirmData = await confirmOTPMutation.mutateAsync(data);
+          console.log(confirmData, "Verify OTP response data");
         }}
-        isLoading={null}
+        isLoading={confirmOTPMutation.isLoading}
         type={"normal"}
-        block={false}
+        block={true}
       />
     </>
   );
