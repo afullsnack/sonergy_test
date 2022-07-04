@@ -3,9 +3,7 @@ import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
 
-
-function CreateSurvey () {
-
+function CreateSurvey() {
   return (
     <div className="w-full">
       <SurveyRewards />
@@ -14,8 +12,6 @@ function CreateSurvey () {
 }
 
 const SurveyPlans = (props) => {
-
-
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
@@ -25,13 +21,15 @@ const SurveyPlans = (props) => {
             <AiFillCheckSquare color="#0059AC" />
           </div>
           <div>
-            <div className="text-sm font-medium text-black">
-              Free plan
-            </div>
+            <div className="text-sm font-medium text-black">Free plan</div>
             <p className="text-slate-500 text-sm">
-              Max. response - <b className="font-medium text-black">15</b><br/>
-              Max. validated response - <b className="font-medium text-black">0</b><br/>
-              Cost - <b className="font-medium text-black">0 SNEGY</b><br/>
+              Max. response - <b className="font-medium text-black">15</b>
+              <br />
+              Max. validated response -{" "}
+              <b className="font-medium text-black">0</b>
+              <br />
+              Cost - <b className="font-medium text-black">0 SNEGY</b>
+              <br />
             </p>
           </div>
         </div>
@@ -41,13 +39,15 @@ const SurveyPlans = (props) => {
             <AiFillCheckSquare color="#0059AC" />
           </div>
           <div>
-            <div className="text-sm font-medium text-black">
-              Basic plan
-            </div>
+            <div className="text-sm font-medium text-black">Basic plan</div>
             <p className="text-slate-500 text-sm">
-              Max. response - <b className="font-medium text-black">50</b><br/>
-              Max. validated response - <b className="font-medium text-black">10</b><br/>
-              Cost - <b className="font-medium text-black">500 SNEGY</b><br/>
+              Max. response - <b className="font-medium text-black">50</b>
+              <br />
+              Max. validated response -{" "}
+              <b className="font-medium text-black">10</b>
+              <br />
+              Cost - <b className="font-medium text-black">500 SNEGY</b>
+              <br />
             </p>
           </div>
         </div>
@@ -57,40 +57,61 @@ const SurveyPlans = (props) => {
             <AiFillCheckSquare color="#0059AC" />
           </div>
           <div>
-            <div className="text-sm font-medium text-black">
-              Cooperate plan
-            </div>
+            <div className="text-sm font-medium text-black">Cooperate plan</div>
             <p className="text-slate-500 text-sm">
-              Max. response - <b className="font-medium text-black">Unlimited</b><br/>
-              Max. validated response - <b className="font-medium text-black">Unlimited</b><br/>
-              Cost - <b className="font-medium text-black">10 SNEGY</b> per response<br/>
+              Max. response -{" "}
+              <b className="font-medium text-black">Unlimited</b>
+              <br />
+              Max. validated response -{" "}
+              <b className="font-medium text-black">Unlimited</b>
+              <br />
+              Cost - <b className="font-medium text-black">10 SNEGY</b> per
+              response
+              <br />
             </p>
           </div>
         </div>
       </div>
       <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3">
-        <ButtonPrimary type="normal" text="Choose plan" icon={undefined} iconPosition={undefined} block={true} onClick={e => console.log(e, "Choose survey")} />
+        <ButtonPrimary
+          type="normal"
+          text="Choose plan"
+          icon={undefined}
+          iconPosition={undefined}
+          block={true}
+          onClick={(e) => console.log(e, "Choose survey")}
+          isLoading={false}
+        />
       </div>
     </>
   );
-}
+};
 
 const SurveyConfigs = () => {
-
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
         <OnboardCard>
-          <progress className="progress bg-blue-300 w-full mb-2" value="30" max="100"></progress>
-          <span className="text-xs font-medium text-gray-500 mb-4">Step 1 of 4</span>
-          <span className="text-md font-medium text-gray-800 mb-8">Survey configuration</span>
+          <progress
+            className="progress bg-blue-300 w-full mb-2"
+            value="30"
+            max="100"
+          ></progress>
+          <span className="text-xs font-medium text-gray-500 mb-4">
+            Step 1 of 4
+          </span>
+          <span className="text-md font-medium text-gray-800 mb-8">
+            Survey configuration
+          </span>
 
           <span className="text-sm font-medium text-gray-800 mb-3">
             Survey Topic
           </span>
           <div className="form-control mb-5">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">Topic</span>
+              <span className="label-text text-slate-700 font-medium">
+                Topic
+              </span>
             </label>
             <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
               {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -110,7 +131,9 @@ const SurveyConfigs = () => {
           <div className="form-control mb-5 flex flex-row items-center justify-center space-x-4">
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">From</span>
+                <span className="label-text text-slate-700 font-medium">
+                  From
+                </span>
               </label>
               <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
                 {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -128,7 +151,9 @@ const SurveyConfigs = () => {
             </div>
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">To</span>
+                <span className="label-text text-slate-700 font-medium">
+                  To
+                </span>
               </label>
               <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
                 {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -148,40 +173,69 @@ const SurveyConfigs = () => {
           </span>
           <div className="form-control">
             <label className="label justify-start cursor-pointer">
-              <input type="checkbox" className="checkbox mr-2 checked:bg-primary" />
-              <span className="label-text text-slate-800">Multiple choice</span> 
+              <input
+                type="checkbox"
+                className="checkbox mr-2 checked:bg-primary"
+              />
+              <span className="label-text text-slate-800">Multiple choice</span>
             </label>
           </div>
           <div className="form-control">
             <label className="label justify-start cursor-pointer">
-              <input type="checkbox" className="checkbox mr-2 checked:bg-primary" />
-              <span className="label-text text-slate-800">Optional</span> 
+              <input
+                type="checkbox"
+                className="checkbox mr-2 checked:bg-primary"
+              />
+              <span className="label-text text-slate-800">Optional</span>
             </label>
           </div>
           <div className="form-control">
             <label className="label justify-start cursor-pointer">
-              <input type="checkbox" className="checkbox mr-2 checked:bg-primary" />
-              <span className="label-text text-slate-800">Free form<div className="badge bg-orange-200 text-orange-700 text-xs border-none ml-2 mb-3">Coming soon</div></span> 
+              <input
+                type="checkbox"
+                className="checkbox mr-2 checked:bg-primary"
+              />
+              <span className="label-text text-slate-800">
+                Free form
+                <div className="badge bg-orange-200 text-orange-700 text-xs border-none ml-2 mb-3">
+                  Coming soon
+                </div>
+              </span>
             </label>
           </div>
         </OnboardCard>
       </div>
       <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3">
-        <ButtonPrimary type="normal" text="Continue" icon={undefined} iconPosition={undefined} block={true} onClick={e => console.log(e, "Choose survey")} />
+        <ButtonPrimary
+          type="normal"
+          text="Continue"
+          icon={undefined}
+          iconPosition={undefined}
+          block={true}
+          onClick={(e) => console.log(e, "Choose survey")}
+          isLoading={false}
+        />
       </div>
     </>
   );
-}
+};
 
 const SurveyRewards = () => {
-
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
         <OnboardCard>
-          <progress className="progress bg-blue-300 w-full mb-2" value="50" max="100"></progress>
-          <span className="text-xs font-medium text-gray-500 mb-4">Step 2 of 4</span>
-          <span className="text-md font-medium text-gray-800 mb-8">Responses, validation and rewards</span>
+          <progress
+            className="progress bg-blue-300 w-full mb-2"
+            value="50"
+            max="100"
+          ></progress>
+          <span className="text-xs font-medium text-gray-500 mb-4">
+            Step 2 of 4
+          </span>
+          <span className="text-md font-medium text-gray-800 mb-8">
+            Responses, validation and rewards
+          </span>
 
           <span className="text-sm font-medium text-gray-800 mb-3">
             Responses
@@ -189,7 +243,9 @@ const SurveyRewards = () => {
           <div className="form-control mb-5 flex flex-row items-center justify-center space-x-3">
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">Required response</span>
+                <span className="label-text text-slate-700 font-medium">
+                  Required response
+                </span>
               </label>
               <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
                 {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -207,7 +263,9 @@ const SurveyRewards = () => {
             </div>
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">Reward per response</span>
+                <span className="label-text text-slate-700 font-medium">
+                  Reward per response
+                </span>
               </label>
               <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
                 {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -228,7 +286,9 @@ const SurveyRewards = () => {
           <div className="form-control mb-5 flex flex-row items-center justify-center space-x-3">
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">Required validators</span>
+                <span className="label-text text-slate-700 font-medium">
+                  Required validators
+                </span>
               </label>
               <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
                 {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -246,7 +306,9 @@ const SurveyRewards = () => {
             </div>
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">Reward per validator</span>
+                <span className="label-text text-slate-700 font-medium">
+                  Reward per validator
+                </span>
               </label>
               <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
                 {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -266,7 +328,9 @@ const SurveyRewards = () => {
           </span>
           <div className="form-control mb-5">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">Number of survey questions</span>
+              <span className="label-text text-slate-700 font-medium">
+                Number of survey questions
+              </span>
             </label>
             <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
               {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -284,15 +348,30 @@ const SurveyRewards = () => {
               {/* <span>USD</span> */}
             </label>
           </div>
-          
         </OnboardCard>
       </div>
       <div className="flex flex-row items-center justify-center space-x-3 bg-white w-full mobile:p-3">
-        <ButtonGhost type="normal" text="Previous" icon={undefined} iconPosition={undefined} block={true} onClick={e => console.log(e, "Previous survey")} />
-        <ButtonPrimary type="normal" text="Next" icon={undefined} iconPosition={undefined} block={true} onClick={e => console.log(e, "Next survey")} />
+        <ButtonGhost
+          type="normal"
+          text="Previous"
+          icon={undefined}
+          iconPosition={undefined}
+          block={true}
+          onClick={(e) => console.log(e, "Previous survey")}
+          isLoading={false}
+        />
+        <ButtonPrimary
+          type="normal"
+          text="Next"
+          icon={undefined}
+          iconPosition={undefined}
+          block={true}
+          onClick={(e) => console.log(e, "Next survey")}
+          isLoading={false}
+        />
       </div>
     </>
   );
-}
+};
 
 export default withLayout(CreateSurvey);
