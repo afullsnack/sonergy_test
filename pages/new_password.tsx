@@ -1,10 +1,43 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { FaEyeSlash, FaLock } from "react-icons/fa";
+import { useMutation, useQueryClient } from "react-query";
 import { ButtonPrimary } from "../components/Button";
 import Logo from "../components/Logo";
 import OnboardCard from "../components/OnboardCard";
+import {
+  createNewForgotPassword,
+  CreateNewPasswordData,
+} from "../lib/mutations";
 
 function SetNewPassword() {
+  /**
+   * @Page => ForgotPassword page
+   * @States => email, otp, newPassword, confirmPassword
+   * @Event => Call createNewForgotPassword() mutation function and redirect to login page
+   */
+
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  /* State */
+  const [email, setEmail] = useState<string>("");
+  const [otp, setOTP] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  // DONE: setup useMutation
+  const { mutate, isLoading, data } = useMutation(createNewForgotPassword, {
+    onSuccess: (data) => {
+      console.log(data, "Returned create new password data");
+      if (data?.success) {
+        router.push("/login");
+      }
+    },
+    onError: () => console.error("There was an error trying to reset password"),
+    // onSettled: () => queryClient.invalidateQueries("login"),
+  });
+
   return (
     <div className="container">
       <div className="w-[100%] mobile:bg-white desktop:bg-transparent flex items-center mobile:justify-between desktop:justify-center justify-center pr-4 mb-2">
@@ -34,6 +67,11 @@ function SetNewPassword() {
                 type="text"
                 placeholder="Enter new password"
                 className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                value={newPassword}
+                onChange={(e) => {
+                  console.log("New password", e.target.value);
+                  setNewPassword(e.target.value);
+                }}
               />
               <span
                 className="flex items-center justify-center pr-4 pl-1 bg-transparent"
@@ -57,6 +95,11 @@ function SetNewPassword() {
                 type="text"
                 placeholder="Confirm new password"
                 className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                value={confirmPassword}
+                onChange={(e) => {
+                  console.log("Confirm password", e.target.value);
+                  setConfirmPassword(e.target.value);
+                }}
               />
               <span
                 className="flex items-center justify-center pr-4 pl-1 bg-transparent"
@@ -71,8 +114,16 @@ function SetNewPassword() {
             text="Change password"
             icon={null}
             iconPosition={null}
-            isLoading={null}
-            onClick={(e) => console.info("Button comp clicked", e)}
+            isLoading={isLoading}
+            onClick={(e) => {
+              console.info("Button comp clicked", e);
+              const data: CreateNewPasswordData = {
+                code: otp,
+                email: email,
+                newPassword: confirmPassword,
+              };
+              mutate(data);
+            }}
             type={"normal"}
             block={true}
           />
