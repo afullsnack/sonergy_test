@@ -4,7 +4,6 @@ import {
   AiFillDollarCircle,
   AiOutlineArrowRight,
   AiOutlineRight,
-  AiOutlineSchedule,
 } from "react-icons/ai";
 import { FaCheck } from "react-icons/fa";
 import { ButtonGhost } from "./Button";
@@ -140,7 +139,7 @@ export const EmptySurveyList = () => {
     <OnboardCard>
       <div className="w-full flex flex-col items-center justify-around">
         <div className="p-4 rounded-full bg-slate-100 mb-2">
-          <AiOutlineSchedule size={36} />
+          <img src="/empty_state_icon.svg" width={70} alt="No transaction" />
         </div>
         <h2 className="text-gray-700 text-sm desktop:text-md font-semibold mb-1">
           No surveys at this time

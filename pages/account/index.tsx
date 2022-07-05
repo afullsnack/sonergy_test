@@ -1,30 +1,68 @@
 import { useRouter } from "next/router";
+import { useCookies } from "react-cookie";
 import { AiOutlineRight } from "react-icons/ai";
+import { useQuery, useQueryClient } from "react-query";
 import { ButtonGhost } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
+import { getUserProfile } from "../../lib/queries";
 
 function Account() {
+  /**
+   * @Page => Account page
+   * @States => cookies
+   * @Event => Call getUserProfile() query function to get user data and render appropriately
+   */
+
+  const queryClient = useQueryClient();
   const router = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies();
+
+  // DONE: Setup query and render data from returned data
+  const { token } = cookies;
+  console.log(token, "Token");
+  const { data, isLoading, error } = useQuery(
+    ["getUser", token],
+    () => getUserProfile(token),
+    {
+      onSuccess({ success, message, data }) {
+        console.info(data, "Data returned from fetching users");
+      },
+      onError(err) {
+        console.error(err, "Error occurred while getting user");
+      },
+    }
+  );
 
   return (
     <div className="w-full">
-      <div className="flex flex-col items-start justify-start w-full bg-white mobile:p-3 mb-5">
-        <div className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4">
+      <div
+        style={{ backgroundImage: `url('${data?.data?.cover}')` }}
+        className="flex flex-col items-start justify-start w-full bg-white mobile:p-3 mb-5 bg-cover bg-center bg-no-repeat"
+      >
+        <div
+          className={`w-full mx-auto bg-transparent rounded-lg flex items-center space-x-4`}
+        >
           <div className="shrink-0 rounded-xl border-solid bg-transparent p-0">
             <img
-              src="/profile/sonergy_logo_icon.svg"
+              src={
+                data?.data?.avatar
+                  ? data?.data?.avatar
+                  : "/profile/sonergy_logo_icon.svg"
+              }
               width={70}
+              height={70}
               alt="Update bio data"
+              className="rounded-full shadow h-auto align-middle border-none"
             />
           </div>
           <div className="flex w-full items-center justify-between">
             <div className="flex-[4]">
               <div className="text-[16px] font-[700] text-gray-700 mb-2">
-                Karllesinho
+                {data?.data?.username}
               </div>
               <p className="text-xs text-gray-600 font-[400]">
-                charles@sonergy.io
+                {data?.data?.email}
               </p>
             </div>
             {/* <AiOutlineRight size={16} color="black" /> */}
@@ -57,9 +95,15 @@ function Account() {
               title="Verification status"
               subText="Supply KYC information"
               extra={
-                <div className="badge bg-green-600 text-white font-light border-none mt-0 mr-2 mx-auto">
-                  Verified
-                </div>
+                data?.data?.isVerified ? (
+                  <div className="badge bg-green-600 text-white text-xs font-light border-none mt-0 mr-2 mx-auto">
+                    Verified
+                  </div>
+                ) : (
+                  <div className="badge bg-orange-400 text-white text-xs font-light border-none mt-0 mr-2 mx-auto">
+                    Pending
+                  </div>
+                )
               }
               icon={
                 <img
@@ -140,7 +184,12 @@ function Account() {
           icon={undefined}
           iconPosition={undefined}
           block={true}
-          onClick={(e) => console.log(e, "Logout clicked")}
+          onClick={(e) => {
+            // TODO: Clear cookie and redirect to the login screen
+            console.log(e, "Logout clicked");
+            removeCookie("token");
+            router.push("/login");
+          }}
           isLoading={false}
         />
       </div>

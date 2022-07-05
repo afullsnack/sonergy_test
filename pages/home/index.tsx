@@ -1,13 +1,20 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useCookies } from "react-cookie";
 import { FaPlus } from "react-icons/fa";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 import { BalanceCarousel } from "../../components/Carousel";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
-import { AvailableSurveyCarousel, MySurveyList } from "../../components/Survey";
+import { EmptySurveyList, MySurveyList } from "../../components/Survey";
 
 function Home() {
   const router = useRouter();
+  const [cookies, setCookie] = useCookies(["token"]);
+
+  useEffect(() => {
+    console.log(cookies.token, "User token set after login redirect");
+  }, []);
 
   return (
     <div className="w-full">
@@ -19,7 +26,7 @@ function Home() {
         <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-3">
           Available surveys
         </span>
-        <AvailableSurveyCarousel />
+        <EmptySurveyList />
       </div>
 
       {/* My Surveys section */}

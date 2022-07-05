@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AiFillClockCircle } from "react-icons/ai";
 import { FaFileDownload } from "react-icons/fa";
 import {
@@ -9,18 +10,40 @@ import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
 
 function MySurveys() {
+  const [sort, setSort] = useState("commissioned");
   return (
     <div className="w-full">
       {/* Sort actions */}
       <div className="flex flex-col items-start justify-start w-full bg-white mobile:p-3 mb-10">
         <div className="flex items-center justify-center w-[100%] mb-2">
-          <button className="flex-1 mx-1 p-2 rounded-md border-solid border-[1px] border-slate-200 mobile:text-xs">
+          <button
+            className={`flex-1 mx-1 p-2 rounded-md border-solid border-[1px] ${
+              sort === "commissioned"
+                ? "border-blue-700 bg-blue-100"
+                : "border-slate-200"
+            } mobile:text-xs`}
+            onClick={() => setSort("commissioned")}
+          >
             Commissioned
           </button>
-          <button className="flex-1 mx-1 p-2 rounded-md border-solid border-[1px] border-slate-200 mobile:text-xs">
+          <button
+            className={`flex-1 mx-1 p-2 rounded-md border-solid border-[1px] ${
+              sort === "completed"
+                ? "border-blue-700 bg-blue-100"
+                : "border-slate-200"
+            } mobile:text-xs`}
+            onClick={() => setSort("completed")}
+          >
             Completed
           </button>
-          <button className="flex-1 mx-1 p-2 rounded-md border-solid border-[1px] border-slate-200 mobile:text-xs">
+          <button
+            className={`flex-1 mx-1 p-2 rounded-md border-solid border-[1px] ${
+              sort === "validated"
+                ? "border-blue-700 bg-blue-100"
+                : "border-slate-200"
+            } mobile:text-xs`}
+            onClick={() => setSort("validated")}
+          >
             Validated
           </button>
         </div>
