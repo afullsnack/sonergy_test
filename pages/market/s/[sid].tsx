@@ -4,12 +4,18 @@ import { FaEye, FaWallet } from "react-icons/fa";
 import { GoVerified } from "react-icons/go";
 import { ButtonPrimary } from "../../../components/Button";
 import withLayout from "../../../components/Layout";
+import { useModal } from "../../../components/Modal";
 import OnboardCard from "../../../components/OnboardCard";
 
 function SingleSurvey() {
   const router = useRouter();
   const { sid, action } = router.query;
   console.log(sid, action, "Query params");
+
+  const [bidModal, BidModal] = useModal({
+    title: "Place bid",
+    content: <PlaceBidModalContent />,
+  });
 
   return (
     <div className="w-full">
@@ -61,7 +67,10 @@ function SingleSurvey() {
               icon={<FaWallet color="white" />}
               iconPosition={"left"}
               block={true}
-              onClick={(e) => console.log("Place bid on survey clicked", e)}
+              onClick={(e) => {
+                console.log("Place bid on survey clicked", e);
+                bidModal.show();
+              }}
               isLoading={false}
             />
           </OnboardCard>
@@ -106,14 +115,58 @@ function SingleSurvey() {
               icon={<FaWallet color="white" />}
               iconPosition={"left"}
               block={true}
-              onClick={(e) => console.log("confirm buy on survey clicked", e)}
+              onClick={(e) => {
+                console.log("confirm buy on survey clicked", e);
+                bidModal.show();
+              }}
               isLoading={false}
             />
           </OnboardCard>
         </div>
       )}
+      <BidModal />
     </div>
   );
 }
+
+const PlaceBidModalContent = () => (
+  <div className="w-full flex flex-col space-y-2">
+    <div className="form-control mb-2">
+      <label className="label">
+        <span className="label-text text-slate-700 font-medium">Price</span>
+      </label>
+      <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+        <span className="flex items-center justify-center text-gray-700 px-4 bg-slate-100">
+          SNEGY
+        </span>
+        <input
+          type="number"
+          placeholder="0.00"
+          className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 w-[100%]"
+        />
+        {/* <span className="flex items-center justify-center px-4 text-primary bg-transparent">
+                MAX
+              </span> */}
+      </label>
+      <label className="label">
+        <span className="label-text-alt text-xs text-gray-500 mb-1">
+          = $2.400.40
+        </span>
+        <span className="label-text-alt text-xs text-gray-500 mb-1">
+          <b>Available:</b> 0.0000 <b>SNEGY</b>
+        </span>
+      </label>
+    </div>
+    <ButtonPrimary
+      text="Confirm bid"
+      type="normal"
+      icon={null}
+      iconPosition={null}
+      block={true}
+      onClick={(e) => console.log("confirm bid clicked", e)}
+      isLoading={false}
+    />
+  </div>
+);
 
 export default withLayout(SingleSurvey);

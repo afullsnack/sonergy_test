@@ -2,14 +2,28 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { FaFileDownload } from "react-icons/fa";
 import { GoVerified } from "react-icons/go";
-import { ButtonIcon, ButtonPrimary } from "../../components/Button";
+import {
+  ButtonGhost,
+  ButtonIcon,
+  ButtonPrimary,
+} from "../../components/Button";
 import withLayout from "../../components/Layout";
 import { MostPopularSlider } from "../../components/Marketplace/carousel";
+import { useModal } from "../../components/Modal";
 import OnboardCard from "../../components/OnboardCard";
 
 function Market() {
   const router = useRouter();
   const [sort, setSort] = useState<string>("marketplace");
+  const [mintModal, MintModal] = useModal({
+    title: "Mint NFT",
+    content: <MintModalContent />,
+  });
+
+  const [listModal, ListModal] = useModal({
+    title: "List item for sale",
+    content: <ListItemModalContent />,
+  });
 
   return (
     <div className="w-full">
@@ -154,7 +168,10 @@ function Market() {
                     icon={null}
                     iconPosition={null}
                     block={true}
-                    onClick={(e) => console.log("Sell survey clicked", e)}
+                    onClick={(e) => {
+                      console.log("Sell survey clicked", e);
+                      listModal.show();
+                    }}
                     isLoading={false}
                   />
                 </div>
@@ -193,7 +210,10 @@ function Market() {
                     icon={null}
                     iconPosition={null}
                     block={true}
-                    onClick={(e) => console.log("Sell survey clicked", e)}
+                    onClick={(e) => {
+                      console.log("Sell survey clicked", e);
+                      mintModal.show();
+                    }}
                     isLoading={false}
                   />
                 </div>
@@ -210,8 +230,194 @@ function Market() {
           ))}
         </div>
       )}
+      <MintModal />
+      <ListModal />
     </div>
   );
 }
+
+const MintModalContent = () => (
+  <div className="w-full flex flex-col space-y-2">
+    <span className="text-sm text-gray-600 font-normal mb-3">
+      Converting your completed surveys to NFT will make them available for
+      trade on the maketplace when you list them. Are you sure about this?
+    </span>
+    <ButtonPrimary
+      text="Confirm & mint"
+      type="normal"
+      icon={null}
+      iconPosition={null}
+      block={true}
+      onClick={(e) => console.log("confirm and mint clicked", e)}
+      isLoading={false}
+    />
+    <ButtonGhost
+      text="Cancel"
+      type="normal"
+      icon={null}
+      iconPosition={null}
+      block={true}
+      onClick={(e) => console.log("cancel mint clicked", e)}
+      isLoading={false}
+    />
+  </div>
+);
+
+const ListItemModalContent = () => {
+  const [saleType, setSaleType] = useState("fixed");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
+
+  return (
+    <div className="w-full flex flex-col space-y-2">
+      <div className="flex items-center justify-center w-full mb-2">
+        <button
+          className={`flex-1 mr-1 p-2 rounded-md border-solid border-[1px] ${
+            saleType === "fixed"
+              ? "border-primary bg-[#B9D0E3] opacity-50 text-gray-800"
+              : "border-slate-200"
+          } mobile:text-xs`}
+          onClick={(e) => setSaleType("fixed")}
+        >
+          Fixed
+        </button>
+        <button
+          className={`flex-1 mx-1 p-2 rounded-md border-solid border-[1px] ${
+            saleType === "auction"
+              ? "border-primary bg-[#B9D0E3] opacity-50 text-gray-800"
+              : "border-slate-200"
+          }  mobile:text-xs`}
+          onClick={(e) => setSaleType("auction")}
+        >
+          Auction
+        </button>
+      </div>
+      {saleType === "fixed" && (
+        <div className="form-control mb-2">
+          <label className="label">
+            <span className="label-text text-slate-700 font-medium">Price</span>
+          </label>
+          <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+            <span className="flex items-center justify-center text-gray-700 px-4 bg-slate-100">
+              SNEGY
+            </span>
+            <input
+              type="number"
+              placeholder="0.00"
+              className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 w-[100%]"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+            {/* <span className="flex items-center justify-center px-4 text-primary bg-transparent">
+                MAX
+              </span> */}
+          </label>
+          <label className="label">
+            <span className="label-text-alt text-xs text-gray-500 mb-1">
+              = $2.400.40
+            </span>
+            {/* <span className="label-text-alt text-xs text-gray-500 mb-1">
+                <b>Available:</b> 0.0000 <b>SNEGY</b>
+              </span> */}
+          </label>
+        </div>
+      )}
+      {saleType === "auction" && (
+        <>
+          <div className="form-control mb-5 flex flex-row items-center justify-center space-x-3">
+            <div className="flex-1">
+              <label className="label">
+                <span className="label-text text-slate-700 font-medium">
+                  Start date
+                </span>
+              </label>
+              <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+                {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                  <FaUser color="#B8C4CE" />
+                </span> */}
+                <input
+                  type="date"
+                  placeholder="DD/MM/YYYY"
+                  className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  value={startDate}
+                  onChange={(e) => {
+                    console.log("start date", e.target.value);
+                    setStartDate(e.target.value);
+                  }}
+                />
+                {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                  <FaCalendarAlt color="#B8C4CE" />
+                </span> */}
+              </label>
+            </div>
+            <div className="flex-1">
+              <label className="label">
+                <span className="label-text text-slate-700 font-medium">
+                  Expiration date
+                </span>
+              </label>
+              <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+                {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                  <FaUser color="#B8C4CE" />
+                </span> */}
+                <input
+                  type="date"
+                  placeholder="DD/MM/YYYY"
+                  className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  value={endDate}
+                  onChange={(e) => {
+                    console.log("End date", e.target.value);
+                    setEndDate(e.target.value);
+                  }}
+                />
+                {/* <span>USD</span> */}
+              </label>
+            </div>
+          </div>
+          <div className="form-control mb-2">
+            <label className="label">
+              <span className="label-text text-slate-700 font-medium">
+                Minimum bid
+              </span>
+            </label>
+            <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+              <span className="flex items-center justify-center text-gray-700 px-4 bg-slate-100">
+                SNEGY
+              </span>
+              <input
+                type="number"
+                placeholder="0.00"
+                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 w-[100%]"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+              {/* <span className="flex items-center justify-center px-4 text-primary bg-transparent">
+                MAX
+              </span> */}
+            </label>
+            <label className="label">
+              <span className="label-text-alt text-xs text-gray-500 mb-1">
+                = $2.400.40
+              </span>
+              {/* <span className="label-text-alt text-xs text-gray-500 mb-1">
+                <b>Available:</b> 0.0000 <b>SNEGY</b>
+              </span> */}
+            </label>
+          </div>
+        </>
+      )}
+      <ButtonPrimary
+        text="Confirm listing"
+        type="normal"
+        icon={null}
+        iconPosition={null}
+        block={true}
+        onClick={(e) => console.log("confirm and mint clicked", e)}
+        isLoading={false}
+      />
+    </div>
+  );
+};
 
 export default withLayout(Market);

@@ -26,7 +26,7 @@ export function useModal({ title, content }) {
           {/* <!-- Modal content --> */}
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             {/* <!-- Modal header --> */}
-            <div className="flex justify-between items-start p-4 rounded-t border-b bg-gray-100">
+            <div className="flex justify-between items-start p-4 rounded-t border-b bg-slate-100">
               <h3 className="text-lg font-medium text-gray-700 desktop:">
                 {title}
               </h3>
