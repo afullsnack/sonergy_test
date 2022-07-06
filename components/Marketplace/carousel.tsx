@@ -11,7 +11,13 @@ export const MostPopularSlider = () => {
     <div className="w-full carousel max-w-sm desktop:max-w-screen-desktop space-x-4 bg-transparent">
       <div className="carousel-item max-w-xs">
         <OnboardCard>
-          <div className="flex flex-col items-start justify-between mb-2">
+          <div
+            className="w-full flex flex-col items-start justify-between mb-2"
+            onClick={(e) => {
+              console.log(e, "Clicked on te survey");
+              router.push("/market/s/123?action=bid");
+            }}
+          >
             <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
               <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
               Username <GoVerified color="#0059AC" className="ml-2" />
@@ -42,7 +48,7 @@ export const MostPopularSlider = () => {
                 block={true}
                 onClick={(e) => {
                   console.log("Buy now clicked", e);
-                  // router.push("/home/take-survey");
+                  router.push("/market/s/123?action=buy");
                 }}
                 isLoading={false}
               />
