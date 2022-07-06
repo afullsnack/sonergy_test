@@ -1,12 +1,19 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { FaFileDownload } from "react-icons/fa";
+import { GoVerified } from "react-icons/go";
+import { ButtonIcon, ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
+import { MostPopularSlider } from "../../components/Marketplace/carousel";
+import OnboardCard from "../../components/OnboardCard";
 
 function Market() {
+  const router = useRouter();
   const [sort, setSort] = useState<string>("marketplace");
 
   return (
     <div className="w-full">
-      <div className="flex flex-col items-start justify-start w-full bg-white p-3 mb-8">
+      <div className="flex flex-col items-start justify-start w-full bg-white p-3 mb-2">
         {/* Search action */}
         <form className="form-control mb-4 w-full">
           {/* <label
@@ -88,6 +95,121 @@ function Market() {
           </button>
         </div>
       </div>
+      {/* List of surveys */}
+      {sort === "marketplace" && (
+        <>
+          <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
+            <div className="w-full flex items-center justify-between">
+              <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
+                Most popular
+              </span>
+              <span
+                className="text-sm desktop:text-lg font-medium text-blue-600 mb-2 hover:cursor-pointer"
+                onClick={(e) => {
+                  console.log("See all clicked", e);
+                }}
+              >
+                See all
+              </span>
+            </div>
+            <MostPopularSlider />
+          </div>
+          <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
+            <div className="w-full flex items-center justify-between">
+              <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
+                New
+              </span>
+              <span
+                className="text-sm desktop:text-lg font-medium text-blue-600 mb-2 hover:cursor-pointer"
+                onClick={(e) => {
+                  console.log("See all clicked", e);
+                }}
+              >
+                See all
+              </span>
+            </div>
+            <MostPopularSlider />
+          </div>
+        </>
+      )}
+
+      {sort === "collections" && (
+        <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
+          {new Array(3).fill("muches").map((item) => (
+            <OnboardCard>
+              <div className="flex flex-col items-start justify-between mb-2">
+                <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
+                  <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
+                  Username <GoVerified color="#0059AC" className="ml-2" />
+                </span>
+                <span className="text-gray-700 text-sm font-normal text-left">
+                  Blockchain development and utilization in sub-saharan Africa.
+                </span>
+              </div>
+              <div className="flex items-center justify-between space-x-4">
+                <div className="flex-[3]">
+                  <ButtonPrimary
+                    text="Sell"
+                    type="normal"
+                    icon={null}
+                    iconPosition={null}
+                    block={true}
+                    onClick={(e) => console.log("Sell survey clicked", e)}
+                    isLoading={false}
+                  />
+                </div>
+                <div className="flex-1">
+                  <ButtonIcon
+                    type="normal"
+                    icon={<FaFileDownload size={18} />}
+                    block={true}
+                    onClick={(e) => console.log("Download", e)}
+                  />
+                </div>
+              </div>
+            </OnboardCard>
+          ))}
+        </div>
+      )}
+
+      {sort === "completed" && (
+        <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
+          {new Array(3).fill("muches").map((item) => (
+            <OnboardCard>
+              <div className="flex flex-col items-start justify-between mb-2">
+                <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
+                  <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
+                  Username <GoVerified color="#0059AC" className="ml-2" />
+                </span>
+                <span className="text-gray-700 text-sm font-normal text-left">
+                  Blockchain development and utilization in sub-saharan Africa.
+                </span>
+              </div>
+              <div className="flex items-center justify-between space-x-4">
+                <div className="flex-[3]">
+                  <ButtonPrimary
+                    text="Convert to NFT"
+                    type="normal"
+                    icon={null}
+                    iconPosition={null}
+                    block={true}
+                    onClick={(e) => console.log("Sell survey clicked", e)}
+                    isLoading={false}
+                  />
+                </div>
+                <div className="flex-1">
+                  <ButtonIcon
+                    type="normal"
+                    icon={<FaFileDownload size={18} />}
+                    block={true}
+                    onClick={(e) => console.log("Download", e)}
+                  />
+                </div>
+              </div>
+            </OnboardCard>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
