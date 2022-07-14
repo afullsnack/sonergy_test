@@ -149,8 +149,8 @@ function Market() {
 
       {sort === "collections" && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
-          {new Array(3).fill("muches").map((item) => (
-            <OnboardCard>
+          {new Array(3).fill("muches").map((item, idx) => (
+            <OnboardCard key={idx.toString()}>
               <div className="flex flex-col items-start justify-between mb-2">
                 <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
                   <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
@@ -191,8 +191,8 @@ function Market() {
 
       {sort === "completed" && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
-          {new Array(3).fill("muches").map((item) => (
-            <OnboardCard>
+          {new Array(3).fill("muches").map((item, idx) => (
+            <OnboardCard key={idx.toString()}>
               <div className="flex flex-col items-start justify-between mb-2">
                 <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
                   <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
