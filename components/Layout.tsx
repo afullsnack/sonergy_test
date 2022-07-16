@@ -161,7 +161,7 @@ export default function withLayout(BaseComp: React.ElementType) {
           </div>
         </div>
         <div className="container">
-          <div className="w-[100%] mobile:pb-[112px] p-0 h-auto flex flex-col items-start justify-center my-0 mx-auto scroll-smooth">
+          <div className="w-full mobile:pb-[112px] p-0 h-auto flex flex-col items-start justify-center my-0 mx-auto scroll-smooth">
             <BaseComp {...props} />
           </div>
           {isMobile && (

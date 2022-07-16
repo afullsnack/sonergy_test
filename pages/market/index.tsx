@@ -14,7 +14,10 @@ import OnboardCard from "../../components/OnboardCard";
 
 function Market() {
   const router = useRouter();
-  const [sort, setSort] = useState<string>("marketplace");
+  const { dSort } = router.query; //Default sort value from query param
+  const [sort, setSort] = useState<string>(
+    typeof dSort === "string" ? dSort : "marketplace"
+  );
   const [mintModal, MintModal] = useModal({
     title: "Mint NFT",
     content: <MintModalContent />,

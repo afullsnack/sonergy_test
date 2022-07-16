@@ -122,7 +122,10 @@ function Account() {
               subText="View your purchased NFTs"
               extra={null}
               icon={<img src="/profile/box_icon.svg" alt="My Collection" />}
-              onClick={(e) => console.log(e, "My Collections clicked")}
+              onClick={(e) => {
+                console.log(e, "My Collections clicked");
+                router.push("/market?dSort=collections");
+              }}
             />
           </OnboardCard>
         </div>

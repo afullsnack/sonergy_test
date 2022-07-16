@@ -47,6 +47,8 @@ interface UpdateData {
   token: string;
 }
 
+// Onboarding and profile endpoints
+
 export const loginUser = async (data: LoginData) =>
   await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
@@ -56,12 +58,14 @@ export const loginUser = async (data: LoginData) =>
       "Access-Control-Allow-Origin": "*",
     },
   }).then((res) => res.json());
+
 export const registerUser = async (data: RegisterData) =>
   await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" },
   }).then((res) => res.json());
+
 export const resendEmailOTP = async (email: string) =>
   await fetch(`${BASE_URL}/auth/send-email-otp`, {
     method: "POST",
@@ -71,24 +75,28 @@ export const resendEmailOTP = async (email: string) =>
       "Access-Control-Allow-Origin": "*",
     },
   }).then((res) => res.json());
+
 export const verifyEmailOTP = async (data: VerifyEmailOTPData) =>
   await fetch(`${BASE_URL}/auth/verify-email-otp`, {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" },
   }).then((res) => res.json());
+
 export const forgotPassword = async (email: string) =>
   await fetch(`${BASE_URL}/auth/send-password-reset-otp`, {
     method: "POST",
     body: JSON.stringify(email),
     headers: { "Content-Type": "application/json" },
   }).then((res) => res.json());
+
 export const createNewForgotPassword = async (data: CreateNewPasswordData) =>
   await fetch(`${BASE_URL}/auth/create-new-password`, {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" },
   }).then((res) => res.json());
+
 export const updateUserBio = async ({ data, token }: UpdateData) =>
   await fetch(`${BASE_URL}/user`, {
     method: "PUT",
@@ -98,6 +106,7 @@ export const updateUserBio = async ({ data, token }: UpdateData) =>
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const completeUserBio = async ({ data, token }: UpdateData) =>
   await fetch(`${BASE_URL}/user/complete-profile`, {
     method: "POST",
@@ -107,3 +116,82 @@ export const completeUserBio = async ({ data, token }: UpdateData) =>
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
+export const changeUserPassword = async ({
+  oldPassword,
+  newPassword,
+  token,
+}: {
+  oldPassword: string;
+  newPassword: string;
+  token: string;
+}) =>
+  await fetch(`${BASE_URL}/user/change-user-password`, {
+    method: "POST",
+    body: JSON.stringify({
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => res.json());
+
+// Surveys and NFT's endpoints
+
+export const addSurvey = async ({
+  token,
+  surveyURI,
+  enrollForSurvey,
+  address,
+  surveyPlanId,
+  numOfValidators,
+  amount,
+  numberOfCommissioners,
+}: {
+  token: string;
+  surveyURI: string;
+  enrollForSurvey: string;
+  address: string;
+  surveyPlanId: string;
+  numOfValidators: string;
+  amount: string;
+  numberOfCommissioners: string;
+}) =>
+  await fetch(`${BASE_URL}/surveys/add-survey`, {
+    method: "POST",
+    body: JSON.stringify({
+      surveyURI,
+      enrollForSurvey,
+      address,
+      surveyPlanId,
+      numOfValidators,
+      amount,
+      numberOfCommissioners,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => res.json());
+
+export const addAnswerToSurvey = async ({
+  token,
+  surveyId,
+  address,
+  cid,
+}: {
+  token: string;
+  surveyId: string;
+  address: string;
+  cid: string;
+}) =>
+  await fetch(`${BASE_URL}/surveys/`, {
+    method: "POST",
+    body: JSON.stringify({ surveyId, address, cid }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });

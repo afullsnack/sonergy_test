@@ -8,7 +8,7 @@ export const MostPopularSlider = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full carousel max-w-sm desktop:max-w-screen-desktop space-x-4 bg-transparent">
+    <div className="w-full carousel max-w-screen desktop:max-w-screen-desktop space-x-4 bg-transparent">
       <div className="carousel-item max-w-xs">
         <OnboardCard>
           <div
