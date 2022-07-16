@@ -1,6 +1,6 @@
 const BASE_URL = "https://sonergy-mvp.herokuapp.com";
 
-// Onboarding
+// Onboarding =======================>
 export const getUserProfile = async (token: string) =>
   await fetch(`${BASE_URL}/user`, {
     headers: {
@@ -9,7 +9,7 @@ export const getUserProfile = async (token: string) =>
     },
   }).then((res) => res.json());
 
-// Wallets
+// Wallet ===========================>
 export const getUserWalletAddresses = async (token: string) =>
   await fetch(`${BASE_URL}/wallet/fetch-wallet`, {
     headers: {
@@ -17,6 +17,7 @@ export const getUserWalletAddresses = async (token: string) =>
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const getSonergyBalance = async ({
   token,
   address,
@@ -30,6 +31,7 @@ export const getSonergyBalance = async ({
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const getTransactionHistory = async ({
   token,
   address,
@@ -44,7 +46,7 @@ export const getTransactionHistory = async ({
     },
   }).then((res) => res.json());
 
-// Survey
+// Survey =========================>
 
 export const getSurveyPlans = async (token: string) =>
   await fetch(`${BASE_URL}/surveys/get-survey-plans`, {
@@ -73,6 +75,7 @@ export const getAllSurveys = async (token: string) =>
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const getCompletedSurveys = async ({
   token,
   address,

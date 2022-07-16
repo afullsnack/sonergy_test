@@ -18,7 +18,11 @@ export default function Home() {
         <div className="bg-primary rounded-md w-8 h-8 desktop:hidden"></div>
       </div>
       <div className="w-[100%] desktop:max-w-screen-desktop mobile:max-w-screen-mobile mobile:p-2 h-auto flex flex-col items-start justify-center my-0 mx-auto">
-        <AccountType setAccountType={setAccountType} accountType={accountType} />
+        <AccountType
+          setAccountType={setAccountType}
+          accountType={accountType}
+          router={router}
+        />
 
         <div className="w-[100%] flex flex-col items-center justify-end mt-14">
           <span className="text-gray-600 text-xs font-normal mb-2">
@@ -33,7 +37,7 @@ export default function Home() {
   );
 }
 
-const AccountType = ({ accountType, setAccountType }) => (
+const AccountType = ({ accountType, setAccountType, router }) => (
   <>
     <OnboardCard>
       <h3 className="text-black text-lg font-medium">Select account type</h3>
@@ -42,13 +46,21 @@ const AccountType = ({ accountType, setAccountType }) => (
       </p>
       <br />
 
-      <div className={`w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] ${accountType === 'researcher'? 'border-[#0059AC]' : 'border-[#E2EDF6]'} border-solid hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all`} onClick={(e) => {
-        setAccountType('researcher');
-        console.log(accountType);
-      }}>
+      <div
+        className={`w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] ${
+          accountType === "researcher" ? "border-[#0059AC]" : "border-[#E2EDF6]"
+        } border-solid hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all`}
+        onClick={(e) => {
+          setAccountType("researcher");
+          console.log(accountType);
+        }}
+      >
         <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
           {/* <Image className="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
-          <img src="/onboarding/researcher_icon.svg" alt="Researcher account type logo" />
+          <img
+            src="/onboarding/researcher_icon.svg"
+            alt="Researcher account type logo"
+          />
         </div>
         <div>
           <div className="text-sm font-medium text-black">
@@ -60,13 +72,21 @@ const AccountType = ({ accountType, setAccountType }) => (
           </p>
         </div>
       </div>
-      <div className={`w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid ${accountType === 'merchant'? 'border-[#0059AC]' : 'border-[#E2EDF6]'} hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all`} onClick={(e) => {
-        setAccountType('merchant');
-        console.log(accountType);
-      }}>
+      <div
+        className={`w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid ${
+          accountType === "merchant" ? "border-[#0059AC]" : "border-[#E2EDF6]"
+        } hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all`}
+        onClick={(e) => {
+          setAccountType("merchant");
+          console.log(accountType);
+        }}
+      >
         <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#01AAF0]">
           {/* <Image className="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
-          <img src="/onboarding/merchant_icon.svg" alt="Merchant account type logo" />
+          <img
+            src="/onboarding/merchant_icon.svg"
+            alt="Merchant account type logo"
+          />
         </div>
         <div>
           <div className="text-sm font-medium text-black">Merchant</div>
@@ -80,19 +100,22 @@ const AccountType = ({ accountType, setAccountType }) => (
         text="Continue"
         icon={null}
         iconPosition={null}
-        onClick={(e) => console.info("Button comp clicked", e)}
+        onClick={(e) => {
+          console.info("Button comp clicked", e);
+          router.push("/register");
+        }}
         isLoading={null}
         type={"normal"}
-        block={false}      />
+        block={false}
+      />
     </OnboardCard>
     <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
       <span className="text-slate-500 text-sm">Already have an account?</span>
-      <span className="text-primary text-sm"><Link href="/login" passHref><a>Log in</a></Link></span>
+      <span className="text-primary text-sm">
+        <Link href="/login" passHref>
+          <a>Log in</a>
+        </Link>
+      </span>
     </div>
   </>
 );
-
-
-
-
-

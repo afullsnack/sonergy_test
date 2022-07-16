@@ -31,6 +31,7 @@ function NewAccount() {
    */
 
   /* States */
+  const [fullName, setFullName] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -73,6 +74,29 @@ function NewAccount() {
           </p>
           <br />
 
+          <div className="form-control mb-2">
+            <label className="label">
+              <span className="label-text text-slate-700 font-medium">
+                Full Name
+              </span>
+            </label>
+            <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+              <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                <FaUser color="#B8C4CE" />
+              </span>
+              <input
+                type="text"
+                placeholder="James Doe"
+                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                value={fullName}
+                onChange={(e) => {
+                  console.info("Full name", e.target.value);
+                  setFullName(e.target.value);
+                }}
+              />
+              {/* <span>USD</span> */}
+            </label>
+          </div>
           <div className="form-control mb-2">
             <label className="label">
               <span className="label-text text-slate-700 font-medium">
@@ -220,7 +244,7 @@ function NewAccount() {
             onClick={async (e) => {
               console.info("Button comp clicked", e);
               const data: RegisterData = {
-                fullName: `Test user`,
+                fullName: fullName,
                 username: username,
                 email: email,
                 password: password,

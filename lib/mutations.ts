@@ -1,4 +1,4 @@
-const BASE_URL = "https://sonergy.herokuapp.com";
+const BASE_URL = "https://sonergy-mvp.herokuapp.com";
 
 export type Gender = `male` | "female";
 export interface BioData {
@@ -187,9 +187,90 @@ export const addAnswerToSurvey = async ({
   address: string;
   cid: string;
 }) =>
-  await fetch(`${BASE_URL}/surveys/`, {
+  await fetch(`${BASE_URL}/surveys/add-survey-answer`, {
     method: "POST",
     body: JSON.stringify({ surveyId, address, cid }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+export const fetchSurveyAnswers = async ({
+  token,
+  surveyId,
+  address,
+}: {
+  token: string;
+  surveyId: string;
+  address: string;
+}) =>
+  await fetch(`${BASE_URL}/surveys/get-all-survey-answers`, {
+    method: "POST",
+    body: JSON.stringify({ surveyId, address }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+export const convertSurveyToNFT = async ({
+  token,
+  surveyId,
+  address,
+  surveyUrl,
+  price,
+}: {
+  token: string;
+  surveyId: string;
+  address: string;
+  surveyUrl: string;
+  price: string;
+}) =>
+  await fetch(`${BASE_URL}/surveys/get-all-survey-answers`, {
+    method: "POST",
+    body: JSON.stringify({ surveyId, address, surveyUrl, price }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+export const buySurveyNFT = async ({
+  token,
+  surveyTokenId,
+  price,
+}: {
+  token: string;
+  surveyTokenId: string;
+  price: string;
+}) =>
+  await fetch(`${BASE_URL}/surveys/get-all-survey-answers`, {
+    method: "POST",
+    body: JSON.stringify({ surveyTokenId, price }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+// Wallet
+export const sendSonergy = async ({
+  token,
+  amount,
+  recipient,
+  Network = "BSC",
+  address,
+}: {
+  token: string;
+  amount: string;
+  recipient: string;
+  Network: string;
+  address: string;
+}) =>
+  await fetch(`${BASE_URL}/wallet/get-all-survey-answers`, {
+    method: "POST",
+    body: JSON.stringify({ amount, recipient, Network, address }),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
