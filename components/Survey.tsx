@@ -5,18 +5,17 @@ import {
   AiOutlineArrowRight,
   AiOutlineRight,
 } from "react-icons/ai";
-import { FaCheck } from "react-icons/fa";
 import { ButtonGhost } from "./Button";
 import OnboardCard from "./OnboardCard";
 
-export const MySurveyList = ({ title, count, onClick }) => {
+export const MySurveyList = ({ title, count, onClick, icon }) => {
   return (
     <div
-      className="w-full p-3 mx-auto bg-white rounded-lg flex items-center space-x-4 border-[#E2EDF6] border-[0.5px] mb-3"
+      className="w-full p-3 mx-auto bg-white rounded-lg flex items-center space-x-4 border-[#E2EDF6] border-[0.5px] mb-3 hover:cursor-pointer"
       onClick={onClick}
     >
-      <div className="shrink-0 rounded-2xl border-solid border-primary border-[.9px] p-3">
-        <FaCheck size={18} />
+      <div className="shrink-0 rounded-2xl border-solid border-[#E2EDF6] border-[.9px] p-3">
+        <img src={icon} alt="My Survey logos" />
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex-[4]">
@@ -33,7 +32,7 @@ export const AvailableSurveyCarousel = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full carousel max-w-sm desktop:max-w-screen-desktop space-x-4 bg-transparent">
+    <div className="w-full carousel max-w-sm desktop:max-w-screen-desktop space-x-4 bg-transparent hover:cursor-pointer">
       <div className="carousel-item max-w-xs">
         <OnboardCard>
           <div className="flex flex-col items-start justify-between mb-3">

@@ -42,16 +42,19 @@ function Home() {
               console.log("Commissioned Surveys Survey clicked", e);
               router.push("/home/my-surveys");
             }}
+            icon={"/home/task-square.svg"}
           />
           <MySurveyList
             title={"Completed Surveys"}
             count={"12"}
             onClick={(e) => console.log("Completed Surveys Survey clicked", e)}
+            icon={"/home/tick-square.svg"}
           />
           <MySurveyList
             title={"Validated Surveys"}
             count={"5"}
             onClick={(e) => console.log("Validated Surveys Survey clicked", e)}
+            icon={"/home/verify.svg"}
           />
         </OnboardCard>
       </div>
