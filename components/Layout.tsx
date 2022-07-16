@@ -1,5 +1,6 @@
+import { ethers } from "ethers";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AiFillAppstore } from "react-icons/ai";
 import {
   FaBell,
@@ -9,8 +10,9 @@ import {
   FaWallet,
 } from "react-icons/fa";
 import resolveConfig from "tailwindcss/resolveConfig";
+import { WalletContext } from "../lib/contexts/wallet";
 import tailwindConfig from "../tailwind.config"; // Fix the path
-import { ButtonPrimary } from "./Button";
+import { ButtonGhost, ButtonPrimary } from "./Button";
 import Logo from "./Logo";
 
 const fullConfig = resolveConfig(tailwindConfig);
@@ -42,6 +44,9 @@ export default function withLayout(BaseComp: React.ElementType) {
     const router = useRouter();
     const { pathname } = router;
     const [isMobile, setIsMobile] = useState(false);
+    const [shouldConnect, setShouldConnect] = useState(false);
+    // const [address, setAddress] = useState<string | undefined | null>();
+    const walletContext = useContext(WalletContext);
     useEffect(() => {
       console.log(getCurrentBreakpoint(), "Break point value");
       setIsMobile(getCurrentBreakpoint() === "mobile");
@@ -56,6 +61,26 @@ export default function withLayout(BaseComp: React.ElementType) {
       // Remove event listener on cleanup
       return () => window.removeEventListener("resize", handleResize);
     }, []); //Call once
+
+    const connectWallet = async () => {
+      const provider = await new ethers.providers.Web3Provider(
+        // @ts-ignore
+        window.ethereum,
+        "any"
+      );
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      walletContext.setAddress(address);
+      console.log(address, "Wallet signer address");
+      return address;
+    };
+
+    useEffect(() => {
+      if (shouldConnect) {
+        connectWallet();
+      }
+    }, [shouldConnect]);
 
     return (
       <>
@@ -149,15 +174,38 @@ export default function withLayout(BaseComp: React.ElementType) {
                 <FaMoon color="#8895A7" size={"14px"} />
               </div>
             )}
-            <ButtonPrimary
-              text="Connect wallet"
-              type="small"
-              onClick={(e) => console.log(e, "Connect wallet clicked")}
-              icon={null}
-              iconPosition={null}
-              block={false}
-              isLoading={false}
-            />
+            {walletContext.address ? (
+              <ButtonGhost
+                text={`${walletContext.address.substring(
+                  0,
+                  6
+                )}...${walletContext.address.substring(
+                  walletContext.address.length - 4,
+                  walletContext.address.length
+                )}`}
+                type="small"
+                onClick={(e) => {
+                  console.log(e, "Disconnect wallet clicked");
+                }}
+                icon={null}
+                iconPosition={null}
+                block={false}
+                isLoading={false}
+              />
+            ) : (
+              <ButtonPrimary
+                text={"Connect wallet"}
+                type="small"
+                onClick={(e) => {
+                  console.log(e, "Connect wallet clicked");
+                  setShouldConnect(!shouldConnect);
+                }}
+                icon={null}
+                iconPosition={null}
+                block={false}
+                isLoading={false}
+              />
+            )}
           </div>
         </div>
         <div className="container">

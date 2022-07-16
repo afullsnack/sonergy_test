@@ -2,15 +2,36 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { FaPlus } from "react-icons/fa";
+import { useQuery } from "react-query";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 import { BalanceCarousel } from "../../components/Carousel";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
 import { EmptySurveyList, MySurveyList } from "../../components/Survey";
+import { getAllSurveys } from "../../lib/queries";
 
 function Home() {
   const router = useRouter();
   const [cookies, setCookie] = useCookies(["token"]);
+  const { token } = cookies;
+
+  const { data, isLoading, error } = useQuery(
+    ["getAllSurveys", token],
+    () => getAllSurveys(token),
+    {
+      onSuccess({ success, message, data }) {
+        console.info(
+          data,
+          success,
+          message,
+          "Data returned from the getAllSurveys"
+        );
+      },
+      onError(err) {
+        console.error(err, "Error occurred while getAllSurvey called");
+      },
+    }
+  );
 
   useEffect(() => {
     console.log(cookies.token, "User token set after login redirect");

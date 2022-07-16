@@ -55,6 +55,7 @@ export const getSurveyPlans = async (token: string) =>
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const getMySurveys = async ({
   token,
   address,
@@ -68,6 +69,7 @@ export const getMySurveys = async ({
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const getAllSurveys = async (token: string) =>
   await fetch(`${BASE_URL}/surveys/get-all-surveys`, {
     headers: {

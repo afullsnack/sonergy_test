@@ -1,4 +1,6 @@
 import { useRouter } from "next/router";
+import { useContext, useEffect } from "react";
+import { useCookies } from "react-cookie";
 import { AiOutlineRight } from "react-icons/ai";
 import {
   FaArrowCircleDown,
@@ -8,11 +10,44 @@ import {
   FaTag,
 } from "react-icons/fa";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
+import { useQuery, useQueryClient } from "react-query";
 import withLayout from "../../components/Layout";
+import Loader from "../../components/Loader";
 import OnboardCard from "../../components/OnboardCard";
+import { WalletContext } from "../../lib/contexts/wallet";
+import { getTransactionHistory } from "../../lib/queries";
 
 function Wallet() {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
+  const [cookies, setCookie] = useCookies(["token"]);
+  const { token } = cookies;
+
+  const walletC = useContext(WalletContext);
+
+  // Wallet transaction history query
+  const { data, isLoading, error } = useQuery(
+    ["getTransactionHistory", token],
+    () => getTransactionHistory({ token, address: walletC.address }),
+    {
+      onSuccess({ success, message, data }) {
+        console.info(
+          data,
+          success,
+          message,
+          "Data returned from the getTransactionHistory"
+        );
+      },
+      onError(err) {
+        console.error(err, "Error occurred while getTransactionHistory called");
+      },
+    }
+  );
+
+  useEffect(() => {
+    console.log(walletC.address, "Connected address");
+  }, []);
 
   return (
     <div className="w-full">
@@ -86,8 +121,13 @@ function Wallet() {
             See all
           </span>
         </div>
-        {/* <TransactionsList router={router} data={[]} /> */}
-        <NoTransaction />
+        {isLoading && <Loader />}
+        {!isLoading && !error && data.data.length && (
+          <TransactionsList router={router} data={data.data} />
+        )}
+        {!isLoading && !error && data.data && !data.data.length && (
+          <NoTransaction />
+        )}
       </div>
     </div>
   );
