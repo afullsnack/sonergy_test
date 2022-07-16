@@ -43,6 +43,10 @@ export default function withLayout(BaseComp: React.ElementType) {
   const Page: React.FunctionComponent = (props) => {
     const router = useRouter();
     const { pathname } = router;
+
+    // Query client
+    // const queryClient = useQueryClient();
+
     const [isMobile, setIsMobile] = useState(false);
     const [shouldConnect, setShouldConnect] = useState(false);
     // const [address, setAddress] = useState<string | undefined | null>();
