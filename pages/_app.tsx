@@ -1,25 +1,17 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useState } from "react";
 import { CookiesProvider } from "react-cookie";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { WalletContext } from "../lib/contexts/wallet";
+import { WalletProvider } from "../lib/contexts/walletContext";
 import "../styles/globals.css";
 
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [address, setAddress] = useState();
-
   return (
     <QueryClientProvider client={queryClient}>
       <CookiesProvider>
-        <WalletContext.Provider
-          value={{
-            address,
-            setAddress,
-          }}
-        >
+        <WalletProvider>
           <Head>
             <meta
               name="viewport"
@@ -27,7 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             />
           </Head>
           <Component {...pageProps} />
-        </WalletContext.Provider>
+        </WalletProvider>
       </CookiesProvider>
     </QueryClientProvider>
   );

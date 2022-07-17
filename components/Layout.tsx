@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiFillAppstore } from "react-icons/ai";
 import {
   FaBell,
@@ -10,7 +10,7 @@ import {
   FaWallet,
 } from "react-icons/fa";
 import resolveConfig from "tailwindcss/resolveConfig";
-import { WalletContext } from "../lib/contexts/wallet";
+import { useWalletContext } from "../lib/contexts/walletContext";
 import tailwindConfig from "../tailwind.config"; // Fix the path
 import { ButtonGhost, ButtonPrimary } from "./Button";
 import Logo from "./Logo";
@@ -44,13 +44,12 @@ export default function withLayout(BaseComp: React.ElementType) {
     const router = useRouter();
     const { pathname } = router;
 
-    // Query client
-    // const queryClient = useQueryClient();
+    // wallet context
+    const { address, setAddress } = useWalletContext();
 
     const [isMobile, setIsMobile] = useState(false);
     const [shouldConnect, setShouldConnect] = useState(false);
     // const [address, setAddress] = useState<string | undefined | null>();
-    const walletContext = useContext(WalletContext);
     useEffect(() => {
       console.log(getCurrentBreakpoint(), "Break point value");
       setIsMobile(getCurrentBreakpoint() === "mobile");
@@ -75,8 +74,12 @@ export default function withLayout(BaseComp: React.ElementType) {
       await provider.send("eth_requestAccounts", []);
       const signer = provider.getSigner();
       const address = await signer.getAddress();
-      walletContext.setAddress(address);
-      console.log(address, "Wallet signer address");
+
+      if (address) {
+        // If address set address and invalidate balance query
+        console.log(address, "Wallet signer address");
+        setAddress(address);
+      }
       return address;
     };
 
@@ -178,14 +181,11 @@ export default function withLayout(BaseComp: React.ElementType) {
                 <FaMoon color="#8895A7" size={"14px"} />
               </div>
             )}
-            {walletContext.address ? (
+            {address ? (
               <ButtonGhost
-                text={`${walletContext.address.substring(
-                  0,
-                  6
-                )}...${walletContext.address.substring(
-                  walletContext.address.length - 4,
-                  walletContext.address.length
+                text={`${address.substring(0, 6)}...${address.substring(
+                  address.length - 4,
+                  address.length
                 )}`}
                 type="small"
                 onClick={(e) => {

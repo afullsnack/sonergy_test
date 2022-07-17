@@ -227,7 +227,7 @@ export const convertSurveyToNFT = async ({
   surveyUrl: string;
   price: string;
 }) =>
-  await fetch(`${BASE_URL}/surveys/get-all-survey-answers`, {
+  await fetch(`${BASE_URL}/surveys/convert-to-nft`, {
     method: "POST",
     body: JSON.stringify({ surveyId, address, surveyUrl, price }),
     headers: {
@@ -245,7 +245,7 @@ export const buySurveyNFT = async ({
   surveyTokenId: string;
   price: string;
 }) =>
-  await fetch(`${BASE_URL}/surveys/get-all-survey-answers`, {
+  await fetch(`${BASE_URL}/surveys/buy-nft`, {
     method: "POST",
     body: JSON.stringify({ surveyTokenId, price }),
     headers: {
@@ -268,7 +268,7 @@ export const sendSonergy = async ({
   Network: string;
   address: string;
 }) =>
-  await fetch(`${BASE_URL}/wallet/get-all-survey-answers`, {
+  await fetch(`${BASE_URL}/wallet/send-sonergy`, {
     method: "POST",
     body: JSON.stringify({ amount, recipient, Network, address }),
     headers: {

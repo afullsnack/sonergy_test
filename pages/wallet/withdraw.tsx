@@ -1,9 +1,44 @@
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useCookies } from "react-cookie";
 import { FaQrcode } from "react-icons/fa";
+import { useMutation, useQueryClient } from "react-query";
 import { ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
+import { useWalletContext } from "../../lib/contexts/walletContext";
+import { sendSonergy } from "../../lib/mutations";
 
 function Withdraw() {
+  /**
+   * @Page => Withdraw page
+   * @States => email, password, isHidden
+   * @Event => Call loginUser() mutation function and store the user token in localStorage/cookie
+   */
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const [{ token }] = useCookies(["token"]);
+
+  // Wallet context
+  const { address, sonergyBalance } = useWalletContext();
+
+  /* States */
+  const [recipient, setRecipient] = useState<string>();
+  const [network, setNetwork] = useState<string>();
+  const [amount, setAmount] = useState<number>();
+
+  // DONE: setup useMutation
+  const { mutate, isLoading, data } = useMutation(sendSonergy, {
+    onSuccess: (data) => {
+      console.log(data, "Returned login data");
+    },
+    onError: () => console.error("There was an error trying to login"),
+    onSettled: () => {
+      queryClient.invalidateQueries("getSonergyBalance");
+      queryClient.invalidateQueries("getTransactionHistory");
+    },
+  });
+
   return (
     <div className="w-full">
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
@@ -28,6 +63,11 @@ function Withdraw() {
                 type="text"
                 placeholder="Long press to paste"
                 className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 w-[100%]"
+                value={recipient}
+                onChange={(e) => {
+                  console.log(e, "Recipient address");
+                  setRecipient(e.target.value);
+                }}
               />
               <span className="flex items-center justify-center pl-1 pr-4 bg-transparent">
                 <FaQrcode />
@@ -69,6 +109,11 @@ function Withdraw() {
                 type="number"
                 placeholder="0.00"
                 className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 w-[100%]"
+                value={amount}
+                onChange={(e) => {
+                  console.log(e, "Amount to be sent");
+                  setAmount(Number(e.target.value));
+                }}
               />
               <span className="flex items-center justify-center px-4 text-primary bg-transparent">
                 MAX
@@ -76,7 +121,8 @@ function Withdraw() {
             </label>
             <label className="label">
               <span className="label-text-alt text-xs text-gray-500 mb-1">
-                <b>Available:</b> 25,000.0000 <b>SNEGY</b>
+                <b>Available:</b> {sonergyBalance.sonergy}{" "}
+                <b>{sonergyBalance.symbol}</b>
               </span>
             </label>
           </div>
@@ -104,7 +150,10 @@ function Withdraw() {
           icon={undefined}
           iconPosition={undefined}
           block={true}
-          onClick={(e) => console.log(e, "Confirm withdrawal")}
+          onClick={(e) => {
+            console.log(e, "Confirm withdrawal");
+            // TODO: Check sonergy  balance and call alert insufficient alert if less than minimum
+          }}
           isLoading={false}
         />
       </div>

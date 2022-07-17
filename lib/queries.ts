@@ -106,6 +106,7 @@ export const getNFTSurveysByAddress = async ({
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const getMyNFTSurveys = async (token: string) =>
   await fetch(`${BASE_URL}/surveys/get-my-nft-surveys`, {
     headers: {
@@ -113,6 +114,7 @@ export const getMyNFTSurveys = async (token: string) =>
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const getCreatedNFTSurveys = async (token: string) =>
   await fetch(`${BASE_URL}/surveys/get-created-nft-surveys`, {
     headers: {
@@ -120,6 +122,7 @@ export const getCreatedNFTSurveys = async (token: string) =>
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+
 export const getNFTListingPrice = async (token: string) =>
   await fetch(`${BASE_URL}/surveys/get-nft-listing-price`, {
     headers: {

@@ -1,6 +1,6 @@
 import { utils } from "ethers";
-import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { NextRouter, useRouter } from "next/router";
+import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { AiOutlineRight } from "react-icons/ai";
 import {
@@ -15,8 +15,8 @@ import { useQuery, useQueryClient } from "react-query";
 import withLayout from "../../components/Layout";
 import Loader from "../../components/Loader";
 import OnboardCard from "../../components/OnboardCard";
-import { WalletContext } from "../../lib/contexts/wallet";
-import { getSonergyBalance, getTransactionHistory } from "../../lib/queries";
+import { useWalletContext } from "../../lib/contexts/walletContext";
+import { getTransactionHistory } from "../../lib/queries";
 
 function Wallet() {
   const queryClient = useQueryClient();
@@ -25,7 +25,8 @@ function Wallet() {
   const [cookies, setCookie] = useCookies(["token"]);
   const { token } = cookies;
 
-  const walletC = useContext(WalletContext);
+  // Wallet context
+  const { address } = useWalletContext();
 
   // Wallet transaction history query : { data, success, message }
   const {
@@ -39,8 +40,8 @@ function Wallet() {
     isLoading: boolean;
     error: object | undefined;
   } = useQuery(
-    ["getTransactionHistory", token, walletC.address],
-    () => getTransactionHistory({ token, address: walletC.address }),
+    ["getTransactionHistory", token, address],
+    () => getTransactionHistory({ token, address: address }),
     {
       onSuccess({ success, message, data }) {
         console.info(
@@ -57,16 +58,16 @@ function Wallet() {
   );
 
   useEffect(() => {
-    console.log(walletC.address, "Connected address");
+    console.log(address, "Connected address");
     // Invalidate all queries that depend on the connected address
     queryClient.invalidateQueries("getTransactionHistory");
-  }, [walletC.address]);
+  }, [address]);
 
   return (
     <div className="w-full">
       {/* Available balance */}
       <div className="flex flex-col items-start justify-start w-full bg-white mobile:p-3 mb-8">
-        <WalletBalance token={token} address={walletC.address} />
+        <WalletBalance token={token} />
         <div className="w-full flex flex-row items-center justify-center space-x-8 px-6">
           <div
             className="flex flex-col items-center justify-evenly hover:cursor-pointer"
@@ -121,8 +122,8 @@ function Wallet() {
           </span>
         </div>
         {isLoading && !error && !data && <Loader />}
-        {!isLoading && !error && data && data?.data.length && (
-          <TransactionsList router={router} data={data} />
+        {!isLoading && !error && data && !!data?.data.length && (
+          <TransactionsList router={router} data={data?.data} />
         )}
         {!isLoading && !error && data && !data?.data.length && (
           <NoTransaction />
@@ -149,7 +150,13 @@ const NoTransaction = () => (
   </OnboardCard>
 );
 
-const TransactionsList = ({ router, data }) => {
+const TransactionsList = ({
+  router,
+  data,
+}: {
+  router: NextRouter;
+  data: object[];
+}) => {
   const TransactionIn = ({ title, subText, amount, onClick }) => (
     <div
       className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer"
@@ -227,45 +234,12 @@ const TransactionsList = ({ router, data }) => {
   );
 };
 
-const WalletBalance = ({ token, address }) => {
+const WalletBalance = ({ token }) => {
   const queryClient = useQueryClient();
-  interface BalanceData {
-    USD: number;
-    sonergy: string;
-    symbol: string;
-  }
-  // Wallet sonergy balance { data, success, message }
-  const {
-    data,
-    isLoading,
-    error,
-  }: {
-    data:
-      | {
-          data: Array<BalanceData | undefined>;
-          success: boolean;
-          message: string;
-        }
-      | undefined;
-    isLoading: boolean;
-    error: object | undefined;
-  } = useQuery(
-    ["getSonergyBalance", token, address],
-    () => getSonergyBalance({ token, address: address }),
-    {
-      onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getSonergyBalance"
-        );
-      },
-      onError(err) {
-        console.error(err, "Error occurred while getSonergyBalance called");
-      },
-    }
-  );
+
+  // Wallet Context
+  const { isFetchingBalance, address, sonergyBalance, setSonergyBalance } =
+    useWalletContext();
 
   useEffect(() => {
     console.log("Balance invalidated", address);
@@ -274,7 +248,7 @@ const WalletBalance = ({ token, address }) => {
 
   return (
     <div className="w-full flex flex-col items-center justify-around bg-cyan-700 py-6 rounded-xl mb-5">
-      {!isLoading && !error && data && data?.data?.length && (
+      {!isFetchingBalance && (
         <>
           <div className="flex items-center justify-center mb-3">
             <span className="text-xs font-light text-center text-white mr-2">
@@ -284,35 +258,27 @@ const WalletBalance = ({ token, address }) => {
           </div>
           <p className="mb-2">
             <b className="text-lg text-white font-semibold">
-              {(data?.data?.length &&
-                utils.formatUnits(
-                  data?.data.filter((val) => val.symbol === "SNEGYTEST")[0]
-                    .sonergy,
-                  "ether"
-                )) ||
-                "0"}
-              {!data && !data?.success && "0"}.
-              <small className="text-xs font-medium">00</small>
+              {utils.formatUnits(sonergyBalance.sonergy, "ether")}
+              <small className="text-xs font-medium">.00</small>
             </b>{" "}
-            <span className="text-sm text-white font-light">SNEGY</span>
+            <span className="text-sm text-white font-light">
+              {sonergyBalance.symbol}
+            </span>
           </p>
           <span className="text-xs text-white font-light mb-2">
-            $
-            {data?.data?.length &&
-              data?.data?.filter((val) => val.symbol === "SNEGYTEST")[0].USD}
-            {!data && !data?.success && "0"}
+            ${sonergyBalance.USD}
           </span>
         </>
       )}
-      {isLoading && !error && !data && <Loader />}
-      {!isLoading &&
+      {isFetchingBalance && <Loader />}
+      {/* {!isLoading &&
         !error &&
         !data.data &&
         data.message.includes("invalid address") && (
           <span className="text-xs text-white font-medium mb-2">
             Invalid Address provided/Connect wallet
           </span>
-        )}
+        )} */}
     </div>
   );
 };
