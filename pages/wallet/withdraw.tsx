@@ -6,7 +6,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
-import { useWalletContext } from "../../lib/contexts/walletContext";
+import {
+  MIN_WITHDRAW,
+  useWalletContext,
+} from "../../lib/contexts/walletContext";
 import { sendSonergy } from "../../lib/mutations";
 
 function Withdraw() {
@@ -84,6 +87,7 @@ function Withdraw() {
               {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
                 <FaUser color="#B8C4CE" />
               </span> */}
+              {/* TODO: Change this to a network dropdown */}
               <input
                 type="text"
                 disabled
@@ -130,7 +134,7 @@ function Withdraw() {
             Should arrive after 15 network confirmations
           </span>
           <span className="text-xs text-gray-500 mb-1">
-            Minimum withdrawal 10 SNEGY
+            Minimum withdrawal {MIN_WITHDRAW} SNEGY
           </span>
         </OnboardCard>
       </div>
