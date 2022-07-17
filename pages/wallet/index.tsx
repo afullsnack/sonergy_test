@@ -67,7 +67,7 @@ function Wallet() {
     <div className="w-full">
       {/* Available balance */}
       <div className="flex flex-col items-start justify-start w-full bg-white mobile:p-3 mb-8">
-        <WalletBalance token={token} />
+        <WalletBalance />
         <div className="w-full flex flex-row items-center justify-center space-x-8 px-6">
           <div
             className="flex flex-col items-center justify-evenly hover:cursor-pointer"
@@ -109,7 +109,7 @@ function Wallet() {
       </div>
 
       {/* Transactions states */}
-      <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
+      <div className="flex flex-col items-center justify-center w-full bg-transparent mobile:p-3 mb-10">
         <div className="w-full flex items-center justify-between">
           <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
             Wallet transactions
@@ -234,7 +234,7 @@ const TransactionsList = ({
   );
 };
 
-const WalletBalance = ({ token }) => {
+const WalletBalance = () => {
   const queryClient = useQueryClient();
 
   // Wallet Context

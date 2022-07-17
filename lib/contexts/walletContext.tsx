@@ -11,6 +11,8 @@ import { useCookies } from "react-cookie";
 import { useQuery, useQueryClient } from "react-query";
 import { getSonergyBalance } from "../queries";
 
+export const MIN_WITHDRAW = 10;
+
 type walletContextType = {
   isFetchingBalance: boolean;
   address: string;
