@@ -17,6 +17,7 @@ export function IPFSProvider({ children }: ProviderProps) {
   const [isPullingData, setIsPullingData] = useState<boolean>(false);
 
   const pushData = async ({ json }) => {
+    setIsPushingData(true);
     const ipfsClient = create({
       url: `${process.env.IPFS_URL}/api/v0`,
       headers: {
@@ -25,9 +26,11 @@ export function IPFSProvider({ children }: ProviderProps) {
     });
     const cid = await ipfsClient.object.new(json);
     console.log(cid.toString(), "CID after IPFS call");
+    setIsPushingData(false);
     return cid.toString();
   };
   const pullData = async ({ cid }) => {
+    setIsPullingData(true);
     const ipfsClient = create({
       url: `${process.env.IPFS_URL}/api/v0`,
       headers: {
@@ -36,6 +39,7 @@ export function IPFSProvider({ children }: ProviderProps) {
     });
     const json = await ipfsClient.object.get(cid);
     console.log(json, "JSON after IPFS call");
+    setIsPullingData(false);
     return json;
   };
 
