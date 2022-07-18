@@ -1,16 +1,41 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import { AiFillLeftCircle } from "react-icons/ai";
 import { ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
 
 function TakeSurvey() {
-  const router = useRouter();
+  const { asPath, pathname, push } = useRouter();
+
+  // Get stages from asPath route info
+  const [stage, setStage] = useState<string | undefined>(asPath.split("#")[1]);
+  const TOTAL_QUESTIONS: number = 10;
+
+  // Effect when asPath changes i.e: when #question-{n} in the path changes
+  useEffect(() => {
+    setStage((prevStage) =>
+      asPath.split("#")[1] === prevStage ? prevStage : asPath.split("#")[1]
+    );
+    console.log(stage, asPath, "Path and path modification");
+  }, [asPath]);
+
+  // Next and Previous action callbacks
+  const nextClick = useCallback(
+    (n: string) => push(`/home/take-survey#question-${n}`),
+    [stage]
+  );
+  const prevClick = useCallback(
+    (n: string) => push(`/home/take-survey#question-${n}`),
+    [stage]
+  );
+
+  // TODO: render template will be to have a slider that works based in the current asPath or stage value
 
   return (
     <div className="w-full">
-      <SurveyFinished router={router} />
+      <SurveyFinished />
     </div>
   );
 }
@@ -163,7 +188,7 @@ const SurveyQuestion = ({ router }) => {
   );
 };
 
-const SurveyFinished = ({ router }) => {
+const SurveyFinished = () => {
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
