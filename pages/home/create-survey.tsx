@@ -1,41 +1,138 @@
+import { utils } from "ethers";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useCookies } from "react-cookie";
 import { AiFillCheckSquare } from "react-icons/ai";
+import { useQuery, useQueryClient } from "react-query";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
+import Loader from "../../components/Loader";
 import OnboardCard from "../../components/OnboardCard";
+import { getSurveyPlans } from "../../lib/queries";
+
+enum Stage {
+  Plan = "Plan",
+  Config = "Config",
+  Rewards = "Rewards",
+  Questions = "Questions",
+  Review = "Review",
+}
 
 function CreateSurvey() {
+  // State
+  const [stage, setStage] = useState(Stage.Plan);
+
+  // Survey config
+  const [planId, setPlanId] = useState<string>();
+  const [surveyTopic, setSurveyTopic] = useState<string>();
+  const [surveyDescription, setSurveyDescription] = useState<string>();
+  const [commissionerCount, setCommissionerCount] = useState();
+  const [validatorCount, setValidatorCount] = useState();
+  const [questionCount, setQuestionCount] = useState();
+  const [createdAt, setCreatedAt] = useState<string>();
+  const [expireAt, setExpireAt] = useState<string>();
+
   return (
     <div className="w-full">
-      <SurveyRewards />
+      {stage === Stage.Plan && (
+        <SurveyPlans
+          setPlanId={setPlanId}
+          planId={planId}
+          setStage={setStage}
+        />
+      )}
+      {stage === Stage.Config && (
+        <SurveyConfigs
+          setSurveyTopic={setSurveyTopic}
+          setSurveyDescription={setSurveyDescription}
+          surveyTopic={surveyTopic}
+          surveyDescription={surveyDescription}
+          setCreatedAt={setCreatedAt}
+          setExpireAt={setExpireAt}
+          setStage={setStage}
+        />
+      )}
+      {stage === Stage.Rewards && <SurveyRewards />}
     </div>
   );
 }
 
-const SurveyPlans = (props) => {
+interface SurveyPlanProps {
+  setPlanId: Dispatch<SetStateAction<string>>;
+  planId: string | undefined;
+  setStage: Dispatch<SetStateAction<Stage>>;
+}
+const SurveyPlans = ({ planId, setPlanId, setStage }: SurveyPlanProps) => {
+  const [{ token }] = useCookies(["token"]);
+
+  // State
+  const [plansData, setPlansData] = useState([]);
+
+  // query for survey plans
+  const queryClient = useQueryClient();
+  const { data, isLoading, error } = useQuery(
+    ["getSurveyPlans", token],
+    () => getSurveyPlans(token),
+    {
+      onSuccess({ data, message, success }) {
+        console.log(data, success, message, "Data from getSurveyPlans query");
+        setPlansData(data);
+      },
+      onError(err) {
+        console.error(err, "Error occurred while getMySurveys called");
+      },
+    }
+  );
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
-        <div className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
+        {!isLoading &&
+          !!plansData.length &&
+          plansData
+            .filter((item) => item?.status === true)
+            .map((plan) => (
+              <div
+                key={plan.planID}
+                className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all"
+                onClick={() => {
+                  setPlanId(plan?.planID);
+                  setStage(Stage.Config);
+                }}
+              >
+                <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
+                  {/* <Image class="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
+                  <AiFillCheckSquare color="#0059AC" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-black">
+                    {plan?.planName}
+                  </div>
+                  <p className="text-slate-500 text-sm">
+                    {/* Max. response - <b className="font-medium text-black">15</b> */}
+                    Commissioner profit % -{" "}
+                    <b className="font-medium text-black">
+                      {plan.providerProfit}
+                    </b>
+                    <br />
+                    Validator profit -{" "}
+                    <b className="font-medium text-black">
+                      {plan.validatorsProfit}
+                    </b>
+                    {/* Max. validated response -{" "}
+              <b className="font-medium text-black">0</b> */}
+                    <br />
+                    Cost -{" "}
+                    <b className="font-medium text-black">
+                      {utils.formatUnits(plan.minAmount, "ether")} SNEGYTEST
+                    </b>
+                    <br />
+                  </p>
+                </div>
+              </div>
+            ))}
+        {isLoading && <Loader />}
+        {/* <div className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
           <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-            {/* <Image class="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
-            <AiFillCheckSquare color="#0059AC" />
-          </div>
-          <div>
-            <div className="text-sm font-medium text-black">Free plan</div>
-            <p className="text-slate-500 text-sm">
-              Max. response - <b className="font-medium text-black">15</b>
-              <br />
-              Max. validated response -{" "}
-              <b className="font-medium text-black">0</b>
-              <br />
-              Cost - <b className="font-medium text-black">0 SNEGY</b>
-              <br />
-            </p>
-          </div>
-        </div>
-        <div className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
-          <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-            {/* <Image class="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
+            
             <AiFillCheckSquare color="#0059AC" />
           </div>
           <div>
@@ -53,7 +150,7 @@ const SurveyPlans = (props) => {
         </div>
         <div className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all">
           <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-            {/* <Image class="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
+            
             <AiFillCheckSquare color="#0059AC" />
           </div>
           <div>
@@ -70,9 +167,9 @@ const SurveyPlans = (props) => {
               <br />
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
-      <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3">
+      {/* <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3">
         <ButtonPrimary
           type="normal"
           text="Choose plan"
@@ -82,12 +179,29 @@ const SurveyPlans = (props) => {
           onClick={(e) => console.log(e, "Choose survey")}
           isLoading={false}
         />
-      </div>
+      </div> */}
     </>
   );
 };
 
-const SurveyConfigs = () => {
+interface SurveyConfigProps {
+  setSurveyTopic: Dispatch<SetStateAction<string>>;
+  setSurveyDescription: Dispatch<SetStateAction<string>>;
+  surveyTopic: string;
+  surveyDescription: string;
+  setCreatedAt: Dispatch<SetStateAction<string>>;
+  setExpireAt: Dispatch<SetStateAction<string>>;
+  setStage: Dispatch<SetStateAction<Stage>>;
+}
+const SurveyConfigs = ({
+  setSurveyTopic,
+  setSurveyDescription,
+  surveyTopic,
+  surveyDescription,
+  setCreatedAt,
+  setExpireAt,
+  setStage,
+}: SurveyConfigProps) => {
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
@@ -121,6 +235,28 @@ const SurveyConfigs = () => {
                 type="text"
                 placeholder="Enter topic"
                 className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                value={surveyTopic}
+                onChange={(e) => setSurveyTopic(e.target.value)}
+              />
+              {/* <span>USD</span> */}
+            </label>
+          </div>
+          <div className="form-control mb-5">
+            <label className="label">
+              <span className="label-text text-slate-700 font-medium">
+                Description
+              </span>
+            </label>
+            <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+              {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                <FaUser color="#B8C4CE" />
+              </span> */}
+              <textarea
+                placeholder="Enter description"
+                rows={3}
+                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                value={surveyDescription}
+                onChange={(e) => setSurveyDescription(e.target.value)}
               />
               {/* <span>USD</span> */}
             </label>
@@ -143,6 +279,7 @@ const SurveyConfigs = () => {
                   type="date"
                   placeholder="DD/MM/YYYY"
                   className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  onChange={(e) => setCreatedAt(e.target.value)}
                 />
                 {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
                   <FaCalendarAlt color="#B8C4CE" />
@@ -163,12 +300,13 @@ const SurveyConfigs = () => {
                   type="date"
                   placeholder="DD/MM/YYYY"
                   className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  onChange={(e) => setExpireAt(e.target.value)}
                 />
                 {/* <span>USD</span> */}
               </label>
             </div>
           </div>
-          <span className="text-sm font-medium text-gray-800 mb-3">
+          {/* <span className="text-sm font-medium text-gray-800 mb-3">
             Question type
           </span>
           <div className="form-control">
@@ -202,7 +340,7 @@ const SurveyConfigs = () => {
                 </div>
               </span>
             </label>
-          </div>
+          </div> */}
         </OnboardCard>
       </div>
       <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3">
@@ -212,7 +350,7 @@ const SurveyConfigs = () => {
           icon={undefined}
           iconPosition={undefined}
           block={true}
-          onClick={(e) => console.log(e, "Choose survey")}
+          onClick={(e) => setStage(Stage.Rewards)}
           isLoading={false}
         />
       </div>
@@ -339,8 +477,6 @@ const SurveyRewards = () => {
               <input
                 type="number"
                 placeholder="0"
-                min="1"
-                max="10"
                 // value="0"
                 step="1"
                 className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
