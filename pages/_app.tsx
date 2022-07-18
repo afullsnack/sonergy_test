@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { CookiesProvider } from "react-cookie";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { IPFSProvider } from "../lib/contexts/ipfsContext";
 import { WalletProvider } from "../lib/contexts/walletContext";
 import "../styles/globals.css";
 
@@ -12,13 +13,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <CookiesProvider>
         <WalletProvider>
-          <Head>
-            <meta
-              name="viewport"
-              content="width=device-width,initial-scale=1"
-            />
-          </Head>
-          <Component {...pageProps} />
+          <IPFSProvider>
+            <Head>
+              <meta
+                name="viewport"
+                content="width=device-width,initial-scale=1"
+              />
+            </Head>
+            <Component {...pageProps} />
+          </IPFSProvider>
         </WalletProvider>
       </CookiesProvider>
     </QueryClientProvider>

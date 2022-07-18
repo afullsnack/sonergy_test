@@ -165,7 +165,7 @@ export interface SurveyQuestionsData {
   id: string;
   questionType: string;
   question: string;
-  options: { id: string; choice: string }[] | undefined;
+  options: { id: string; choice: string }[] | undefined | null;
 }
 
 interface SurveyQAEntryProps {
@@ -190,18 +190,18 @@ export const SurveyQAEntry = ({
       ? questions[currentQuestion - 1]?.questionType || QuestionType.MultiChoice
       : QuestionType.MultiChoice
   );
-  const [q, setQ] = useState<string | undefined>(
+  const [q, setQ] = useState<string | undefined | null>(
     !!questions.length
       ? questions[currentQuestion - 1]?.question || undefined
       : undefined
   );
-  const [a, setA] = useState<string[] | undefined>(
+  const [a, setA] = useState<string[] | undefined | null>(
     !!questions.length
       ? questions[currentQuestion - 1]?.options?.map((item) => item.choice) ||
           undefined
       : type === QuestionType.MultiChoice || type === QuestionType.SingleChoice
       ? [""]
-      : undefined
+      : null
   );
 
   const setAnswer = useCallback(
@@ -212,7 +212,7 @@ export const SurveyQAEntry = ({
           prevA[idx] = value;
           return [...prevA];
         }
-        return undefined;
+        return null;
       });
     },
     [a]
@@ -256,7 +256,7 @@ export const SurveyQAEntry = ({
                   choice: item,
                 };
               })
-            : undefined,
+            : null,
         };
 
         return [...prevQuestion];
@@ -273,7 +273,7 @@ export const SurveyQAEntry = ({
                   choice: item,
                 };
               })
-            : undefined,
+            : null,
         },
         "Previous question data",
         currentQuestion,
@@ -297,7 +297,7 @@ export const SurveyQAEntry = ({
                   choice: item,
                 };
               })
-            : undefined,
+            : null,
         },
       ];
     });
@@ -326,7 +326,7 @@ export const SurveyQAEntry = ({
                   choice: item,
                 };
               })
-            : undefined,
+            : null,
         };
         return [...prevQuestion];
       }
@@ -342,7 +342,7 @@ export const SurveyQAEntry = ({
                   choice: item,
                 };
               })
-            : undefined,
+            : null,
         },
         "Previous question data",
         currentQuestion,
@@ -366,7 +366,7 @@ export const SurveyQAEntry = ({
                   choice: item,
                 };
               })
-            : undefined,
+            : null,
         },
       ];
     });
@@ -491,7 +491,7 @@ export const SurveyQAEntry = ({
             </button>
           </>
         )}
-        {typeof a === "undefined" && type === "free-form" && (
+        {typeof a === null && type === "free-form" && (
           <span className="label-text text-slate-700 font-medium text-center">
             The user can enter any length of text they want, no need to pre-fill
             answers

@@ -1,11 +1,14 @@
 import { utils } from "ethers";
+import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AiFillCheckSquare } from "react-icons/ai";
+import { FaCheck } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import Loader from "../../components/Loader";
+import { useModal } from "../../components/Modal";
 import OnboardCard from "../../components/OnboardCard";
 import { SurveyQAEntry, SurveyQuestionsData } from "../../components/Survey";
 import { useIPFSContext } from "../../lib/contexts/ipfsContext";
@@ -663,12 +666,26 @@ const SurveyReview = ({
 }: SurveyReviewProps) => {
   const [{ token }] = useCookies(["token"]);
   const { address } = useWalletContext();
+  const router = useRouter();
   const { pushData, isPushingData } = useIPFSContext();
+
+  // Modal
+  const [createSurveyModal, CreateSurveyModal] = useModal({
+    title: "Create survey",
+    content: (
+      <SurveyCreationModalContent surveyTopic={surveyTopic} router={router} />
+    ),
+  });
+
   const { mutate, isLoading, error } = useMutation(addSurvey, {
-    onSuccess: (data) => {
-      console.log(data, "Returned login data");
+    onSuccess: ({ data, success, message }) => {
+      console.log(data, success, message, "Returned add survey data");
+
+      if (success) {
+        createSurveyModal.show();
+      }
     },
-    onError: () => console.error("There was an error trying to login"),
+    onError: () => console.error("There was an error adding survey"),
     // onSettled: () => queryClient.invalidateQueries("login"),
   });
 
@@ -749,6 +766,14 @@ const SurveyReview = ({
               questions: questions,
             });
 
+            // .map((item) => {
+            //   if (typeof item?.options === "undefined") {
+            //     item!.options = String(undefined);
+            //   }
+
+            //   return item;
+            // }),
+
             if (cid && typeof cid === "string") {
               mutate({
                 token: token,
@@ -770,5 +795,29 @@ const SurveyReview = ({
     </>
   );
 };
+
+const SurveyCreationModalContent = ({ surveyTopic, router }) => (
+  <div className="w-full flex flex-col items-center space-y-2">
+    <div className="w-10 h-10 rounded-full bg-primary mb-4 flex items-center justify-center">
+      <FaCheck className="text-white text-lg" />
+    </div>
+    <span className="text-black text-lg font-[600] mb-2">
+      Survey created successfully
+    </span>
+    <span className="text-black text-lg font-[600] text-center mb-5">
+      Your survey on {surveyTopic} has been created successfully. you can access
+      this on your surveys tab.
+    </span>
+    <ButtonPrimary
+      type="normal"
+      text="Ok, got it"
+      icon={undefined}
+      iconPosition={undefined}
+      block={true}
+      onClick={async (e) => router.push("/home/")}
+      isLoading={false}
+    />
+  </div>
+);
 
 export default withLayout(CreateSurvey);

@@ -45,7 +45,7 @@ export default function withLayout(BaseComp: React.ElementType) {
     const { pathname } = router;
 
     // wallet context
-    const { address, setAddress } = useWalletContext();
+    const { address, setAddress, setPrivateKey } = useWalletContext();
 
     const [isMobile, setIsMobile] = useState(false);
     const [shouldConnect, setShouldConnect] = useState(false);
