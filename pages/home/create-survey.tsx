@@ -2,12 +2,15 @@ import { utils } from "ethers";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AiFillCheckSquare } from "react-icons/ai";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import Loader from "../../components/Loader";
 import OnboardCard from "../../components/OnboardCard";
 import { SurveyQAEntry, SurveyQuestionsData } from "../../components/Survey";
+import { useIPFSContext } from "../../lib/contexts/ipfsContext";
+import { useWalletContext } from "../../lib/contexts/walletContext";
+import { addSurvey } from "../../lib/mutations";
 import { getSurveyPlans } from "../../lib/queries";
 
 export enum Stage {
@@ -658,6 +661,17 @@ const SurveyReview = ({
   questions,
   setStage,
 }: SurveyReviewProps) => {
+  const [{ token }] = useCookies(["token"]);
+  const { address } = useWalletContext();
+  const { pushData, isPushingData } = useIPFSContext();
+  const { mutate, isLoading, error } = useMutation(addSurvey, {
+    onSuccess: (data) => {
+      console.log(data, "Returned login data");
+    },
+    onError: () => console.error("There was an error trying to login"),
+    // onSettled: () => queryClient.invalidateQueries("login"),
+  });
+
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
@@ -725,10 +739,32 @@ const SurveyReview = ({
           icon={undefined}
           iconPosition={undefined}
           block={true}
-          onClick={(e) => {
+          onClick={async (e) => {
+            // Call ipfs context push method
             console.log(e, "Submit survey to ipfs and create", questions);
+            const cid = await pushData({
+              surveyTitle: surveyTopic,
+              description: surveyDescription,
+              dateCreated: createdAt,
+              questions: questions,
+            });
+
+            if (cid && typeof cid === "string") {
+              mutate({
+                token: token,
+                surveyURI: cid,
+                surveyPlanId: planId,
+                address: address,
+                enrollForSurvey: "",
+                numOfValidators: validatorCount.toString(),
+                amount: "5000000000000000000",
+                numberOfCommissioners: commissionerCount.toString(),
+              });
+            }
+
+            console.log(cid, "Returned CID");
           }}
-          isLoading={false}
+          isLoading={isPushingData || isLoading}
         />
       </div>
     </>

@@ -152,7 +152,7 @@ export const addSurvey = async ({
 }: {
   token: string;
   surveyURI: string;
-  enrollForSurvey: string;
+  enrollForSurvey: string | undefined;
   address: string;
   surveyPlanId: string;
   numOfValidators: string;
@@ -163,7 +163,7 @@ export const addSurvey = async ({
     method: "POST",
     body: JSON.stringify({
       surveyURI,
-      enrollForSurvey,
+      // enrollForSurvey,
       address,
       surveyPlanId,
       numOfValidators,
