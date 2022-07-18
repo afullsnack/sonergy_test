@@ -1,4 +1,4 @@
-import * as IPFS from "ipfs-core";
+import { create } from "ipfs-http-client";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 type ipfsContextType = {
@@ -13,21 +13,40 @@ interface ProviderProps {
 }
 
 export function IPFSProvider({ children }: ProviderProps) {
-  const [pushData, setPushData] = useState();
-  const [pullData, setPullData] = useState();
+  const [isPushingData, setIsPushingData] = useState<boolean>(false);
+  const [isPullingData, setIsPullingData] = useState<boolean>(false);
 
-  const initIPFS = async () => {
-    const ipfs = await IPFS.create();
+  const pushData = async ({ json }) => {
+    const ipfsClient = create({
+      url: `${process.env.IPFS_URL}/api/v0`,
+      headers: {
+        authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+      },
+    });
+    const cid = await ipfsClient.object.new(json);
+    console.log(cid.toString(), "CID after IPFS call");
+    return cid.toString();
+  };
+  const pullData = async ({ cid }) => {
+    const ipfsClient = create({
+      url: `${process.env.IPFS_URL}/api/v0`,
+      headers: {
+        authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+      },
+    });
+    const json = await ipfsClient.object.get(cid);
+    console.log(json, "JSON after IPFS call");
+    return json;
   };
 
   return (
     <>
       <IPFSContext.Provider
         value={{
-          isPushingData: false,
-          isPullingData: false,
-          pushData: ({ json }) => {},
-          pullData: ({ cid }) => {},
+          isPushingData,
+          isPullingData,
+          pushData,
+          pullData,
         }}
       >
         {children}
