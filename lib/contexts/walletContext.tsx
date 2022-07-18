@@ -18,6 +18,8 @@ type walletContextType = {
   address: string;
   setAddress: Dispatch<SetStateAction<string>>;
   sonergyBalance: BalanceData;
+  privateKey: string;
+  setPrivateKey: Dispatch<SetStateAction<string>>;
   setSonergyBalance: Dispatch<SetStateAction<BalanceData>>;
 };
 
@@ -37,6 +39,7 @@ export function WalletProvider({ children }: Props): JSX.Element {
 
   // States
   const [address, setAddress] = useState<string | undefined>();
+  const [privateKey, setPrivateKey] = useState<string | undefined>();
   const [sonergyBalance, setSonergyBalance] = useState<BalanceData | undefined>(
     {
       USD: 0,
@@ -93,6 +96,8 @@ export function WalletProvider({ children }: Props): JSX.Element {
         value={{
           isFetchingBalance: isLoading,
           address,
+          privateKey,
+          setPrivateKey,
           setAddress,
           sonergyBalance,
           setSonergyBalance,

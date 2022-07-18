@@ -14,9 +14,9 @@ interface ProviderProps {
 }
 
 interface EncodeData {
-  surveyTitle: string | undefined;
-  description: string | undefined;
-  dateCreated: string | undefined;
+  surveyTitle: string;
+  description: string;
+  dateCreated: string;
   questions: SurveyQuestionsData[];
 }
 
@@ -24,7 +24,13 @@ export function IPFSProvider({ children }: ProviderProps) {
   const [isPushingData, setIsPushingData] = useState<boolean>(false);
   const [isPullingData, setIsPullingData] = useState<boolean>(false);
 
-  const pushData = async ({ json }: { json: EncodeData }) => {
+  const pushData = async (json: EncodeData) => {
+    console.log(
+      json,
+      process.env.IPFS_PROJEC_ID,
+      process.env.IPFS_URL,
+      process.env.IPFS_PROJECT_SECRET
+    );
     setIsPushingData(true);
     const ipfsClient = create({
       url: `${process.env.IPFS_URL}/api/v0`,
@@ -32,7 +38,10 @@ export function IPFSProvider({ children }: ProviderProps) {
         authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
       },
     });
-    const cid = await ipfsClient.object.new(json as object);
+    const cid = await ipfsClient.dag.put(json as object, {
+      storeCodec: "dag-cbor",
+      hashAlg: "sha2-256",
+    });
     console.log(cid.toString(), "CID after IPFS call");
     setIsPushingData(false);
     return cid.toString();
@@ -45,10 +54,10 @@ export function IPFSProvider({ children }: ProviderProps) {
         authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
       },
     });
-    const json = await ipfsClient.object.get(cid);
-    console.log(json, "JSON after IPFS call");
+    const json = await ipfsClient.dag.get(cid);
+    console.log(json, json.value, "JSON after IPFS call");
     setIsPullingData(false);
-    return json;
+    return json.value;
   };
 
   return (
