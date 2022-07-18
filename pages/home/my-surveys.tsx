@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiFillClockCircle } from "react-icons/ai";
 import { FaFileDownload } from "react-icons/fa";
@@ -9,8 +10,17 @@ import {
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
 
+enum SurveySort {
+  Commissioned = "commissioned",
+  Completed = "completed",
+  Validated = "validated",
+}
+
 function MySurveys() {
-  const [sort, setSort] = useState("commissioned");
+  const { query } = useRouter();
+  const [sort, setSort] = useState(
+    query.sort ? query.sort : SurveySort.Commissioned
+  );
   return (
     <div className="w-full">
       {/* Sort actions */}
@@ -22,7 +32,7 @@ function MySurveys() {
                 ? "border-blue-700 bg-blue-100"
                 : "border-slate-200"
             } mobile:text-xs`}
-            onClick={() => setSort("commissioned")}
+            onClick={() => setSort(SurveySort.Commissioned)}
           >
             Commissioned
           </button>
@@ -32,7 +42,7 @@ function MySurveys() {
                 ? "border-blue-700 bg-blue-100"
                 : "border-slate-200"
             } mobile:text-xs`}
-            onClick={() => setSort("completed")}
+            onClick={() => setSort(SurveySort.Completed)}
           >
             Completed
           </button>
@@ -42,7 +52,7 @@ function MySurveys() {
                 ? "border-blue-700 bg-blue-100"
                 : "border-slate-200"
             } mobile:text-xs`}
-            onClick={() => setSort("validated")}
+            onClick={() => setSort(SurveySort.Validated)}
           >
             Validated
           </button>
