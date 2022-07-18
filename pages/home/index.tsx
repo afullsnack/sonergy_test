@@ -4,12 +4,13 @@ import { useCookies } from "react-cookie";
 import { FaPlus } from "react-icons/fa";
 import { useQuery, useQueryClient } from "react-query";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
-import { BalanceCarousel } from "../../components/Carousel";
+// import { BalanceCarousel } from "../../components/Carousel";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
 import { EmptySurveyList, MySurveyList } from "../../components/Survey";
 import { useWalletContext } from "../../lib/contexts/walletContext";
 import { getMySurveys } from "../../lib/queries";
+import { WalletBalance } from "../wallet";
 
 function Home() {
   const router = useRouter();
@@ -50,7 +51,7 @@ function Home() {
   return (
     <div className="w-full">
       <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
-        <BalanceCarousel data={[]} />
+        <WalletBalance />
       </div>
       {/* Available surveys section */}
       <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-3">
