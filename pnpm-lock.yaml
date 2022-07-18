@@ -12,6 +12,7 @@ specifiers:
   flowbite: ^1.4.7
   flowbite-react: ^0.1.0
   ipfs-core: ^0.15.4
+  ipfs-http-client: ^57.0.3
   next: 12.1.6
   postcss: ^8.4.14
   react: 18.1.0
@@ -29,6 +30,7 @@ dependencies:
   flowbite: 1.4.7
   flowbite-react: 0.1.0_r3oolga2fitczfrqkcwi6qpekm
   ipfs-core: 0.15.4_2zqz24ol5yhbv2blv4fh7akzrq
+  ipfs-http-client: 57.0.3
   next: 12.1.6_ef5jwxihqo6n7gxfmzogljlgcm
   react: 18.1.0
   react-cookie: 4.1.1_react@18.1.0

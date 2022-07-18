@@ -1,11 +1,14 @@
 import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import {
   AiFillClockCircle,
   AiFillDollarCircle,
   AiOutlineArrowRight,
   AiOutlineRight,
 } from "react-icons/ai";
-import { ButtonGhost } from "./Button";
+import { FaPlus } from "react-icons/fa";
+import { Stage } from "../pages/home/create-survey";
+import { ButtonGhost, ButtonPrimary } from "./Button";
 import OnboardCard from "./OnboardCard";
 
 export const MySurveyList = ({ title, count, onClick, icon }) => {
@@ -149,5 +152,373 @@ export const EmptySurveyList = () => {
         </span>
       </div>
     </OnboardCard>
+  );
+};
+
+export enum QuestionType {
+  MultiChoice = "multi-choice",
+  SingleChoice = "single-choice",
+  FreeForm = "free-form",
+}
+
+export interface SurveyQuestionsData {
+  id: string;
+  questionType: string;
+  question: string;
+  options: { id: string; choice: string }[] | undefined;
+}
+
+interface SurveyQAEntryProps {
+  questions: SurveyQuestionsData[];
+  currentQuestion: number;
+  questionCount: number;
+  setQuestions: Dispatch<SetStateAction<SurveyQuestionsData[]>>;
+  setCurrentQuestion: Dispatch<SetStateAction<number>>;
+  setStage: Dispatch<SetStateAction<Stage>>;
+}
+
+export const SurveyQAEntry = ({
+  questions,
+  currentQuestion,
+  setQuestions,
+  questionCount,
+  setCurrentQuestion,
+  setStage,
+}: SurveyQAEntryProps) => {
+  const [type, setType] = useState<string>(
+    !!questions.length
+      ? questions[currentQuestion - 1]?.questionType || QuestionType.MultiChoice
+      : QuestionType.MultiChoice
+  );
+  const [q, setQ] = useState<string | undefined>(
+    !!questions.length
+      ? questions[currentQuestion - 1]?.question || undefined
+      : undefined
+  );
+  const [a, setA] = useState<string[] | undefined>(
+    !!questions.length
+      ? questions[currentQuestion - 1]?.options?.map((item) => item.choice) || [
+          "",
+        ]
+      : type === QuestionType.MultiChoice || type === QuestionType.SingleChoice
+      ? [""]
+      : undefined
+  );
+
+  const setAnswer = useCallback(
+    (value, idx) => {
+      setA((prevA) => {
+        if (Array.isArray(prevA)) {
+          console.log(value, idx, prevA, "output and idx");
+          prevA[idx] = value;
+          return [...prevA];
+        }
+        return undefined;
+      });
+    },
+    [a]
+  );
+
+  const handleTypeSelect = useCallback(
+    (e) => {
+      // console.log(e.target.value, "Check value");
+      switch (e.target.value) {
+        case QuestionType.FreeForm.toString():
+          setType(QuestionType.FreeForm);
+          setA(undefined);
+          break;
+        case QuestionType.MultiChoice.toString():
+          setType(QuestionType.MultiChoice);
+          setA([""]);
+          break;
+        case QuestionType.SingleChoice.toString():
+          setType(QuestionType.SingleChoice);
+          setA([""]);
+      }
+    },
+    [type]
+  );
+
+  // Question navigation
+  const nextClick = useCallback(() => {
+    console.log("TO next question", currentQuestion);
+    // update questions array and navigate questions
+    setQuestions((prevQuestion) => {
+      // IF there was a previously set data
+      if (prevQuestion.length) {
+        prevQuestion[currentQuestion - 1] = {
+          id: currentQuestion.toString(),
+          questionType: type,
+          question: q,
+          options: Array.isArray(a)
+            ? a.map((item, index) => {
+                return {
+                  id: (index + 1).toString(),
+                  choice: item,
+                };
+              })
+            : undefined,
+        };
+
+        return [...prevQuestion];
+      }
+      console.log(
+        {
+          id: currentQuestion.toString(),
+          questionType: type,
+          question: q,
+          options: Array.isArray(a)
+            ? a.map((item, index) => {
+                return {
+                  id: (index + 1).toString(),
+                  choice: item,
+                };
+              })
+            : undefined,
+        },
+        "Previous question data",
+        currentQuestion,
+        "Current question",
+        q,
+        "Q/A",
+        a
+      );
+
+      // Return previously set data and add the new one
+      return [
+        ...prevQuestion,
+        {
+          id: currentQuestion.toString(),
+          questionType: type,
+          question: q,
+          options: Array.isArray(a)
+            ? a.map((item, index) => {
+                return {
+                  id: (index + 1).toString(),
+                  choice: item,
+                };
+              })
+            : undefined,
+        },
+      ];
+    });
+    if (currentQuestion === questionCount) {
+      setStage(Stage.Review);
+    }
+
+    setCurrentQuestion((prevQ) => prevQ + 1);
+    console.info(questions, "Saved questions");
+  }, [currentQuestion, a, q, type]);
+
+  const prevClick = useCallback(() => {
+    console.log("To previous question", currentQuestion);
+    // update questions array and navigate questions
+    setQuestions((prevQuestion) => {
+      // IF there was a previously set data
+      if (prevQuestion.length) {
+        prevQuestion[currentQuestion - 1] = {
+          id: currentQuestion.toString(),
+          questionType: type,
+          question: q,
+          options: Array.isArray(a)
+            ? a.map((item, index) => {
+                return {
+                  id: (index + 1).toString(),
+                  choice: item,
+                };
+              })
+            : undefined,
+        };
+        return [...prevQuestion];
+      }
+      console.log(
+        {
+          id: currentQuestion.toString(),
+          questionType: type,
+          question: q,
+          options: Array.isArray(a)
+            ? a.map((item, index) => {
+                return {
+                  id: (index + 1).toString(),
+                  choice: item,
+                };
+              })
+            : undefined,
+        },
+        "Previous question data",
+        currentQuestion,
+        "Current question",
+        q,
+        "Q/A",
+        a
+      );
+
+      // Return previously set data and add the new one
+      return [
+        ...prevQuestion,
+        {
+          id: currentQuestion.toString(),
+          questionType: type,
+          question: q,
+          options: Array.isArray(a)
+            ? a.map((item, index) => {
+                return {
+                  id: (index + 1).toString(),
+                  choice: item,
+                };
+              })
+            : undefined,
+        },
+      ];
+    });
+    setCurrentQuestion((prevQ) => prevQ - 1);
+    console.info(questions, "Saved questions");
+    if (currentQuestion === 1) {
+      setStage(Stage.Rewards);
+    }
+  }, [currentQuestion, a, q, type]);
+
+  return (
+    <>
+      <div className="form-control mb-5">
+        <label className="label">
+          <span className="label-text text-slate-700 font-medium">
+            Question
+          </span>
+        </label>
+        <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+          {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                <FaUser color="#B8C4CE" />
+              </span> */}
+          <input
+            type="text"
+            placeholder="Enter question"
+            className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
+          {/* <span>USD</span> */}
+        </label>
+      </div>
+      <div className="flex items-start justify-between">
+        <div className="flex items-center mb-4">
+          <input
+            id={QuestionType.MultiChoice.toString()}
+            type="radio"
+            value={QuestionType.MultiChoice.toString()}
+            name="question-type"
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            checked={type === QuestionType.MultiChoice}
+            onChange={handleTypeSelect}
+          />
+          <label
+            htmlFor={QuestionType.MultiChoice.toString()}
+            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            Multi Choice
+          </label>
+        </div>
+        <div className="flex items-center">
+          <input
+            id={QuestionType.SingleChoice.toString()}
+            type="radio"
+            value={QuestionType.SingleChoice.toString()}
+            name="question-type"
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            checked={type === QuestionType.SingleChoice}
+            onChange={handleTypeSelect}
+          />
+          <label
+            htmlFor={QuestionType.SingleChoice.toString()}
+            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            Single Choice
+          </label>
+        </div>
+        <div className="flex items-center">
+          <input
+            id={QuestionType.FreeForm.toString()}
+            type="radio"
+            value={QuestionType.FreeForm.toString()}
+            name="question-type"
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            checked={type === QuestionType.FreeForm}
+            onChange={handleTypeSelect}
+          />
+          <label
+            htmlFor={QuestionType.FreeForm.toString()}
+            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            Free Form
+          </label>
+        </div>
+      </div>
+
+      <div className="flex flex-col">
+        {Array.isArray(a) && (
+          <>
+            {a.map((item, idx) => (
+              <div className="form-control mb-5" key={idx.toString()}>
+                <label className="label">
+                  <span className="label-text text-slate-700 font-medium">
+                    Answer {idx + 1}
+                  </span>
+                </label>
+                <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+                  {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                <FaUser color="#B8C4CE" />
+                </span> */}
+                  <input
+                    placeholder="Enter answer"
+                    className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                    value={item}
+                    onChange={(e) => setAnswer(e.target.value, idx)}
+                  />
+                  {/* <span>USD</span> */}
+                </label>
+              </div>
+            ))}
+            <button
+              className="text-primary text-sm outline-none border-none text-left flex items-center justify-start"
+              onClick={() =>
+                setA((prevA) => {
+                  if (Array.isArray(prevA)) {
+                    return [...prevA, ""];
+                  }
+                })
+              }
+            >
+              <FaPlus className="mr-2" /> Add another answer
+            </button>
+          </>
+        )}
+        {typeof a === "string" && type === "free-form" && (
+          <span className="label-text text-slate-700 font-medium text-center">
+            The user can enter any length of text they want, no need to pre-fill
+            answers
+          </span>
+        )}
+      </div>
+      <div className="flex flex-row items-center justify-center space-x-3 bg-white w-full mobile:p-3">
+        <ButtonGhost
+          type="normal"
+          text="Previous"
+          icon={undefined}
+          iconPosition={undefined}
+          block={true}
+          onClick={prevClick}
+          isLoading={false}
+        />
+        <ButtonPrimary
+          type="normal"
+          text="Next"
+          icon={undefined}
+          iconPosition={undefined}
+          block={true}
+          onClick={nextClick}
+          isLoading={false}
+        />
+      </div>
+    </>
   );
 };
