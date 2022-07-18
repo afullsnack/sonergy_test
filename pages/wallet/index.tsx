@@ -1,12 +1,13 @@
 import { utils } from "ethers";
 import { NextRouter, useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AiOutlineRight } from "react-icons/ai";
 import {
   FaArrowCircleDown,
   FaArrowCircleUp,
   FaEye,
+  FaEyeSlash,
   FaPercentage,
   FaTag,
 } from "react-icons/fa";
@@ -238,8 +239,10 @@ export const WalletBalance = () => {
   const queryClient = useQueryClient();
 
   // Wallet Context
-  const { isFetchingBalance, address, sonergyBalance, setSonergyBalance } =
-    useWalletContext();
+  const { isFetchingBalance, address, sonergyBalance } = useWalletContext();
+
+  // State
+  const [hideBalance, setHideBalance] = useState<boolean>(false);
 
   useEffect(() => {
     console.log("Balance invalidated", address);
@@ -254,24 +257,38 @@ export const WalletBalance = () => {
             <span className="text-xs font-light text-center text-white mr-2">
               Available balance
             </span>
-            <FaEye color="white" />
+            {hideBalance ? (
+              <FaEye
+                color="white"
+                onClick={() => setHideBalance((hide) => !hide)}
+              />
+            ) : (
+              <FaEyeSlash
+                color="white"
+                onClick={() => setHideBalance((hide) => !hide)}
+              />
+            )}
           </div>
           <p className="mb-2">
-            <b className="text-lg text-white font-semibold">
-              {
-                Number(utils.formatUnits(sonergyBalance.sonergy, "ether"))
-                  .toFixed(2)
-                  .split(".")[0]
-              }
-              <small className="text-xs font-medium">
-                .
+            {!hideBalance ? (
+              <b className="text-lg text-white font-semibold">
                 {
                   Number(utils.formatUnits(sonergyBalance.sonergy, "ether"))
                     .toFixed(2)
-                    .split(".")[1]
+                    .split(".")[0]
                 }
-              </small>
-            </b>{" "}
+                <small className="text-xs font-medium">
+                  .
+                  {
+                    Number(utils.formatUnits(sonergyBalance.sonergy, "ether"))
+                      .toFixed(2)
+                      .split(".")[1]
+                  }
+                </small>
+              </b>
+            ) : (
+              <b className="text-lg text-white font-semibold">****</b>
+            )}{" "}
             <span className="text-sm text-white font-light">
               {sonergyBalance.symbol}
             </span>
