@@ -197,9 +197,8 @@ export const SurveyQAEntry = ({
   );
   const [a, setA] = useState<string[] | undefined>(
     !!questions.length
-      ? questions[currentQuestion - 1]?.options?.map((item) => item.choice) || [
-          "",
-        ]
+      ? questions[currentQuestion - 1]?.options?.map((item) => item.choice) ||
+          undefined
       : type === QuestionType.MultiChoice || type === QuestionType.SingleChoice
       ? [""]
       : undefined
@@ -492,7 +491,7 @@ export const SurveyQAEntry = ({
             </button>
           </>
         )}
-        {typeof a === "string" && type === "free-form" && (
+        {typeof a === "undefined" && type === "free-form" && (
           <span className="label-text text-slate-700 font-medium text-center">
             The user can enter any length of text they want, no need to pre-fill
             answers

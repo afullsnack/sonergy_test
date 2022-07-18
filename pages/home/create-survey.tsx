@@ -86,6 +86,7 @@ function CreateSurvey() {
           questionCount={questionCount}
           createdAt={createdAt}
           expireAt={expireAt}
+          questions={questions}
           setStage={setStage}
         />
       )}
@@ -633,7 +634,7 @@ const SurveyQuestions = ({
   );
 };
 
-interface SurveyReviewData {
+interface SurveyReviewProps {
   planId: string;
   surveyTopic: string;
   surveyDescription: string;
@@ -642,6 +643,7 @@ interface SurveyReviewData {
   questionCount: number;
   createdAt: string;
   expireAt: string;
+  questions: any[];
   setStage: Dispatch<SetStateAction<Stage>>;
 }
 const SurveyReview = ({
@@ -653,8 +655,9 @@ const SurveyReview = ({
   questionCount,
   createdAt,
   expireAt,
+  questions,
   setStage,
-}: SurveyReviewData) => {
+}: SurveyReviewProps) => {
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
@@ -723,7 +726,7 @@ const SurveyReview = ({
           iconPosition={undefined}
           block={true}
           onClick={(e) => {
-            console.log(e, "Submit survey to ipfs and create");
+            console.log(e, "Submit survey to ipfs and create", questions);
           }}
           isLoading={false}
         />
