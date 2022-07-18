@@ -234,7 +234,7 @@ const TransactionsList = ({
   );
 };
 
-const WalletBalance = () => {
+export const WalletBalance = () => {
   const queryClient = useQueryClient();
 
   // Wallet Context
@@ -258,8 +258,19 @@ const WalletBalance = () => {
           </div>
           <p className="mb-2">
             <b className="text-lg text-white font-semibold">
-              {utils.formatUnits(sonergyBalance.sonergy, "ether")}
-              <small className="text-xs font-medium">.00</small>
+              {
+                Number(utils.formatUnits(sonergyBalance.sonergy, "ether"))
+                  .toFixed(2)
+                  .split(".")[0]
+              }
+              <small className="text-xs font-medium">
+                .
+                {
+                  Number(utils.formatUnits(sonergyBalance.sonergy, "ether"))
+                    .toFixed(2)
+                    .split(".")[1]
+                }
+              </small>
             </b>{" "}
             <span className="text-sm text-white font-light">
               {sonergyBalance.symbol}
