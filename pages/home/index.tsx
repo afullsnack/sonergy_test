@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FaPlus } from "react-icons/fa";
 import { useQuery, useQueryClient } from "react-query";
@@ -20,6 +20,8 @@ function Home() {
 
   // Context
   const { address, sonergyBalance } = useWalletContext();
+  const [mySurveyData, setMySurveyData] = useState([]);
+  const [availableSurveyData, setAvailableSurveyData] = useState([]);
 
   const { data, isLoading, error } = useQuery(
     ["getMySurveys", token, address],
@@ -32,6 +34,8 @@ function Home() {
           message,
           "Data returned from the getMySurveys"
         );
+
+        if (success) setMySurveyData(data);
       },
       onError(err) {
         console.error(err, "Error occurred while getMySurveys called");
@@ -47,6 +51,12 @@ function Home() {
     );
     queryClient.invalidateQueries("getMySurveys");
   }, [address]);
+
+  // Callback actions
+  const mySurveyClicked = (sort: string) => {
+    console.log(`My survey list clicked on, sort: ${sort}`);
+    router.push(`/home/my-surveys?sort=${sort}`);
+  };
 
   return (
     <div className="w-full">
@@ -69,23 +79,20 @@ function Home() {
         <OnboardCard>
           <MySurveyList
             title={"Commissioned Surveys"}
-            count={"3"}
-            onClick={(e) => {
-              console.log("Commissioned Surveys Survey clicked", e);
-              router.push("/home/my-surveys");
-            }}
+            count={!mySurveyData.length ? "0" : "3"}
+            onClick={(e) => mySurveyClicked("commissioned")}
             icon={"/home/task-square.svg"}
           />
           <MySurveyList
             title={"Completed Surveys"}
-            count={"12"}
-            onClick={(e) => console.log("Completed Surveys Survey clicked", e)}
+            count={!mySurveyData.length ? "0" : "12"}
+            onClick={(e) => mySurveyClicked("completed")}
             icon={"/home/tick-square.svg"}
           />
           <MySurveyList
             title={"Validated Surveys"}
-            count={"5"}
-            onClick={(e) => console.log("Validated Surveys Survey clicked", e)}
+            count={!mySurveyData.length ? "0" : "5"}
+            onClick={(e) => mySurveyClicked("validated")}
             icon={"/home/verify.svg"}
           />
         </OnboardCard>
