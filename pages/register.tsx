@@ -321,14 +321,14 @@ const RegisterOTPModal = ({ email, otpCode }) => {
       </div>
       <OTPInput
         autoFocus
-        isNumberInput
+        isNumberInput={false}
         length={6}
         onChangeOTP={function (otp: string) {
           console.log(otp, "OTP String", otp.length);
           setOTP(otp);
         }}
         className="flex flex-row justify-center text-center px-2 mt-5"
-        inputClassName="m-2 border h-10 w-10 text-center form-control rounded"
+        inputClassName="m-2 border h-10 w-10 desktop:w-14 desktop:h-14 text-center form-control rounded"
       />
       <div className="flex justify-center text-center mt-5">
         {!resendOTPMutation.isLoading && (
