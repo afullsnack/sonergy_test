@@ -1,3 +1,4 @@
+import { Contract, ethers } from "ethers";
 import {
   createContext,
   Dispatch,
@@ -9,6 +10,12 @@ import {
 } from "react";
 import { useCookies } from "react-cookie";
 import { useQuery, useQueryClient } from "react-query";
+import {
+  CONTRACT_ABI,
+  SURVEY_ABI,
+  SURVEY_ADDRESS,
+  TOKEN_ADDRESS,
+} from "../contract/config";
 import { getSonergyBalance } from "../queries";
 
 export const MIN_WITHDRAW = 10;
@@ -18,8 +25,12 @@ type walletContextType = {
   address: string;
   setAddress: Dispatch<SetStateAction<string>>;
   sonergyBalance: BalanceData;
-  privateKey: string;
-  setPrivateKey: Dispatch<SetStateAction<string>>;
+  provider: string;
+  setProvider: Dispatch<SetStateAction<any>>;
+  setSigner: Dispatch<SetStateAction<any>>;
+  tokenContract: Contract;
+  surveyContract: Contract;
+  approveSpend: Function;
   setSonergyBalance: Dispatch<SetStateAction<BalanceData>>;
 };
 
@@ -39,7 +50,10 @@ export function WalletProvider({ children }: Props): JSX.Element {
 
   // States
   const [address, setAddress] = useState<string | undefined>();
-  const [privateKey, setPrivateKey] = useState<string | undefined>();
+  const [tokenContract, setTokenContract] = useState<Contract>();
+  const [surveyContract, setSurveyContract] = useState<Contract>();
+  const [provider, setProvider] = useState();
+  const [signer, setSigner] = useState();
   const [sonergyBalance, setSonergyBalance] = useState<BalanceData | undefined>(
     {
       USD: 0,
@@ -86,8 +100,56 @@ export function WalletProvider({ children }: Props): JSX.Element {
     }
   );
 
+  const approveSpend = async (amount: string) => {
+    // approve spend for user
+    if (tokenContract && typeof tokenContract !== "undefined") {
+      const data = await tokenContract?.approve(
+        SURVEY_ADDRESS,
+        ethers.utils.parseUnits(amount, 18)
+      );
+      console.log(data, "Data of spending approval");
+      return data;
+    } else {
+      return false;
+    }
+  };
+
+  const connectTokenContract = async () => {
+    // COnnect contract on wallet connect
+    if (provider && typeof provider !== "undefined") {
+      const tokenContract = new ethers.Contract(
+        TOKEN_ADDRESS,
+        JSON.parse(JSON.stringify(CONTRACT_ABI)),
+        provider
+      );
+      // Configure with signer
+      const contractWithSigner = tokenContract?.connect(signer);
+      setTokenContract(contractWithSigner);
+
+      console.log(contractWithSigner, "COnnected to  contract with signer");
+    }
+  };
+  const connectSurveyContract = async () => {
+    // COnnect contract on wallet connect
+    if (provider && typeof provider !== "undefined") {
+      const surveyContract = new ethers.Contract(
+        SURVEY_ADDRESS,
+        JSON.parse(JSON.stringify(SURVEY_ABI)),
+        provider
+      );
+      // Configure with signer
+      const contractWithSigner = surveyContract?.connect(signer);
+      setSurveyContract(contractWithSigner);
+
+      console.log(contractWithSigner, "COnnected to  contract with signer");
+    }
+  };
+
   useEffect(() => {
     queryClient.invalidateQueries("getSonergyBalance");
+
+    connectTokenContract();
+    connectSurveyContract();
   }, [address]);
 
   return (
@@ -96,9 +158,13 @@ export function WalletProvider({ children }: Props): JSX.Element {
         value={{
           isFetchingBalance: isLoading,
           address,
-          privateKey,
-          setPrivateKey,
+          provider,
+          setProvider,
+          setSigner,
+          tokenContract,
+          surveyContract,
           setAddress,
+          approveSpend,
           sonergyBalance,
           setSonergyBalance,
         }}

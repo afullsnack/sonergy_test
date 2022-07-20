@@ -1,8 +1,9 @@
+import { ethers, utils } from "ethers";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { FaQrcode } from "react-icons/fa";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
@@ -10,7 +11,6 @@ import {
   MIN_WITHDRAW,
   useWalletContext,
 } from "../../lib/contexts/walletContext";
-import { sendSonergy } from "../../lib/mutations";
 
 function Withdraw() {
   /**
@@ -23,24 +23,25 @@ function Withdraw() {
   const [{ token }] = useCookies(["token"]);
 
   // Wallet context
-  const { address, sonergyBalance } = useWalletContext();
+  const { address, sonergyBalance, tokenContract } = useWalletContext();
 
   /* States */
   const [recipient, setRecipient] = useState<string>();
-  const [network, setNetwork] = useState<string>();
+  const [network, setNetwork] = useState<string>("BSC");
   const [amount, setAmount] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // DONE: setup useMutation
-  const { mutate, isLoading, data } = useMutation(sendSonergy, {
-    onSuccess: (data) => {
-      console.log(data, "Returned login data");
-    },
-    onError: () => console.error("There was an error trying to login"),
-    onSettled: () => {
-      queryClient.invalidateQueries("getSonergyBalance");
-      queryClient.invalidateQueries("getTransactionHistory");
-    },
-  });
+  // const { mutate, isLoading, data } = useMutation(sendSonergy, {
+  //   onSuccess(data) {
+  //     console.log(data, "Returned login data");
+  //   },
+  //   onError: () => console.error("There was an error trying to login"),
+  //   onSettled: () => {
+
+  //     queryClient.invalidateQueries("getTransactionHistory");
+  //   },
+  // });
 
   return (
     <div className="w-full">
@@ -91,7 +92,7 @@ function Withdraw() {
               <input
                 type="text"
                 disabled
-                placeholder="Ethereum (ERC20)"
+                placeholder="Binance (BEP20)"
                 className="input input-bordered disabled:bg-gray-200 bg-transparent disabled:placeholder:text-black text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 w-[100%]"
               />
               {/* <span className="flex items-center justify-center pl-1 pr-4 bg-transparent">
@@ -125,7 +126,8 @@ function Withdraw() {
             </label>
             <label className="label">
               <span className="label-text-alt text-xs text-gray-500 mb-1">
-                <b>Available:</b> {sonergyBalance.sonergy}{" "}
+                <b>Available:</b>{" "}
+                {ethers.utils.formatUnits(sonergyBalance.sonergy, 18)}{" "}
                 <b>{sonergyBalance.symbol}</b>
               </span>
             </label>
@@ -154,11 +156,48 @@ function Withdraw() {
           icon={undefined}
           iconPosition={undefined}
           block={true}
-          onClick={(e) => {
+          onClick={async (e) => {
             console.log(e, "Confirm withdrawal");
             // TODO: Check sonergy  balance and call alert insufficient alert if less than minimum
+            if (
+              Number(ethers.utils.formatUnits(sonergyBalance.sonergy, 18)) >=
+              amount
+            ) {
+              setIsLoading(true);
+              // Then carry out transaction
+              const parsedAmount = ethers.utils.parseUnits(
+                amount.toString(),
+                18
+              );
+              // mutate({
+              //   token,
+              //   amount: parsedAmount.toString(),
+              //   recipient,
+              //   Network: network,
+              //   address,
+              // });
+              // Call contract function
+              const estimatedGas = await tokenContract.estimateGas.transfer(
+                recipient,
+                parsedAmount
+              );
+              const gasPrice = utils.formatUnits(
+                await ethers.getDefaultProvider().getGasPrice(),
+                "ether"
+              );
+              console.log(estimatedGas, "Gas price", gasPrice);
+              const tx = await tokenContract.transfer(recipient, parsedAmount, {
+                gasPrice: utils.parseUnits("100", "gwei"),
+                gasLimit: 1000000,
+              });
+              const receipt = tx.wait();
+              console.log(tx, receipt, "BSC sonergy transfer tokens");
+              queryClient.invalidateQueries("getSonergyBalance");
+              setIsLoading(false);
+              router.push("/wallet/");
+            }
           }}
-          isLoading={false}
+          isLoading={isLoading}
         />
       </div>
     </div>

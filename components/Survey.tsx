@@ -1,5 +1,12 @@
+import { utils } from "ethers";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   AiFillClockCircle,
   AiFillDollarCircle,
@@ -8,6 +15,7 @@ import {
 } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
 import { Stage } from "../pages/home/create-survey";
+import { AnswerStage } from "../pages/home/take-survey";
 import { ButtonGhost, ButtonPrimary } from "./Button";
 import OnboardCard from "./OnboardCard";
 
@@ -31,107 +39,57 @@ export const MySurveyList = ({ title, count, onClick, icon }) => {
   );
 };
 
-export const AvailableSurveyCarousel = () => {
+export const AvailableSurveyCarousel = ({ data }: { data: any[] }) => {
   const router = useRouter();
 
   return (
-    <div className="w-full carousel max-w-sm desktop:max-w-screen-desktop space-x-4 bg-transparent hover:cursor-pointer">
-      <div className="carousel-item max-w-xs">
-        <OnboardCard>
-          <div className="flex flex-col items-start justify-between mb-3">
-            <span className="text-gray-700 text-sm font-normal text-left mb-2">
-              Blockchain development and utilisation in sub-saharan Africa.
-            </span>
-            <p className="flex items-center justify-center">
-              {" "}
-              <AiFillDollarCircle size={14} />{" "}
-              <b className="text-gray-700 text-xs mr-1 ml-1">200</b>
-              <span className="text-xs">SNEGY</span>{" "}
-            </p>
-            <p className="flex items-center justify-center">
-              {" "}
-              <AiFillClockCircle size={14} />
-              <span className="text-xs text-gray-500 ml-1">
-                Expires in 2 days 11 hours
-              </span>{" "}
-            </p>
-          </div>
-          <ButtonGhost
-            text="Take survey"
-            type="normal"
-            icon={<AiOutlineArrowRight />}
-            iconPosition="right"
-            block={true}
-            onClick={(e) => {
-              console.log("Take survey clicked", e);
-              router.push("/home/take-survey");
-            }}
-            isLoading={false}
-          />
-        </OnboardCard>
-      </div>
-      <div className="carousel-item max-w-xs">
-        <OnboardCard>
-          <div className="flex flex-col items-start justify-between mb-3">
-            <span className="text-gray-700 text-sm font-normal text-left mb-2">
-              Blockchain development and utilization in sub-saharan Africa.
-            </span>
-            <p className="flex items-center justify-center">
-              {" "}
-              <AiFillDollarCircle size={14} />{" "}
-              <b className="text-gray-700 text-xs mr-1 ml-1">200</b>
-              <span className="text-xs">SNEGY</span>{" "}
-            </p>
-            <p className="flex items-center justify-center">
-              {" "}
-              <AiFillClockCircle size={14} />
-              <span className="text-xs text-gray-500 ml-1">
-                Expires in 2 days 11 hours
-              </span>{" "}
-            </p>
-          </div>
-          <ButtonGhost
-            text="Take survey"
-            type="normal"
-            icon={<AiOutlineArrowRight />}
-            iconPosition="right"
-            block={true}
-            onClick={(e) => console.log("Take survey clicked", e)}
-            isLoading={false}
-          />
-        </OnboardCard>
-      </div>
-      <div className="carousel-item max-w-xs">
-        <OnboardCard>
-          <div className="flex flex-col items-start justify-between mb-3">
-            <span className="text-gray-700 text-sm font-normal text-left mb-2">
-              Blockchain development and utilisation in sub-saharan Africa.
-            </span>
-            <p className="flex items-center justify-center">
-              {" "}
-              <AiFillDollarCircle size={14} />{" "}
-              <b className="text-gray-700 text-xs mr-1 ml-1">200</b>
-              <span className="text-xs">SNEGY</span>{" "}
-            </p>
-            <p className="flex items-center justify-center">
-              {" "}
-              <AiFillClockCircle size={14} />
-              <span className="text-xs text-gray-500 ml-1">
-                Expires in 2 days 11 hours
-              </span>{" "}
-            </p>
-          </div>
-          <ButtonGhost
-            text="Take survey"
-            type="normal"
-            icon={<AiOutlineArrowRight />}
-            iconPosition="right"
-            block={true}
-            onClick={(e) => console.log("Take survey clicked", e)}
-            isLoading={false}
-          />
-        </OnboardCard>
-      </div>
+    <div className="w-full carousel max-w-full desktop:max-w-screen-desktop space-x-6 px-10 mobile:px-8 bg-transparent hover:cursor-pointer">
+      {data?.map((item, idx) => (
+        <div className="carousel-item mobile:min-w-full" key={idx?.toString()}>
+          <OnboardCard>
+            <div className="flex flex-col items-start justify-between mb-3">
+              <span className="text-gray-700 text-sm font-normal text-left mb-2">
+                {item?.description ||
+                  "Blockchain development and utilisation in sub-saharan Africa."}
+              </span>
+              <p className="flex items-center justify-center">
+                {" "}
+                <AiFillDollarCircle size={14} />{" "}
+                <b className="text-gray-700 text-xs mr-1 ml-1">
+                  {utils.formatUnits(item?.amount, 18) || "200"}
+                </b>
+                <span className="text-xs">{item?.symbol || "SNEGY"}</span>{" "}
+              </p>
+              <p className="flex items-center justify-center">
+                {" "}
+                <AiFillClockCircle size={14} />
+                <span className="text-xs text-gray-500 ml-1">
+                  Expires on{" "}
+                  {`${new Date(
+                    item.dateExpiration
+                  ).toLocaleDateString()} ${new Date(
+                    item.dateExpiration
+                  ).toLocaleTimeString()}` || "2 days 11 hours"}
+                </span>{" "}
+              </p>
+            </div>
+            <ButtonGhost
+              text="Take survey"
+              type="normal"
+              icon={<AiOutlineArrowRight />}
+              iconPosition="right"
+              block={true}
+              onClick={(e) => {
+                console.log("Take survey clicked", e);
+                router.push(
+                  `/home/take-survey?surveyURI=${item?.uri}&surveyId=${item?.surveyId}&amount=${item?.amount}&validatorCount=${item?.valCount}&responseCount=${item?.responseCount}`
+                );
+              }}
+              isLoading={false}
+            />
+          </OnboardCard>
+        </div>
+      ))}
     </div>
   );
 };
@@ -491,12 +449,14 @@ export const SurveyQAEntry = ({
             </button>
           </>
         )}
-        {typeof a === null && type === "free-form" && (
-          <span className="label-text text-slate-700 font-medium text-center">
-            The user can enter any length of text they want, no need to pre-fill
-            answers
-          </span>
-        )}
+        {typeof a === null &&
+          typeof a === "undefined" &&
+          type === "free-form" && (
+            <span className="label-text text-slate-700 font-medium text-center">
+              The user can enter any length of text they want, no need to
+              pre-fill answers
+            </span>
+          )}
       </div>
       <div className="flex flex-row items-center justify-center space-x-3 bg-white w-full mobile:p-3">
         <ButtonGhost
@@ -519,5 +479,303 @@ export const SurveyQAEntry = ({
         />
       </div>
     </>
+  );
+};
+
+// Answer interfaces
+export interface SurveyAnswersData {
+  questionId: string;
+  questionType: string;
+  answer: { id: string; choice: string }[] | string | null;
+}
+
+export const SurveyAnswerEntry = ({ setStage, questions }) => {
+  console.log(questions, "Questions");
+  const [currentQuestion, setCurrentQuestion] = useState<number>(1);
+  const [answers, setAnswer] = useState<any[] | undefined>([]);
+
+  useEffect(() => console.log(answers, "The item answers"), [answers]);
+
+  const MultiChoiceRender = ({ setAnswer, data, answers, questionId }) => (
+    <>
+      {data.map((item: any, idx: number) => (
+        <div className="flex items-center mb-4 last:mb-0" key={idx}>
+          <input
+            id={item?.id}
+            type="checkbox"
+            value={item?.choice}
+            className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            checked={
+              typeof answers.find((item) => item.questionId === questionId)
+                ?.answer === "undefined"
+                ? false
+                : answers
+                    .find((item) => item.questionId === questionId)
+                    ?.answer.some((a) => a === item?.choice)
+            }
+            onChange={(e) => {
+              setAnswer((prevAnswers) => {
+                if (prevAnswers.length) {
+                  const idx = prevAnswers.findIndex(
+                    (i) => i?.questionId === questionId
+                  );
+                  console.log("Inside MultiChoice if", idx);
+                  if (idx !== -1) {
+                    prevAnswers[idx] = {
+                      questionId,
+                      questionType: QuestionType.MultiChoice.toString(),
+                      answer: e.target.checked
+                        ? [...prevAnswers[idx].answer, item?.choice]
+                        : prevAnswers[idx].answer.filter(
+                            (f) => f !== item?.choice
+                          ),
+                    };
+
+                    return [...prevAnswers];
+                  }
+                }
+
+                return [
+                  ...prevAnswers,
+                  {
+                    questionId,
+                    questionType: QuestionType.MultiChoice.toString(),
+                    answer: [e.target.value],
+                  },
+                ];
+              });
+            }}
+          />
+          <label
+            htmlFor={item?.id}
+            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            {item?.choice}
+          </label>
+        </div>
+      ))}
+    </>
+  );
+
+  const SingleChoiceRender = ({ setAnswer, data, answers, questionId }) => (
+    <>
+      {data.map((item: any, idx: number) => (
+        <div className="flex items-center mb-4 last:mb-0" key={idx}>
+          <input
+            id={item?.id}
+            type="radio"
+            value={item?.choice}
+            name={questionId.toString()}
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            checked={
+              typeof answers.find((item) => item.questionId === questionId)
+                ?.answer === "undefined"
+                ? false
+                : answers
+                    .find((item) => item.questionId === questionId)
+                    ?.answer.some((a) => a === item?.choice)
+            }
+            onChange={(e) => {
+              setAnswer((prevAnswers) => {
+                if (prevAnswers.length) {
+                  console.log("Inside SingleChoice if");
+                  const idx = prevAnswers.findIndex(
+                    (i) => i?.questionId === questionId
+                  );
+                  console.log("Inside MultiChoice if", idx, typeof idx);
+                  if (idx != -1) {
+                    prevAnswers[idx] = {
+                      questionId,
+                      questionType: QuestionType.SingleChoice.toString(),
+                      answer: [e.target.value],
+                    };
+
+                    return [...prevAnswers];
+                  }
+                }
+
+                return [
+                  ...prevAnswers,
+                  {
+                    questionId,
+                    questionType: QuestionType.SingleChoice.toString(),
+                    answer: [e.target.value],
+                  },
+                ];
+              });
+            }}
+          />
+          <label
+            htmlFor={item?.id}
+            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            {item?.choice}
+          </label>
+        </div>
+      ))}
+    </>
+  );
+
+  const FreeFormRender = ({ answers, setAnswer, questionId }) => (
+    <div className="form-control mb-5">
+      <label className="label">
+        <span className="label-text text-slate-700 font-medium">
+          Enter answer
+        </span>
+      </label>
+      <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+        {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                <FaUser color="#B8C4CE" />
+              </span> */}
+        <input
+          type="text"
+          placeholder="Enter topic"
+          className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+          value={
+            answers.find((item: any) => item?.questionId === questionId)?.answer
+          }
+          autoFocus
+          onChange={(e) =>
+            setAnswer((prevAnswers: any) => {
+              if (prevAnswers.length) {
+                const idx = prevAnswers.findIndex(
+                  (idx) => idx.questionId === questionId
+                );
+
+                console.log("Inside MultiChoice if", idx, typeof idx);
+                if (idx != -1) {
+                  prevAnswers[idx] = {
+                    questionId,
+                    questionType: "free-form",
+                    answer: e.target.value,
+                  };
+
+                  return [...prevAnswers];
+                }
+              }
+
+              return [
+                ...prevAnswers,
+                {
+                  questionId,
+                  questionType: "free-form",
+                  answer: e.target.value,
+                },
+              ];
+            })
+          }
+        />
+        {/* <span>USD</span> */}
+      </label>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col w-full h-full flex-grow items-center justify-start">
+      <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
+        <OnboardCard>
+          <progress
+            className="progress bg-blue-300 w-full mb-2"
+            value="30"
+            max="100"
+          ></progress>
+          <span className="text-xs font-medium text-gray-500 mb-4">
+            Questions 1 of 3
+          </span>
+          {questions.map((item: any, idx: number) => (
+            <>
+              {currentQuestion === idx + 1 && (
+                <>
+                  <span className="text-md font-medium text-gray-800 mb-5">
+                    {item.question}
+                  </span>
+                  {item?.questionType === QuestionType.FreeForm && (
+                    <FreeFormRender
+                      answers={answers}
+                      setAnswer={setAnswer}
+                      questionId={item.id}
+                    />
+                  )}
+                  {item?.questionType === QuestionType.SingleChoice && (
+                    <SingleChoiceRender
+                      answers={answers}
+                      setAnswer={setAnswer}
+                      data={item.options}
+                      questionId={item.id}
+                    />
+                  )}
+                  {item?.questionType === QuestionType.MultiChoice && (
+                    <MultiChoiceRender
+                      answers={answers}
+                      setAnswer={setAnswer}
+                      data={item.options}
+                      questionId={item.id}
+                    />
+                  )}
+                </>
+              )}
+            </>
+          ))}
+        </OnboardCard>
+      </div>
+      <div className="flex items-center justify-center w-full space-x-4 bg-white mobile:p-3">
+        {currentQuestion === 1 && (
+          <ButtonPrimary
+            type="normal"
+            text="Next"
+            icon={undefined}
+            iconPosition={undefined}
+            block={true}
+            onClick={(e) => {
+              console.log(e, "Next survey");
+              setCurrentQuestion((current) => current + 1);
+            }}
+            isLoading={false}
+          />
+        )}
+        {currentQuestion > 1 && (
+          <>
+            <ButtonGhost
+              type="normal"
+              text="Previous"
+              icon={undefined}
+              iconPosition={undefined}
+              block={true}
+              onClick={(e) => {
+                console.log(e, "Previous survey");
+                if (currentQuestion >= 1) {
+                  setCurrentQuestion((current) => current - 1);
+                }
+              }}
+              isLoading={false}
+            />
+            <ButtonPrimary
+              type="normal"
+              text={currentQuestion >= questions.length ? "Submit" : "Next"}
+              icon={undefined}
+              iconPosition={undefined}
+              block={true}
+              onClick={(e) => {
+                console.log(e, "Next survey");
+                if (currentQuestion < questions.length) {
+                  setCurrentQuestion((current) => current + 1);
+                } else {
+                  // Submit survey answers then call finish stage
+                  setStage(AnswerStage.Finish);
+                  console.log(
+                    answers,
+                    "The full answers",
+                    answers
+                      ?.find((item) => item?.questionType === "multi-choice")
+                      ?.answer.filter((v, i, a) => a.indexOf(v) === i)
+                  );
+                }
+              }}
+              isLoading={false}
+            />
+          </>
+        )}
+      </div>
+    </div>
   );
 };

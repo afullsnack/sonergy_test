@@ -34,6 +34,8 @@ function CreateSurvey() {
   const [surveyDescription, setSurveyDescription] = useState<string>();
   const [commissionerCount, setCommissionerCount] = useState<number>();
   const [validatorCount, setValidatorCount] = useState<number>();
+  const [commissionerFee, setCommissionerFee] = useState<number>();
+  const [validatorFee, setValidatorFee] = useState<number>();
   const [questionCount, setQuestionCount] = useState<number>();
   const [createdAt, setCreatedAt] = useState<string>();
   const [expireAt, setExpireAt] = useState<string>();
@@ -69,6 +71,10 @@ function CreateSurvey() {
           setCommissionerCount={setCommissionerCount}
           setValidatorCount={setValidatorCount}
           setQuestionCount={setQuestionCount}
+          commissionerFee={commissionerFee}
+          setCommissionerFee={setCommissionerFee}
+          validatorFee={validatorFee}
+          setValidatorFee={setValidatorFee}
           setStage={setStage}
         />
       )}
@@ -90,6 +96,8 @@ function CreateSurvey() {
           commissionerCount={commissionerCount}
           validatorCount={validatorCount}
           questionCount={questionCount}
+          commissionerFee={commissionerFee}
+          validatorFee={validatorFee}
           createdAt={createdAt}
           expireAt={expireAt}
           questions={questions}
@@ -128,7 +136,7 @@ const SurveyPlans = ({ planId, setPlanId, setStage }: SurveyPlanProps) => {
   );
   return (
     <>
-      <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
+      <div className="flex flex-col items-center justify-center w-full bg-transparent mobile:p-3 mb-10">
         {!isLoading &&
           !!plansData.length &&
           plansData
@@ -164,9 +172,9 @@ const SurveyPlans = ({ planId, setPlanId, setStage }: SurveyPlanProps) => {
                     {/* Max. validated response -{" "}
               <b className="font-medium text-black">0</b> */}
                     <br />
-                    Cost -{" "}
+                    Min Amount -{" "}
                     <b className="font-medium text-black">
-                      {utils.formatUnits(plan.minAmount, "ether")} SNEGYTEST
+                      {utils.formatUnits(plan.minAmount, 18)} SNEGYTEST
                     </b>
                     <br />
                   </p>
@@ -402,13 +410,17 @@ const SurveyConfigs = ({
   );
 };
 
-interface SurveyRewardData {
+interface SurveyRewardProps {
   setCommissionerCount: Dispatch<SetStateAction<number>>;
   setValidatorCount: Dispatch<SetStateAction<number>>;
   setQuestionCount: Dispatch<SetStateAction<number>>;
   commissionerCount: number;
   validatorCount: number;
   questionCount: number;
+  commissionerFee: number;
+  setCommissionerFee: Dispatch<SetStateAction<number>>;
+  validatorFee: number;
+  setValidatorFee: Dispatch<SetStateAction<number>>;
   setStage: Dispatch<SetStateAction<Stage>>;
 }
 const SurveyRewards = ({
@@ -418,8 +430,12 @@ const SurveyRewards = ({
   setCommissionerCount,
   setValidatorCount,
   setQuestionCount,
+  commissionerFee,
+  setCommissionerFee,
+  validatorFee,
+  setValidatorFee,
   setStage,
-}: SurveyRewardData) => {
+}: SurveyRewardProps) => {
   return (
     <>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
@@ -476,7 +492,8 @@ const SurveyRewards = ({
                   type="number"
                   placeholder="0 SNEGY"
                   className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
-                  disabled
+                  value={commissionerFee}
+                  onChange={(e) => setCommissionerFee(Number(e.target.value))}
                 />
                 {/* <span>USD</span> */}
               </label>
@@ -522,7 +539,8 @@ const SurveyRewards = ({
                   type="number"
                   placeholder="0 SNEGY"
                   className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
-                  disabled
+                  value={validatorFee}
+                  onChange={(e) => setValidatorFee(Number(e.target.value))}
                 />
                 {/* <span>USD</span> */}
               </label>
@@ -647,6 +665,8 @@ interface SurveyReviewProps {
   commissionerCount: number;
   validatorCount: number;
   questionCount: number;
+  commissionerFee: number;
+  validatorFee: number;
   createdAt: string;
   expireAt: string;
   questions: any[];
@@ -659,13 +679,15 @@ const SurveyReview = ({
   commissionerCount,
   validatorCount,
   questionCount,
+  commissionerFee,
+  validatorFee,
   createdAt,
   expireAt,
   questions,
   setStage,
 }: SurveyReviewProps) => {
   const [{ token }] = useCookies(["token"]);
-  const { address } = useWalletContext();
+  const { address, approveSpend, sonergyBalance } = useWalletContext();
   const router = useRouter();
   const { pushData, isPushingData } = useIPFSContext();
 
@@ -682,7 +704,6 @@ const SurveyReview = ({
       console.log(data, success, message, "Returned add survey data");
 
       if (success) {
-        createSurveyModal.show();
       }
     },
     onError: () => console.error("There was an error adding survey"),
@@ -737,6 +758,18 @@ const SurveyReview = ({
               {new Date(expireAt).toLocaleDateString()}{" "}
               {new Date(expireAt).toLocaleTimeString()}
             </span>
+            <span className="text-xs text-gray-500 mb-1">
+              Respondent rewards
+            </span>
+            <span className="text-xs font-medium text-gray-800 mb-3">
+              {commissionerFee.toString()} {sonergyBalance.symbol}
+            </span>
+            <span className="text-xs text-gray-500 mb-1">
+              Validator rewards
+            </span>
+            <span className="text-xs font-medium text-gray-800 mb-3">
+              {validatorFee.toString()} {sonergyBalance.symbol}
+            </span>
           </div>
         </OnboardCard>
       </div>
@@ -759,12 +792,29 @@ const SurveyReview = ({
           onClick={async (e) => {
             // Call ipfs context push method
             console.log(e, "Submit survey to ipfs and create", questions);
-            const cid = await pushData({
-              surveyTitle: surveyTopic,
-              description: surveyDescription,
-              dateCreated: createdAt,
-              questions: questions,
-            });
+            const data = await pushData(
+              {
+                surveyTitle: surveyTopic,
+                description: surveyDescription,
+                dateCreated: createdAt,
+                dateExpiration: expireAt,
+                questions: questions,
+              },
+              {
+                surveyPlanId: planId,
+                numOfValidators: validatorCount.toString(),
+                amount: utils.parseUnits(
+                  (
+                    commissionerFee * commissionerCount +
+                    validatorFee * validatorCount
+                  ).toString(),
+                  18
+                ),
+                numberOfCommissioners: commissionerCount.toString(),
+              }
+            );
+            console.log(data, "Data");
+            createSurveyModal.show();
 
             // .map((item) => {
             //   if (typeof item?.options === "undefined") {
@@ -774,24 +824,25 @@ const SurveyReview = ({
             //   return item;
             // }),
 
-            if (cid && typeof cid === "string") {
-              mutate({
-                token: token,
-                surveyURI: cid,
-                surveyPlanId: planId,
-                address: address,
-                enrollForSurvey: "",
-                numOfValidators: validatorCount.toString(),
-                amount: "5000000000000000000",
-                numberOfCommissioners: commissionerCount.toString(),
-              });
-            }
+            // if (cid && typeof cid === "string") {
+            //   mutate({
+            //     token: token,
+            //     surveyURI: cid,
+            //     surveyPlanId: planId,
+            //     address: address,
+            //     // enrollForSurvey: "",
+            //     numOfValidators: validatorCount.toString(),
+            //     amount: "5000000000000000000",
+            //     numberOfCommissioners: commissionerCount.toString(),
+            //   });
+            // }
 
-            console.log(cid, "Returned CID");
+            // console.log(cid, "Returned CID");
           }}
-          isLoading={isPushingData || isLoading}
+          isLoading={isPushingData}
         />
       </div>
+      <CreateSurveyModal />
     </>
   );
 };

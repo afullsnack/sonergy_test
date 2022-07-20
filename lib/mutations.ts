@@ -143,7 +143,7 @@ export const changeUserPassword = async ({
 export const addSurvey = async ({
   token,
   surveyURI,
-  enrollForSurvey,
+  // enrollForSurvey,
   address,
   surveyPlanId,
   numOfValidators,
@@ -152,7 +152,7 @@ export const addSurvey = async ({
 }: {
   token: string;
   surveyURI: string;
-  enrollForSurvey: string | undefined;
+  // enrollForSurvey: string | undefined;
   address: string;
   surveyPlanId: string;
   numOfValidators: string;

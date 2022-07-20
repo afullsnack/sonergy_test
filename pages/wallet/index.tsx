@@ -273,14 +273,14 @@ export const WalletBalance = () => {
             {!hideBalance ? (
               <b className="text-lg text-white font-semibold">
                 {
-                  Number(utils.formatUnits(sonergyBalance.sonergy, "ether"))
+                  Number(utils.formatUnits(sonergyBalance.sonergy, 18))
                     .toFixed(2)
                     .split(".")[0]
                 }
                 <small className="text-xs font-medium">
                   .
                   {
-                    Number(utils.formatUnits(sonergyBalance.sonergy, "ether"))
+                    Number(utils.formatUnits(sonergyBalance.sonergy, 18))
                       .toFixed(2)
                       .split(".")[1]
                   }

@@ -45,7 +45,7 @@ export default function withLayout(BaseComp: React.ElementType) {
     const { pathname } = router;
 
     // wallet context
-    const { address, setAddress, setPrivateKey } = useWalletContext();
+    const { address, setAddress, setProvider, setSigner } = useWalletContext();
 
     const [isMobile, setIsMobile] = useState(false);
     const [shouldConnect, setShouldConnect] = useState(false);
@@ -66,7 +66,7 @@ export default function withLayout(BaseComp: React.ElementType) {
     }, []); //Call once
 
     const connectWallet = async () => {
-      const provider = await new ethers.providers.Web3Provider(
+      const provider = new ethers.providers.Web3Provider(
         // @ts-ignore
         window.ethereum,
         "any"
@@ -74,11 +74,14 @@ export default function withLayout(BaseComp: React.ElementType) {
       await provider.send("eth_requestAccounts", []);
       const signer = provider.getSigner();
       const address = await signer.getAddress();
+      console.log(signer.provider, "This private key hehe");
 
       if (address) {
         // If address set address and invalidate balance query
         console.log(address, "Wallet signer address");
         setAddress(address);
+        setSigner(signer);
+        setProvider(provider);
       }
       return address;
     };

@@ -7,7 +7,12 @@ import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 // import { BalanceCarousel } from "../../components/Carousel";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
-import { EmptySurveyList, MySurveyList } from "../../components/Survey";
+import {
+  AvailableSurveyCarousel,
+  EmptySurveyList,
+  MySurveyList,
+} from "../../components/Survey";
+import { useIPFSContext } from "../../lib/contexts/ipfsContext";
 import { useWalletContext } from "../../lib/contexts/walletContext";
 import { getMySurveys } from "../../lib/queries";
 import { WalletBalance } from "../wallet";
@@ -20,14 +25,16 @@ function Home() {
 
   // Context
   const { address, sonergyBalance } = useWalletContext();
+  const { pullData, isPullingData } = useIPFSContext();
   const [mySurveyData, setMySurveyData] = useState([]);
   const [availableSurveyData, setAvailableSurveyData] = useState([]);
+  const [decodedSurveys, setDecodedSurveys] = useState([]);
 
   const { data, isLoading, error } = useQuery(
     ["getMySurveys", token, address],
     () => getMySurveys({ token, address }),
     {
-      onSuccess({ success, message, data }) {
+      async onSuccess({ success, message, data }) {
         console.info(
           data,
           success,
@@ -35,7 +42,27 @@ function Home() {
           "Data returned from the getMySurveys"
         );
 
-        if (success) setMySurveyData(data);
+        if (success && data.length) {
+          setMySurveyData(data);
+          const decodedMap = data.map(async (item: any) => {
+            console.log("Item", item.surveyURI);
+            const json = await pullData(item?.surveyURI);
+            console.log("Gotten json", json);
+            return {
+              ...json,
+              uri: item.surveyURI,
+              amount: item.amount,
+              symbol: sonergyBalance.symbol,
+              valCount: item?.numOfValidators,
+              responseCount: item?.numOfcommisioners,
+              surveyId: item?.surveyID,
+            };
+          });
+
+          const awaitedDecode = await Promise.all(decodedMap);
+          setDecodedSurveys(awaitedDecode);
+          console.log(awaitedDecode, "Promised awaited");
+        }
       },
       onError(err) {
         console.error(err, "Error occurred while getMySurveys called");
@@ -47,7 +74,9 @@ function Home() {
     console.log(
       token,
       address,
-      "User token set after login redirect and context wallet"
+      "User token set after login redirect and context wallet",
+      decodedSurveys,
+      "Decoded surveys"
     );
     queryClient.invalidateQueries("getMySurveys");
   }, [address]);
@@ -68,7 +97,11 @@ function Home() {
         <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-3">
           Available surveys
         </span>
-        <EmptySurveyList />
+        {!!decodedSurveys.length ? (
+          <AvailableSurveyCarousel data={decodedSurveys} />
+        ) : (
+          <EmptySurveyList />
+        )}
       </div>
 
       {/* My Surveys section */}
@@ -79,19 +112,19 @@ function Home() {
         <OnboardCard>
           <MySurveyList
             title={"Commissioned Surveys"}
-            count={!mySurveyData.length ? "0" : "3"}
+            count={!mySurveyData.length ? "0" : mySurveyData.length}
             onClick={(e) => mySurveyClicked("commissioned")}
             icon={"/home/task-square.svg"}
           />
           <MySurveyList
             title={"Completed Surveys"}
-            count={!mySurveyData.length ? "0" : "12"}
+            count={!mySurveyData.length ? "0" : "0"}
             onClick={(e) => mySurveyClicked("completed")}
             icon={"/home/tick-square.svg"}
           />
           <MySurveyList
             title={"Validated Surveys"}
-            count={!mySurveyData.length ? "0" : "5"}
+            count={!mySurveyData.length ? "0" : "0"}
             onClick={(e) => mySurveyClicked("validated")}
             icon={"/home/verify.svg"}
           />
