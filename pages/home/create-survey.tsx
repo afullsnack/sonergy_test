@@ -689,7 +689,7 @@ const SurveyReview = ({
   const [{ token }] = useCookies(["token"]);
   const { address, approveSpend, sonergyBalance } = useWalletContext();
   const router = useRouter();
-  const { pushData, isPushingData } = useIPFSContext();
+  const { pushQuestionsToIPFS, isPushingData } = useIPFSContext();
 
   // Modal
   const [createSurveyModal, CreateSurveyModal] = useModal({
@@ -792,7 +792,7 @@ const SurveyReview = ({
           onClick={async (e) => {
             // Call ipfs context push method
             console.log(e, "Submit survey to ipfs and create", questions);
-            const data = await pushData(
+            const data = await pushQuestionsToIPFS(
               {
                 surveyTitle: surveyTopic,
                 description: surveyDescription,
