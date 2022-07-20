@@ -217,8 +217,8 @@ function MySurveys() {
       {sort === SurveySort.Commissioned && commissioned.length > 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
-            {commissioned.map((item) => (
-              <div className="border border-slate-200 rounded-lg p-4 mb-3">
+            {commissioned.map((item, idx) => (
+              <div className="border border-slate-200 rounded-lg p-4 mb-3" key={idx.toString()}>
                 <div className="flex flex-col items-start justify-between mb-3">
                   {item?.complete ? (
                     <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
@@ -302,8 +302,8 @@ function MySurveys() {
       {sort === SurveySort.Completed && completed.length > 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
-            {completed.map((item) => (
-              <div className="border border-slate-200 rounded-lg p-4 mb-3">
+            {completed.map((item, idx) => (
+              <div className="border border-slate-200 rounded-lg p-4 mb-3" key={idx.toString()}>
                 <div className="flex flex-col items-start justify-between mb-3">
                   {item?.complete ? (
                     <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
@@ -366,8 +366,8 @@ function MySurveys() {
       {sort === SurveySort.Validated && validated.length > 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
-            {validated.map((item) => (
-              <div className="border border-slate-200 rounded-lg p-4 mb-3">
+            {validated.map((item, idx) => (
+              <div className="border border-slate-200 rounded-lg p-4 mb-3" key={idx.toString()}>
                 <div className="flex flex-col items-start justify-between mb-3">
                   {item?.complete ? (
                     <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
