@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import {
   FaCaretRight,
@@ -37,22 +38,24 @@ function NewAccount() {
   const [password, setPassword] = useState<string>("");
   const [isHidden, setIsHidden] = useState<boolean>(true);
   const [isTOCChecked, setIsTOCChecked] = useState<boolean>(false);
+  const [code, setCode] = useState();
 
   // DONE: setup modal
   const [otpModal, OTPModal] = useModal({
     title: "Enter OTP Code",
-    content: <RegisterOTPModal email={email} />,
+    content: <RegisterOTPModal email={email} otpCode={code} />,
   });
 
   // DONE: setup useMutation
   const { mutate, isLoading, data } = useMutation(registerUser, {
-    onSuccess: (data) => {
-      console.log(data, "Returned register data");
-      if (data?.message === "User with the email already exist") {
-        otpModal.show();
-      } else if (data?.success) {
-        otpModal.show();
+    onSuccess: ({ data, message, success }) => {
+      console.log(data, message, "Returned register data");
+      if (message === "User with the email already exist") {
+        setCode(data?.otp);
+      } else {
+        setCode(data?.otp);
       }
+      otpModal.show();
     },
     onError: () => console.error("There was an error trying to register"),
     onSettled: () => queryClient.invalidateQueries("register"),
@@ -283,7 +286,9 @@ function NewAccount() {
   );
 }
 
-const RegisterOTPModal = ({ email }) => {
+const RegisterOTPModal = ({ email, otpCode }) => {
+  const { push } = useRouter();
+  //Passing in the otp here is just for dev test and should be removed in production
   const queryClient = useQueryClient();
   const resendOTPMutation = useMutation(resendEmailOTP, {
     onSuccess: (data) => {
@@ -308,6 +313,10 @@ const RegisterOTPModal = ({ email }) => {
       <div className="flex flex-col mt-4 items-center">
         <span>Enter the OTP you received at</span>
         <span className="font-bold">{email}</span>
+        <span>
+          Enter {otpCode} into the input field *NOTE: this is just for test
+          purposes and will be changed in production
+        </span>
       </div>
       <OTPInput
         autoFocus
@@ -362,8 +371,11 @@ const RegisterOTPModal = ({ email }) => {
             code: otp,
             email: email,
           };
-          const confirmData = await confirmOTPMutation.mutateAsync(data);
-          console.log(confirmData, "Verify OTP response data");
+          const { success, message } = await confirmOTPMutation.mutateAsync(
+            data
+          );
+          console.log(success, message, "Verify OTP response data");
+          push("/login");
         }}
         isLoading={confirmOTPMutation.isLoading}
         type={"normal"}

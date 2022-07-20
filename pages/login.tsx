@@ -184,13 +184,11 @@ function Login() {
           </span>
         </div>
         <div className="flex items-center justify-center px-10 mt-6 w-[100%]">
-          <a href="#">
+          <Link href="/forgot_password" passHref>
             <span className="text-primary text-sm font-bold">
-              <Link href="/forgot_password" passHref>
-                Forgot password?
-              </Link>
+              Forgot password?
             </span>
-          </a>
+          </Link>
         </div>
         <div className="w-[100%] flex flex-col items-center justify-end mt-14">
           <span className="text-gray-600 text-xs font-normal mb-2">
