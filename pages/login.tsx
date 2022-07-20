@@ -172,6 +172,7 @@ function Login() {
             }}
             isLoading={isLoading}
             type={"normal"}
+            disabled={false}
             block={false}
           />
         </OnboardCard>
