@@ -244,6 +244,7 @@ function Biodata() {
               // Call mutate
               updateUserMutate.mutate({ data, token });
             }}
+            disabled={false}
             isLoading={updateUserMutate.isLoading}
           />
         </OnboardCard>

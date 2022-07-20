@@ -87,6 +87,7 @@ export const AvailableSurveyCarousel = ({ data }: { data: any[] }) => {
                   `/home/take-survey?surveyURI=${item?.uri}&surveyId=${item?.surveyId}&amount=${item?.amount}&validatorCount=${item?.valCount}&responseCount=${item?.responseCount}`
                 );
               }}
+              disabled={false}
               isLoading={false}
             />
           </OnboardCard>
@@ -469,6 +470,7 @@ export const SurveyQAEntry = ({
           block={true}
           onClick={prevClick}
           isLoading={false}
+          disabled={false}
         />
         <ButtonPrimary
           type="normal"
@@ -478,6 +480,7 @@ export const SurveyQAEntry = ({
           block={true}
           onClick={nextClick}
           isLoading={false}
+          disabled={false}
         />
       </div>
     </>
@@ -738,6 +741,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
               console.log(e, "Next survey");
               setCurrentQuestion((current) => current + 1);
             }}
+            disabled={false}
             isLoading={false}
           />
         )}
@@ -755,6 +759,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
                   setCurrentQuestion((current) => current - 1);
                 }
               }}
+              disabled={false}
               isLoading={false}
             />
             <ButtonPrimary
@@ -778,6 +783,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
                   console.log(answers, "The full answers");
                 }
               }}
+              disabled={false}
               isLoading={isPushingData}
             />
           </>

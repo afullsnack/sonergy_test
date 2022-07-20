@@ -6,7 +6,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { ButtonGhost } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import OnboardCard from "../../components/OnboardCard";
-import { fetchUserWalletAddresses } from "../../lib/queries";
+import { getUserWalletAddresses } from "../../lib/queries";
 
 function Deposit() {
   /**
@@ -24,7 +24,7 @@ function Deposit() {
   console.log(token, "Token");
   const { data, isLoading, error } = useQuery(
     ["getUserWalletAddresses", token],
-    () => fetchUserWalletAddresses(token),
+    () => getUserWalletAddresses(token),
     {
       onSuccess({ success, message, data }) {
         console.info(data, "Data returned from fetching users wallet address");
@@ -92,6 +92,7 @@ function Deposit() {
           block={true}
           onClick={(e) => console.log(e, "save qr code info as image")}
           isLoading={false}
+          disabled={false}
         />
       </div>
     </div>

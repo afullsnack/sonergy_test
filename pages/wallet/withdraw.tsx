@@ -156,6 +156,7 @@ function Withdraw() {
           icon={undefined}
           iconPosition={undefined}
           block={true}
+          disabled={false}
           onClick={async (e) => {
             console.log(e, "Confirm withdrawal");
             // TODO: Check sonergy  balance and call alert insufficient alert if less than minimum

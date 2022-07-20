@@ -90,6 +90,7 @@ function Withdraw() {
           block={true}
           onClick={(e) => console.log(e, "Confirm Staking")}
           isLoading={false}
+          disabled={false}
         />
       </div>
     </div>
@@ -128,6 +129,7 @@ const ConfirmStake = () => {
           block={true}
           onClick={(e) => console.log(e, "Redeem Staking")}
           isLoading={false}
+          disabled={false}
         />
       </OnboardCard>
     </div>

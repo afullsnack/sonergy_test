@@ -175,6 +175,7 @@ function Market() {
                       console.log("Sell survey clicked", e);
                       listModal.show();
                     }}
+                    disabled={false}
                     isLoading={false}
                   />
                 </div>
@@ -217,6 +218,7 @@ function Market() {
                       console.log("Sell survey clicked", e);
                       mintModal.show();
                     }}
+                    disabled={false}
                     isLoading={false}
                   />
                 </div>
@@ -252,6 +254,7 @@ const MintModalContent = () => (
       iconPosition={null}
       block={true}
       onClick={(e) => console.log("confirm and mint clicked", e)}
+      disabled={false}
       isLoading={false}
     />
     <ButtonGhost
@@ -261,6 +264,7 @@ const MintModalContent = () => (
       iconPosition={null}
       block={true}
       onClick={(e) => console.log("cancel mint clicked", e)}
+      disabled={false}
       isLoading={false}
     />
   </div>
@@ -418,6 +422,7 @@ const ListItemModalContent = () => {
         block={true}
         onClick={(e) => console.log("confirm and mint clicked", e)}
         isLoading={false}
+        disabled={false}
       />
     </div>
   );

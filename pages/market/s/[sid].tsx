@@ -71,6 +71,7 @@ function SingleSurvey() {
                 console.log("Place bid on survey clicked", e);
                 bidModal.show();
               }}
+              disabled={false}
               isLoading={false}
             />
           </OnboardCard>
@@ -119,6 +120,7 @@ function SingleSurvey() {
                 console.log("confirm buy on survey clicked", e);
                 bidModal.show();
               }}
+              disabled={false}
               isLoading={false}
             />
           </OnboardCard>
@@ -165,6 +167,7 @@ const PlaceBidModalContent = () => (
       block={true}
       onClick={(e) => console.log("confirm bid clicked", e)}
       isLoading={false}
+      disabled={false}
     />
   </div>
 );

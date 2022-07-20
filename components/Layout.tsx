@@ -197,6 +197,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                 icon={null}
                 iconPosition={null}
                 block={false}
+                disabled={false}
                 isLoading={false}
               />
             ) : (
@@ -210,6 +211,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                 icon={null}
                 iconPosition={null}
                 block={false}
+                disabled={false}
                 isLoading={false}
               />
             )}

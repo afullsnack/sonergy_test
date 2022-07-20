@@ -404,6 +404,7 @@ const SurveyConfigs = ({
           block={true}
           onClick={(e) => setStage(Stage.Rewards)}
           isLoading={false}
+          disabled={false}
         />
       </div>
     </>
@@ -582,6 +583,7 @@ const SurveyRewards = ({
           block={true}
           onClick={(e) => setStage(Stage.Config)}
           isLoading={false}
+          disabled={false}
         />
         <ButtonPrimary
           type="normal"
@@ -591,6 +593,7 @@ const SurveyRewards = ({
           block={true}
           onClick={(e) => setStage(Stage.Questions)}
           isLoading={false}
+          disabled={false}
         />
       </div>
     </>
@@ -782,6 +785,7 @@ const SurveyReview = ({
           block={true}
           onClick={(e) => setStage(Stage.Questions)}
           isLoading={false}
+          disabled={false}
         />
         <ButtonPrimary
           type="normal"
@@ -789,6 +793,7 @@ const SurveyReview = ({
           icon={undefined}
           iconPosition={undefined}
           block={true}
+          disabled={false}
           onClick={async (e) => {
             // Call ipfs context push method
             console.log(e, "Submit survey to ipfs and create", questions);
@@ -868,6 +873,7 @@ const SurveyCreationModalContent = ({ surveyTopic, router }) => (
       iconPosition={undefined}
       block={true}
       onClick={async (e) => router.push("/home/")}
+      disabled={false}
       isLoading={false}
     />
   </div>

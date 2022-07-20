@@ -106,6 +106,7 @@ const AccountType = ({ accountType, setAccountType, router }) => (
         }}
         isLoading={null}
         type={"normal"}
+        disabled={false}
         block={false}
       />
     </OnboardCard>

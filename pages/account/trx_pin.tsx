@@ -43,6 +43,7 @@ function TrxPin() {
             iconPosition={undefined}
             block={true}
             onClick={(e) => console.log(e, "Save pin clicked")}
+            disabled={false}
             isLoading={false}
           />
         </OnboardCard>

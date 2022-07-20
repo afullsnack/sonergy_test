@@ -157,6 +157,7 @@ const SurveyDetail = ({
           console.log(e, "answer survey");
           setStage(AnswerStage.Answers);
         }}
+        disabled={false}
         isLoading={false}
       />
     </div>
@@ -215,6 +216,7 @@ const SurveyFinished = ({ surveyReward = "500", push, symbol }) => {
             push("/home/");
           }}
           isLoading={false}
+          disabled={false}
         />
       </div>
     </>

@@ -183,6 +183,7 @@ function Home() {
             router.push("/home/create-survey");
           }}
           block={true}
+          disabled={false}
           isLoading={false}
         />
         <ButtonGhost
@@ -193,6 +194,7 @@ function Home() {
           onClick={(e) => console.log("Become a validator clicked")}
           block={true}
           isLoading={false}
+          disabled={false}
         />
       </div>
     </div>

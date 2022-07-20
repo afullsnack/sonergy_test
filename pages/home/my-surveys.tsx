@@ -1,3 +1,4 @@
+import { utils } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -175,7 +176,7 @@ function MySurveys() {
                 ? "border-blue-700 bg-blue-100"
                 : "border-slate-200"
             } mobile:text-xs`}
-            onClick={() => setSort(SurveySort.Commissioned)}
+            onClick={() => setSort((sort) => SurveySort.Commissioned)}
           >
             Commissioned
           </button>
@@ -185,7 +186,7 @@ function MySurveys() {
                 ? "border-blue-700 bg-blue-100"
                 : "border-slate-200"
             } mobile:text-xs`}
-            onClick={() => setSort(SurveySort.Completed)}
+            onClick={() => setSort((sort) => SurveySort.Completed)}
           >
             Completed
           </button>
@@ -195,7 +196,7 @@ function MySurveys() {
                 ? "border-blue-700 bg-blue-100"
                 : "border-slate-200"
             } mobile:text-xs`}
-            onClick={() => setSort(SurveySort.Validated)}
+            onClick={() => setSort((sort) => SurveySort.Validated)}
           >
             Validated
           </button>
@@ -213,78 +214,65 @@ function MySurveys() {
       </div>
 
       {/* My surveys list */}
-      {sort === SurveySort.Commissioned.toString() && !!commissioned.length && (
+      {sort === SurveySort.Commissioned && commissioned.length > 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
-            <div className="border-solid border-[1px] border-slate-200 rounded-lg p-4 mb-3">
-              <div className="flex flex-col items-start justify-between mb-3">
-                <div className="badge bg-orange-200 text-orange-700 text-xs border-none mb-3">
-                  Pending completion
+            {commissioned.map((item) => (
+              <div className="border border-slate-200 rounded-lg p-4 mb-3">
+                <div className="flex flex-col items-start justify-between mb-3">
+                  {item?.complete ? (
+                    <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
+                      Completed
+                    </div>
+                  ) : (
+                    <div className="badge bg-blue-200 text-blue-700 text-xs border-none mb-3">
+                      Ongoing
+                    </div>
+                  )}
+                  <span className="text-gray-700 text-sm font-normal text-left mb-2">
+                    {item.surveyTitle}
+                  </span>
+                  <span className="text-gray-700 text-xs font-normal text-left mb-2">
+                    {item.description}
+                  </span>
+                  <p className="flex items-center justify-center">
+                    <b className="text-gray-700 text-mf font-medium">
+                      {utils.formatUnits(item?.amount, 18)} {item?.symbol}
+                    </b>{" "}
+                  </p>
+                  <p className="flex items-center justify-center">
+                    {" "}
+                    <AiFillClockCircle size={14} />
+                    <span className="text-xs text-gray-500 ml-1">
+                      Expires on{" "}
+                      {new Date(item?.dateExpiration).toLocaleString()}
+                    </span>{" "}
+                  </p>
                 </div>
-                <span className="text-gray-700 text-sm font-normal text-left mb-2">
-                  Blockchain development and utilisation in sub-saharan Africa.
-                </span>
-                <p className="flex items-center justify-center">
-                  <b className="text-gray-700 text-mf font-medium">200 SNEGY</b>{" "}
-                </p>
-                <p className="flex items-center justify-center">
-                  {" "}
-                  <AiFillClockCircle size={14} />
-                  <span className="text-xs text-gray-500 ml-1">
-                    Expires in 2 days 11 hours
-                  </span>{" "}
-                </p>
-              </div>
-              <div className="flex items-center justify-between space-x-4">
-                <div className="flex-[3]">
-                  <ButtonGhost
-                    text="Convert to NFT"
-                    type="normal"
-                    icon={null}
-                    iconPosition={null}
-                    block={true}
-                    onClick={(e) => console.log("Convert to NFT", e)}
-                    isLoading={false}
-                  />
-                </div>
-                <div className="flex-1">
-                  <ButtonIcon
-                    type="normal"
-                    icon={<FaFileDownload size={18} />}
-                    block={true}
-                    onClick={(e) => console.log("Download", e)}
-                  />
+                <div className="flex items-center justify-between space-x-4">
+                  <div className="flex-[3]">
+                    <ButtonGhost
+                      text="Convert to NFT"
+                      type="normal"
+                      icon={null}
+                      iconPosition={null}
+                      block={true}
+                      onClick={(e) => console.log("Convert to NFT", e)}
+                      isLoading={false}
+                      disabled={!item?.completed}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ButtonIcon
+                      type="normal"
+                      icon={<FaFileDownload size={18} />}
+                      block={true}
+                      onClick={(e) => console.log("Download", e)}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="border-solid border-[1px] border-slate-200 rounded-lg p-4 mb-3">
-              <div className="flex flex-col items-start justify-between mb-3">
-                <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
-                  Completed
-                </div>
-                <span className="text-gray-700 text-sm font-normal text-left mb-2">
-                  Blockchain development and utilisation in sub-saharan Africa.
-                </span>
-                <p className="flex items-center justify-center">
-                  <b className="text-gray-700 text-mf font-medium">200 SNEGY</b>{" "}
-                </p>
-                <p className="flex items-center justify-center">
-                  {" "}
-                  <AiFillClockCircle size={14} />
-                  <span className="text-xs text-gray-500 ml-1">
-                    Expires in 2 days 11 hours
-                  </span>{" "}
-                </p>
-              </div>
-              {/* <div className="flex items-center justify-between space-x-4">
-              <div className="flex-[3]">
-                <ButtonGhost text="Convert to NFT" type="normal" icon={null} iconPosition={null} block={true} onClick={e => console.log('Convert to NFT', e)} />
-              </div>
-              <div className="flex-1">
-                <ButtonIcon type="normal" icon={<FaFileDownload size={18} />} block={true} onClick={e => console.log('Download', e)} />
-              </div>
-            </div> */}
-            </div>
+            ))}
           </OnboardCard>
           {/* Analyze action buttn */}
           <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3 mt-6">
@@ -296,207 +284,144 @@ function MySurveys() {
               block={true}
               onClick={(e) => console.log(e, "Analyze survey")}
               isLoading={false}
+              disabled={false}
             />
           </div>
         </div>
       )}
-      {/* {sort === SurveySort.Commissioned && !!commissioned.length && (
+      {sort === SurveySort.Commissioned && commissioned.length <= 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
             <span className="text-slate-800 text-2xl font-normal">
-              You have no commissioned any surveys yet surveys
-            </span>
-          </OnboardCard>
-        </div>
-      )} */}
-      {/* COMPLETED list */}
-      {sort === SurveySort.Completed.toString() && !!commissioned.length ? (
-        <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
-          <OnboardCard>
-            <div className="border-solid border-[1px] border-slate-200 rounded-lg p-4 mb-3">
-              <div className="flex flex-col items-start justify-between mb-3">
-                <div className="badge bg-orange-200 text-orange-700 text-xs border-none mb-3">
-                  Pending completion
-                </div>
-                <span className="text-gray-700 text-sm font-normal text-left mb-2">
-                  Blockchain development and utilisation in sub-saharan Africa.
-                </span>
-                <p className="flex items-center justify-center">
-                  <b className="text-gray-700 text-mf font-medium">200 SNEGY</b>{" "}
-                </p>
-                <p className="flex items-center justify-center">
-                  {" "}
-                  <AiFillClockCircle size={14} />
-                  <span className="text-xs text-gray-500 ml-1">
-                    Expires in 2 days 11 hours
-                  </span>{" "}
-                </p>
-              </div>
-              <div className="flex items-center justify-between space-x-4">
-                <div className="flex-[3]">
-                  <ButtonGhost
-                    text="Convert to NFT"
-                    type="normal"
-                    icon={null}
-                    iconPosition={null}
-                    block={true}
-                    onClick={(e) => console.log("Convert to NFT", e)}
-                    isLoading={false}
-                  />
-                </div>
-                <div className="flex-1">
-                  <ButtonIcon
-                    type="normal"
-                    icon={<FaFileDownload size={18} />}
-                    block={true}
-                    onClick={(e) => console.log("Download", e)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="border-solid border-[1px] border-slate-200 rounded-lg p-4 mb-3">
-              <div className="flex flex-col items-start justify-between mb-3">
-                <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
-                  Completed
-                </div>
-                <span className="text-gray-700 text-sm font-normal text-left mb-2">
-                  Blockchain development and utilisation in sub-saharan Africa.
-                </span>
-                <p className="flex items-center justify-center">
-                  <b className="text-gray-700 text-mf font-medium">200 SNEGY</b>{" "}
-                </p>
-                <p className="flex items-center justify-center">
-                  {" "}
-                  <AiFillClockCircle size={14} />
-                  <span className="text-xs text-gray-500 ml-1">
-                    Expires in 2 days 11 hours
-                  </span>{" "}
-                </p>
-              </div>
-              {/* <div className="flex items-center justify-between space-x-4">
-            <div className="flex-[3]">
-              <ButtonGhost text="Convert to NFT" type="normal" icon={null} iconPosition={null} block={true} onClick={e => console.log('Convert to NFT', e)} />
-            </div>
-            <div className="flex-1">
-              <ButtonIcon type="normal" icon={<FaFileDownload size={18} />} block={true} onClick={e => console.log('Download', e)} />
-            </div>
-          </div> */}
-            </div>
-          </OnboardCard>
-          {/* Analyze action buttn */}
-          <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3 mt-6">
-            <ButtonPrimary
-              type="normal"
-              text="Analyze survey"
-              icon={undefined}
-              iconPosition={undefined}
-              block={true}
-              onClick={(e) => console.log(e, "Analyze survey")}
-              isLoading={false}
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
-          <OnboardCard>
-            <span className="text-slate-800 text-2xl font-normal">
-              You have not completed any surveys yet surveys
+              You have not commissioned any surveys yet
             </span>
           </OnboardCard>
         </div>
       )}
-      {/* My surveys list */}
-      {sort === SurveySort.Validated.toString() && !!commissioned.length ? (
+      {/* COMPLETED LIST */}
+      {sort === SurveySort.Completed && completed.length > 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
-            <div className="border-solid border-[1px] border-slate-200 rounded-lg p-4 mb-3">
-              <div className="flex flex-col items-start justify-between mb-3">
-                <div className="badge bg-orange-200 text-orange-700 text-xs border-none mb-3">
-                  Pending completion
+            {completed.map((item) => (
+              <div className="border border-slate-200 rounded-lg p-4 mb-3">
+                <div className="flex flex-col items-start justify-between mb-3">
+                  {item?.complete ? (
+                    <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
+                      Completed
+                    </div>
+                  ) : (
+                    <div className="badge bg-blue-200 text-blue-700 text-xs border-none mb-3">
+                      Ongoing
+                    </div>
+                  )}
+                  <span className="text-gray-700 text-sm font-normal text-left mb-2">
+                    {item.surveyTitle}
+                  </span>
+                  <span className="text-gray-700 text-xs font-normal text-left mb-2">
+                    {item.description}
+                  </span>
+                  <p className="flex items-center justify-center">
+                    <b className="text-gray-700 text-mf font-medium">
+                      {utils.formatUnits(item?.amount, 18)} {item?.symbol}
+                    </b>{" "}
+                  </p>
+                  <p className="flex items-center justify-center">
+                    {" "}
+                    <AiFillClockCircle size={14} />
+                    <span className="text-xs text-gray-500 ml-1">
+                      Expires on{" "}
+                      {new Date(item?.dateExpiration).toLocaleString()}
+                    </span>{" "}
+                  </p>
                 </div>
-                <span className="text-gray-700 text-sm font-normal text-left mb-2">
-                  Blockchain development and utilisation in sub-saharan Africa.
-                </span>
-                <p className="flex items-center justify-center">
-                  <b className="text-gray-700 text-mf font-medium">200 SNEGY</b>{" "}
-                </p>
-                <p className="flex items-center justify-center">
-                  {" "}
-                  <AiFillClockCircle size={14} />
-                  <span className="text-xs text-gray-500 ml-1">
-                    Expires in 2 days 11 hours
-                  </span>{" "}
-                </p>
+                {!item?.complete && (
+                  <div className="flex items-center justify-center w-full">
+                    <ButtonGhost
+                      text="Finish up"
+                      type="normal"
+                      icon={null}
+                      iconPosition={null}
+                      block={true}
+                      onClick={(e) => console.log("Finish up", e)}
+                      isLoading={false}
+                      disabled={false}
+                    />
+                  </div>
+                )}
               </div>
-              <div className="flex items-center justify-between space-x-4">
-                <div className="flex-[3]">
-                  <ButtonGhost
-                    text="Convert to NFT"
-                    type="normal"
-                    icon={null}
-                    iconPosition={null}
-                    block={true}
-                    onClick={(e) => console.log("Convert to NFT", e)}
-                    isLoading={false}
-                  />
-                </div>
-                <div className="flex-1">
-                  <ButtonIcon
-                    type="normal"
-                    icon={<FaFileDownload size={18} />}
-                    block={true}
-                    onClick={(e) => console.log("Download", e)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="border-solid border-[1px] border-slate-200 rounded-lg p-4 mb-3">
-              <div className="flex flex-col items-start justify-between mb-3">
-                <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
-                  Completed
-                </div>
-                <span className="text-gray-700 text-sm font-normal text-left mb-2">
-                  Blockchain development and utilisation in sub-saharan Africa.
-                </span>
-                <p className="flex items-center justify-center">
-                  <b className="text-gray-700 text-mf font-medium">200 SNEGY</b>{" "}
-                </p>
-                <p className="flex items-center justify-center">
-                  {" "}
-                  <AiFillClockCircle size={14} />
-                  <span className="text-xs text-gray-500 ml-1">
-                    Expires in 2 days 11 hours
-                  </span>{" "}
-                </p>
-              </div>
-              {/* <div className="flex items-center justify-between space-x-4">
-            <div className="flex-[3]">
-              <ButtonGhost text="Convert to NFT" type="normal" icon={null} iconPosition={null} block={true} onClick={e => console.log('Convert to NFT', e)} />
-            </div>
-            <div className="flex-1">
-              <ButtonIcon type="normal" icon={<FaFileDownload size={18} />} block={true} onClick={e => console.log('Download', e)} />
-            </div>
-          </div> */}
-            </div>
+            ))}
           </OnboardCard>
-          {/* Analyze action buttn */}
-          <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3 mt-6">
-            <ButtonPrimary
-              type="normal"
-              text="Analyze survey"
-              icon={undefined}
-              iconPosition={undefined}
-              block={true}
-              onClick={(e) => console.log(e, "Analyze survey")}
-              isLoading={false}
-            />
-          </div>
         </div>
-      ) : (
+      )}
+      {sort === SurveySort.Completed && completed.length <= 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
             <span className="text-slate-800 text-2xl font-normal">
-              You have nOT validated any surveys yet surveys
+              You have not completed any surveys!
+            </span>
+          </OnboardCard>
+        </div>
+      )}
+      {/* VALIDATED LIST */}
+      {sort === SurveySort.Validated && validated.length > 0 && (
+        <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
+          <OnboardCard>
+            {validated.map((item) => (
+              <div className="border border-slate-200 rounded-lg p-4 mb-3">
+                <div className="flex flex-col items-start justify-between mb-3">
+                  {item?.complete ? (
+                    <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
+                      Completed
+                    </div>
+                  ) : (
+                    <div className="badge bg-blue-200 text-blue-700 text-xs border-none mb-3">
+                      Ongoing
+                    </div>
+                  )}
+                  <span className="text-gray-700 text-sm font-normal text-left mb-2">
+                    {item.surveyTitle}
+                  </span>
+                  <span className="text-gray-700 text-xs font-normal text-left mb-2">
+                    {item.description}
+                  </span>
+                  <p className="flex items-center justify-center">
+                    <b className="text-gray-700 text-mf font-medium">
+                      {utils.formatUnits(item?.amount, 18)} {item?.symbol}
+                    </b>{" "}
+                  </p>
+                  <p className="flex items-center justify-center">
+                    {" "}
+                    <AiFillClockCircle size={14} />
+                    <span className="text-xs text-gray-500 ml-1">
+                      Expires on{" "}
+                      {new Date(item?.dateExpiration).toLocaleString()}
+                    </span>{" "}
+                  </p>
+                </div>
+                {!item?.complete && (
+                  <div className="flex items-center justify-center w-full">
+                    <ButtonGhost
+                      text="Finish up"
+                      type="normal"
+                      icon={null}
+                      iconPosition={null}
+                      block={true}
+                      onClick={(e) => console.log("Finish up", e)}
+                      isLoading={false}
+                      disabled={false}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </OnboardCard>
+        </div>
+      )}
+      {sort === SurveySort.Validated && validated.length <= 0 && (
+        <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
+          <OnboardCard>
+            <span className="text-slate-800 text-2xl font-normal">
+              You have not validated any surveys yet!
             </span>
           </OnboardCard>
         </div>

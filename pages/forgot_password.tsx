@@ -81,6 +81,7 @@ function ForgotPassword() {
               // Call mutate and
               mutate(email);
             }}
+            disabled={false}
             type={"normal"}
             block={true}
           />

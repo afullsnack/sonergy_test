@@ -50,6 +50,7 @@ export const MostPopularSlider = () => {
                   console.log("Buy now clicked", e);
                   router.push("/market/s/123?action=buy");
                 }}
+                disabled={false}
                 isLoading={false}
               />
             </div>
@@ -91,6 +92,7 @@ export const MostPopularSlider = () => {
                   console.log("Buy now clicked", e);
                   // router.push("/home/take-survey");
                 }}
+                disabled={false}
                 isLoading={false}
               />
             </div>
@@ -132,6 +134,7 @@ export const MostPopularSlider = () => {
                   console.log("Buy now clicked", e);
                   // router.push("/home/take-survey");
                 }}
+                disabled={false}
                 isLoading={false}
               />
             </div>

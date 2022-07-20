@@ -96,6 +96,7 @@ function Verification() {
             iconPosition={undefined}
             block={true}
             onClick={(e) => console.log(e, "Submit clicked")}
+            disabled={false}
             isLoading={false}
           />
           <ButtonGhost
@@ -105,6 +106,7 @@ function Verification() {
             iconPosition={undefined}
             block={true}
             onClick={(e) => console.log(e, "advanced verification clicked")}
+            disabled={false}
             isLoading={false}
           />
         </OnboardCard>

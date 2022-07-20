@@ -42,6 +42,7 @@ function TransactionMoreList() {
           block={true}
           onClick={(e) => console.log(e, "Lord more transactions")}
           isLoading={false}
+          disabled={false}
         />
       </div>
     </div>

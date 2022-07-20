@@ -259,6 +259,7 @@ function NewAccount() {
             }}
             isLoading={isLoading}
             type={"normal"}
+            disabled={false}
             block={false}
           />
         </OnboardCard>
@@ -379,6 +380,7 @@ const RegisterOTPModal = ({ email, otpCode }) => {
         }}
         isLoading={confirmOTPMutation.isLoading}
         type={"normal"}
+        disabled={false}
         block={true}
       />
     </>

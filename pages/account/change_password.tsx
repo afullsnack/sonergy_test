@@ -171,6 +171,7 @@ function ChangePassword() {
               }
               mutate({ oldPassword, newPassword, token });
             }}
+            disabled={false}
             isLoading={isLoading}
           />
         </OnboardCard>

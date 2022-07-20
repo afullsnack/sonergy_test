@@ -125,6 +125,7 @@ function SetNewPassword() {
               mutate(data);
             }}
             type={"normal"}
+            disabled={false}
             block={true}
           />
         </OnboardCard>

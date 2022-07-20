@@ -193,6 +193,7 @@ function Account() {
             removeCookie("token");
             router.push("/login");
           }}
+          disabled={false}
           isLoading={false}
         />
       </div>
