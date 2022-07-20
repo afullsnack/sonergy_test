@@ -12,7 +12,8 @@ import { useWalletContext } from "./walletContext";
 type ipfsContextType = {
   isPushingData: boolean;
   isPullingData: boolean;
-  pushData: Function;
+  pushQuestionsToIPFS: Function;
+  pushAnswersToIPFS: Function;
   pullData: Function;
 };
 
@@ -34,7 +35,7 @@ interface EncodeAnswerData {
     email: string;
   };
   surveyId: number;
-  questions: SurveyAnswersData[];
+  answers: SurveyAnswersData[];
 }
 
 export function IPFSProvider({ children }: ProviderProps) {
@@ -45,8 +46,8 @@ export function IPFSProvider({ children }: ProviderProps) {
 
   const router = useRouter();
 
-  const pushData = async (
-    json: EncodeQuestionData | EncodeAnswerData,
+  const pushQuestionsToIPFS = async (
+    json: EncodeQuestionData,
     surveyData: any
   ) => {
     try {
@@ -159,19 +160,6 @@ export function IPFSProvider({ children }: ProviderProps) {
           );
 
           if (userAddress === address) {
-            setPushReturnData({
-              surveyURI,
-              address,
-              surveyID,
-              planID,
-              numOfValidators,
-              numOfcommisioners,
-              numOfresponse,
-              amount,
-              nftStatus,
-              exist,
-              completed,
-            });
             setIsPushingData(false);
           }
         }
@@ -181,6 +169,79 @@ export function IPFSProvider({ children }: ProviderProps) {
       setIsPushingData(false);
     }
   };
+
+  const pushAnswersToIPFS = async (json: EncodeAnswerData, surveyID: any) => {
+    try {
+      console.log(
+        json,
+        process.env.IPFS_PROJEC_ID,
+        process.env.IPFS_URL,
+        process.env.IPFS_PROJECT_SECRET
+      );
+      const userAddress = address;
+      setIsPushingData(true);
+      const ipfsClient = create({
+        url: `${process.env.IPFS_URL}/api/v0`,
+        headers: {
+          authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+        },
+      });
+      const cid = await ipfsClient.dag.put(json as object, {
+        storeCodec: "dag-cbor",
+        hashAlg: "sha2-256",
+      });
+      console.log(cid.toString(), "CID after IPFS answer push");
+
+      // Now call survey contract and add cid to it
+
+      /* Now call enroll function */
+      const answerTx = await surveyContract.provideAnswers(
+        surveyID,
+        cid.toString(),
+        {
+          gasPrice: utils.parseUnits("100", "gwei"),
+          gasLimit: 1000000,
+        }
+      );
+
+      const answerReceipt = answerTx.wait();
+      console.log(answerTx, answerReceipt, "Survey contract ProvideAnswer");
+
+      // Listen for survey enroll event and get returned data
+      surveyContract.on(
+        "AnswerCreated",
+        (
+          surveyURI: string,
+          provider: string,
+          validator: string,
+          surveyID: number,
+          answerID: number,
+          isValidated: boolean,
+          isValid: boolean
+        ) => {
+          // Resolve address to match users
+          console.log(
+            surveyURI,
+            provider,
+            validator,
+            surveyID,
+            answerID,
+            isValidated,
+            isValid,
+            "Returned event data of provide answer contract call"
+          );
+
+          if (userAddress === address) {
+            setIsPushingData(false);
+          }
+        }
+      );
+    } catch (err) {
+      console.error("An error occurred", err);
+      setIsPushingData(false);
+    }
+  };
+
   const pullData = async (cid: string) => {
     console.log(cid, "CID", CID.parse(cid));
     setIsPullingData(true);
@@ -202,7 +263,8 @@ export function IPFSProvider({ children }: ProviderProps) {
         value={{
           isPushingData,
           isPullingData,
-          pushData,
+          pushQuestionsToIPFS,
+          pushAnswersToIPFS,
           pullData,
         }}
       >
