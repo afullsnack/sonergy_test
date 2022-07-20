@@ -146,10 +146,11 @@ export function WalletProvider({ children }: Props): JSX.Element {
   };
 
   useEffect(() => {
-    queryClient.invalidateQueries("getSonergyBalance");
-
-    connectTokenContract();
-    connectSurveyContract();
+    if (address) {
+      queryClient.invalidateQueries("getSonergyBalance");
+      connectTokenContract();
+      connectSurveyContract();
+    }
   }, [address]);
 
   return (

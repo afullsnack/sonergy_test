@@ -489,7 +489,7 @@ export interface SurveyAnswersData {
   answer: { id: string; choice: string }[] | string | null;
 }
 
-export const SurveyAnswerEntry = ({ setStage, questions }) => {
+export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
   console.log(questions, "Questions");
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [answers, setAnswer] = useState<any[] | undefined>([]);
@@ -525,7 +525,9 @@ export const SurveyAnswerEntry = ({ setStage, questions }) => {
                       questionId,
                       questionType: QuestionType.MultiChoice.toString(),
                       answer: e.target.checked
-                        ? [...prevAnswers[idx].answer, item?.choice]
+                        ? [...prevAnswers[idx].answer, item?.choice].filter(
+                            (v, i, a) => a.indexOf(v) === i
+                          )
                         : prevAnswers[idx].answer.filter(
                             (f) => f !== item?.choice
                           ),
@@ -680,7 +682,7 @@ export const SurveyAnswerEntry = ({ setStage, questions }) => {
             max="100"
           ></progress>
           <span className="text-xs font-medium text-gray-500 mb-4">
-            Questions 1 of 3
+            Questions {currentQuestion} of {questions.length}
           </span>
           {questions.map((item: any, idx: number) => (
             <>
@@ -760,7 +762,8 @@ export const SurveyAnswerEntry = ({ setStage, questions }) => {
                 if (currentQuestion < questions.length) {
                   setCurrentQuestion((current) => current + 1);
                 } else {
-                  // Submit survey answers then call finish stage
+                  //TODO: Submit survey answers then call finish stage
+
                   setStage(AnswerStage.Finish);
                   console.log(
                     answers,

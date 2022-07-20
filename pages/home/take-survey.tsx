@@ -58,6 +58,7 @@ function TakeSurvey() {
         <SurveyAnswers
           setStage={setStage}
           questions={[...surveyDetails?.questions]}
+          surveyID={Number(surveyId)}
         />
       )}
       {!isPullingData && stage === AnswerStage.Finish && (
@@ -165,12 +166,20 @@ const SurveyDetail = ({
 const SurveyAnswers = ({
   setStage,
   questions,
+  surveyID,
 }: {
   setStage: any;
   questions: any;
+  surveyID: number;
 }) => {
   console.log(questions, "Questions");
-  return <SurveyAnswerEntry setStage={setStage} questions={questions} />;
+  return (
+    <SurveyAnswerEntry
+      setStage={setStage}
+      questions={questions}
+      surveyID={surveyID}
+    />
+  );
 };
 
 const SurveyFinished = ({ surveyReward = "500", push, symbol }) => {

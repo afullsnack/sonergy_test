@@ -23,7 +23,7 @@ function Biodata() {
   /* States */
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
-  const [dob, setDOB] = useState<string>("2004-01-01");
+  const [dob, setDOB] = useState<string>("");
   const [gender, setGender] = useState<string | undefined>();
   const [address, setAddress] = useState<string>("");
   const [country, setCountry] = useState<string>("");
@@ -57,9 +57,9 @@ function Biodata() {
   });
 
   useEffect(() => {
-    setFirstName(data?.data?.fullName.split(" ")[0]);
-    setLastName(data?.data?.fullName.split(" ")[1]);
-    setDOB(data?.data?.dateOfBirth.split("T")[0]);
+    setFirstName(data?.data?.fullName?.split(" ")[0]);
+    setLastName(data?.data?.fullName?.split(" ")[1]);
+    setDOB(data?.data?.dateOfBirth?.split("T")[0]);
     setGender(data?.data?.gender);
     setAddress(data?.data?.location);
     setCountry(data?.data?.country);
