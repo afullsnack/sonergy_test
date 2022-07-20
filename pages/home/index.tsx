@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FaPlus } from "react-icons/fa";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueries, useQueryClient } from "react-query";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 // import { BalanceCarousel } from "../../components/Carousel";
 import withLayout from "../../components/Layout";
@@ -14,7 +14,11 @@ import {
 } from "../../components/Survey";
 import { useIPFSContext } from "../../lib/contexts/ipfsContext";
 import { useWalletContext } from "../../lib/contexts/walletContext";
-import { getMySurveys } from "../../lib/queries";
+import {
+  getAllSurveys,
+  getCompletedSurveys,
+  getMySurveys,
+} from "../../lib/queries";
 import { WalletBalance } from "../wallet";
 
 function Home() {
@@ -26,24 +30,19 @@ function Home() {
   // Context
   const { address, sonergyBalance } = useWalletContext();
   const { pullData, isPullingData } = useIPFSContext();
-  const [mySurveyData, setMySurveyData] = useState([]);
   const [availableSurveyData, setAvailableSurveyData] = useState([]);
-  const [decodedSurveys, setDecodedSurveys] = useState([]);
+  const [mySurveyCount, setMySurveyCount] = useState(0);
+  const [completedSurveyCount, setCompletedSurveyCount] = useState(0);
+  const [validatedSurveyCount, setValidatedSurveyCount] = useState(0);
 
-  const { data, isLoading, error } = useQuery(
-    ["getMySurveys", token, address],
-    () => getMySurveys({ token, address }),
+  // Setup use queries function
+  const results = useQueries([
     {
-      async onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getMySurveys"
-        );
-
+      queryKey: ["getAllSurveys", token],
+      queryFn: () => getAllSurveys(token),
+      async onSuccess({ data, message, success }) {
+        console.log(data, success, message, "Data from getAllSurveys queries");
         if (success && data.length) {
-          setMySurveyData(data);
           const decodedMap = data.map(async (item: any) => {
             console.log("Item", item.surveyURI);
             const json = await pullData(item?.surveyURI);
@@ -60,25 +59,65 @@ function Home() {
           });
 
           const awaitedDecode = await Promise.all(decodedMap);
-          setDecodedSurveys(awaitedDecode);
-          console.log(awaitedDecode, "Promised awaited");
+          setAvailableSurveyData(awaitedDecode);
+        }
+      },
+      onError(err) {
+        console.error(err, "An error when fetching getAllSurveys");
+      },
+    },
+    {
+      queryKey: ["getMySurveys", token, address],
+      queryFn: () => getMySurveys({ token, address }),
+      async onSuccess({ success, message, data }) {
+        console.info(
+          data,
+          success,
+          message,
+          "Data returned from the getMySurveys"
+        );
+
+        if (success && data.length) {
+          setMySurveyCount(data.length);
+          console.log(data.length, "My survey");
         }
       },
       onError(err) {
         console.error(err, "Error occurred while getMySurveys called");
       },
-    }
-  );
+    },
+    {
+      queryKey: ["getCompletedSurveys", token, address],
+      queryFn: () => getCompletedSurveys({ token, address }),
+      async onSuccess({ success, message, data }) {
+        console.info(
+          data,
+          success,
+          message,
+          "Data returned from the getCompletedSurvey"
+        );
+
+        if (success && data.length) {
+          setCompletedSurveyCount(data?.length);
+          console.log(data.length, "Completed Surveys");
+        }
+      },
+      onError(err) {
+        console.error(err, "Error occurred while getMySurveys called");
+      },
+    },
+  ]);
 
   useEffect(() => {
     console.log(
       token,
       address,
       "User token set after login redirect and context wallet",
-      decodedSurveys,
+      mySurveyCount,
       "Decoded surveys"
     );
     queryClient.invalidateQueries("getMySurveys");
+    queryClient.invalidateQueries("getAllSurveys");
   }, [address]);
 
   // Callback actions
@@ -97,8 +136,8 @@ function Home() {
         <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-3">
           Available surveys
         </span>
-        {!!decodedSurveys.length ? (
-          <AvailableSurveyCarousel data={decodedSurveys} />
+        {!!availableSurveyData.length ? (
+          <AvailableSurveyCarousel data={availableSurveyData} />
         ) : (
           <EmptySurveyList />
         )}
@@ -112,19 +151,19 @@ function Home() {
         <OnboardCard>
           <MySurveyList
             title={"Commissioned Surveys"}
-            count={!mySurveyData.length ? "0" : mySurveyData.length}
+            count={mySurveyCount}
             onClick={(e) => mySurveyClicked("commissioned")}
             icon={"/home/task-square.svg"}
           />
           <MySurveyList
             title={"Completed Surveys"}
-            count={!mySurveyData.length ? "0" : "0"}
+            count={completedSurveyCount}
             onClick={(e) => mySurveyClicked("completed")}
             icon={"/home/tick-square.svg"}
           />
           <MySurveyList
             title={"Validated Surveys"}
-            count={!mySurveyData.length ? "0" : "0"}
+            count={validatedSurveyCount}
             onClick={(e) => mySurveyClicked("validated")}
             icon={"/home/verify.svg"}
           />
