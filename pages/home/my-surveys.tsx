@@ -11,6 +11,7 @@ import {
   ButtonPrimary,
 } from "../../components/Button";
 import withLayout from "../../components/Layout";
+import Loader from "../../components/Loader";
 import OnboardCard from "../../components/OnboardCard";
 import { useIPFSContext } from "../../lib/contexts/ipfsContext";
 import { useWalletContext } from "../../lib/contexts/walletContext";
@@ -40,110 +41,111 @@ function MySurveys() {
   const [validated, setValidated] = useState([]);
 
   // Setup use queries function
-  const results = useQueries([
-    // {
-    //   queryKey: ["getValidatedSurveys", token],
-    //   queryFn: () => getAllSurveys(token),
-    //   async onSuccess({ data, message, success }) {
-    //     console.log(data, success, message, "Data from getAllSurveys queries");
-    //     if (success && data.length) {
-    //       const decodedMap = data.map(async (item: any) => {
-    //         console.log("Item", item.surveyURI);
-    //         const json = await pullData(item?.surveyURI);
-    //         console.log("Gotten json", json);
-    //         return {
-    //           ...json,
-    //           uri: item.surveyURI,
-    //           amount: item.amount,
-    //           symbol: sonergyBalance.symbol,
-    //           valCount: item?.numOfValidators,
-    //           responseCount: item?.numOfcommisioners,
-    //           surveyId: item?.surveyID,
-    //         };
-    //       });
+  const [{ isLoading: commissionedLoading }, { isLoading: completedLoading }] =
+    useQueries([
+      // {
+      //   queryKey: ["getValidatedSurveys", token],
+      //   queryFn: () => getAllSurveys(token),
+      //   async onSuccess({ data, message, success }) {
+      //     console.log(data, success, message, "Data from getAllSurveys queries");
+      //     if (success && data.length) {
+      //       const decodedMap = data.map(async (item: any) => {
+      //         console.log("Item", item.surveyURI);
+      //         const json = await pullData(item?.surveyURI);
+      //         console.log("Gotten json", json);
+      //         return {
+      //           ...json,
+      //           uri: item.surveyURI,
+      //           amount: item.amount,
+      //           symbol: sonergyBalance.symbol,
+      //           valCount: item?.numOfValidators,
+      //           responseCount: item?.numOfcommisioners,
+      //           surveyId: item?.surveyID,
+      //         };
+      //       });
 
-    //       const awaitedDecode = await Promise.all(decodedMap);
-    //       setValidated(awaitedDecode);
-    //     }
-    //   },
-    //   onError(err) {
-    //     console.error(err, "An error when fetching getAllSurveys");
-    //   },
-    // },
-    {
-      queryKey: ["getMySurveys", token, address],
-      queryFn: () => getMySurveys({ token, address }),
-      async onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getMySurveys"
-        );
+      //       const awaitedDecode = await Promise.all(decodedMap);
+      //       setValidated(awaitedDecode);
+      //     }
+      //   },
+      //   onError(err) {
+      //     console.error(err, "An error when fetching getAllSurveys");
+      //   },
+      // },
+      {
+        queryKey: ["getMySurveys", token, address],
+        queryFn: () => getMySurveys({ token, address }),
+        async onSuccess({ success, message, data }) {
+          console.info(
+            data,
+            success,
+            message,
+            "Data returned from the getMySurveys"
+          );
 
-        if (success && data.length) {
-          const decodedMap = data.map(async (item: any) => {
-            console.log("Item", item.surveyURI);
-            const json = await pullData(item?.surveyURI);
-            console.log("Gotten json", json);
-            return {
-              ...json,
-              uri: item.surveyURI,
-              amount: item.amount,
-              symbol: sonergyBalance.symbol,
-              valCount: item?.numOfValidators,
-              responseCount: item?.numOfcommisioners,
-              surveyId: item?.surveyID,
-            };
-          });
+          if (success && data.length) {
+            const decodedMap = data.map(async (item: any) => {
+              console.log("Item", item.surveyURI);
+              const json = await pullData(item?.surveyURI);
+              console.log("Gotten json", json);
+              return {
+                ...json,
+                uri: item.surveyURI,
+                amount: item.amount,
+                symbol: sonergyBalance.symbol,
+                valCount: item?.numOfValidators,
+                responseCount: item?.numOfcommisioners,
+                surveyId: item?.surveyID,
+              };
+            });
 
-          const awaitedDecode = await Promise.all(decodedMap);
-          setCommissioned(awaitedDecode);
-          console.log(awaitedDecode, "My survey: Commissioned");
-        }
+            const awaitedDecode = await Promise.all(decodedMap);
+            setCommissioned(awaitedDecode);
+            console.log(awaitedDecode, "My survey: Commissioned");
+          }
+        },
+        onError(err) {
+          console.error(err, "Error occurred while getMySurveys called");
+        },
       },
-      onError(err) {
-        console.error(err, "Error occurred while getMySurveys called");
-      },
-    },
-    {
-      queryKey: ["getCompletedSurveys", token, address],
-      queryFn: () => getCompletedSurveys({ token, address }),
-      async onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getCompletedSurvey"
-        );
+      {
+        queryKey: ["getCompletedSurveys", token, address],
+        queryFn: () => getCompletedSurveys({ token, address }),
+        async onSuccess({ success, message, data }) {
+          console.info(
+            data,
+            success,
+            message,
+            "Data returned from the getCompletedSurvey"
+          );
 
-        if (success && data.length) {
-          const decodedMap = data.map(async (item: any) => {
-            console.log("Item", item.surveyURI);
-            const json = await pullData(item?.surveyURI);
-            console.log("Gotten json", json);
-            return {
-              ...json,
-              uri: item.surveyURI,
-              amount: item.amount,
-              symbol: sonergyBalance.symbol,
-              valCount: item?.numOfValidators,
-              responseCount: item?.numOfcommisioners,
-              surveyId: item?.surveyID,
-            };
-          });
+          if (success && data.length) {
+            const decodedMap = data.map(async (item: any) => {
+              console.log("Item", item.surveyURI);
+              const json = await pullData(item?.surveyURI);
+              console.log("Gotten json", json);
+              return {
+                ...json,
+                uri: item.surveyURI,
+                amount: item.amount,
+                symbol: sonergyBalance.symbol,
+                valCount: item?.numOfValidators,
+                responseCount: item?.numOfcommisioners,
+                surveyId: item?.surveyID,
+              };
+            });
 
-          const awaitedDecode = await Promise.all(decodedMap);
+            const awaitedDecode = await Promise.all(decodedMap);
 
-          setCompleted(awaitedDecode);
-          console.log(awaitedDecode, "Completed Surveys: Completed survey");
-        }
+            setCompleted(awaitedDecode);
+            console.log(awaitedDecode, "Completed Surveys: Completed survey");
+          }
+        },
+        onError(err) {
+          console.error(err, "Error occurred while getMySurveys called");
+        },
       },
-      onError(err) {
-        console.error(err, "Error occurred while getMySurveys called");
-      },
-    },
-  ]);
+    ]);
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
@@ -156,7 +158,6 @@ function MySurveys() {
         commissioned,
         "....",
         "Decoded surveys",
-        results,
         "Result queries"
       );
     }
@@ -218,7 +219,10 @@ function MySurveys() {
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
             {commissioned.map((item, idx) => (
-              <div className="border border-slate-200 rounded-lg p-4 mb-3" key={idx.toString()}>
+              <div
+                className="border border-slate-200 rounded-lg p-4 mb-3"
+                key={idx.toString()}
+              >
                 <div className="flex flex-col items-start justify-between mb-3">
                   {item?.complete ? (
                     <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
@@ -298,12 +302,24 @@ function MySurveys() {
           </OnboardCard>
         </div>
       )}
+      {(sort === SurveySort.Commissioned &&
+        commissioned.length <= 0 &&
+        commissionedLoading) ||
+        (completedLoading && (
+          <div className="flex flex-col items-center justify-center w-full mobile:p-3 mb-10">
+            <Loader />
+          </div>
+        ))}
+
       {/* COMPLETED LIST */}
       {sort === SurveySort.Completed && completed.length > 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
             {completed.map((item, idx) => (
-              <div className="border border-slate-200 rounded-lg p-4 mb-3" key={idx.toString()}>
+              <div
+                className="border border-slate-200 rounded-lg p-4 mb-3"
+                key={idx.toString()}
+              >
                 <div className="flex flex-col items-start justify-between mb-3">
                   {item?.complete ? (
                     <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
@@ -362,12 +378,23 @@ function MySurveys() {
           </OnboardCard>
         </div>
       )}
+      {(sort === SurveySort.Completed &&
+        completed.length <= 0 &&
+        commissionedLoading) ||
+        (completedLoading && (
+          <div className="flex flex-col items-center justify-center w-full mobile:p-3 mb-10">
+            <Loader />
+          </div>
+        ))}
       {/* VALIDATED LIST */}
       {sort === SurveySort.Validated && validated.length > 0 && (
         <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
           <OnboardCard>
             {validated.map((item, idx) => (
-              <div className="border border-slate-200 rounded-lg p-4 mb-3" key={idx.toString()}>
+              <div
+                className="border border-slate-200 rounded-lg p-4 mb-3"
+                key={idx.toString()}
+              >
                 <div className="flex flex-col items-start justify-between mb-3">
                   {item?.complete ? (
                     <div className="badge bg-green-200 text-green-700 text-xs border-none mb-3">
@@ -426,6 +453,14 @@ function MySurveys() {
           </OnboardCard>
         </div>
       )}
+      {(sort === SurveySort.Validated &&
+        validated.length <= 0 &&
+        commissionedLoading) ||
+        (completedLoading && (
+          <div className="flex flex-col items-center justify-center w-full mobile:p-3 mb-10">
+            <Loader />
+          </div>
+        ))}
     </div>
   );
 }
