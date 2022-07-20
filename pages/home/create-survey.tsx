@@ -792,29 +792,31 @@ const SurveyReview = ({
           onClick={async (e) => {
             // Call ipfs context push method
             console.log(e, "Submit survey to ipfs and create", questions);
-            const data = await pushQuestionsToIPFS(
-              {
-                surveyTitle: surveyTopic,
-                description: surveyDescription,
-                dateCreated: createdAt,
-                dateExpiration: expireAt,
-                questions: questions,
-              },
-              {
-                surveyPlanId: planId,
-                numOfValidators: validatorCount.toString(),
-                amount: utils.parseUnits(
-                  (
-                    commissionerFee * commissionerCount +
-                    validatorFee * validatorCount
-                  ).toString(),
-                  18
-                ),
-                numberOfCommissioners: commissionerCount.toString(),
-              }
-            );
-            console.log(data, "Data");
-            createSurveyModal.show();
+            if (address) {
+              const data = await pushQuestionsToIPFS(
+                {
+                  surveyTitle: surveyTopic,
+                  description: surveyDescription,
+                  dateCreated: createdAt,
+                  dateExpiration: expireAt,
+                  questions: questions,
+                },
+                {
+                  surveyPlanId: planId,
+                  numOfValidators: validatorCount.toString(),
+                  amount: utils.parseUnits(
+                    (
+                      commissionerFee * commissionerCount +
+                      validatorFee * validatorCount
+                    ).toString(),
+                    18
+                  ),
+                  numberOfCommissioners: commissionerCount.toString(),
+                }
+              );
+              console.log(data, "Data");
+              createSurveyModal.show();
+            }
 
             // .map((item) => {
             //   if (typeof item?.options === "undefined") {

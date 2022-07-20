@@ -14,6 +14,8 @@ import {
   AiOutlineRight,
 } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
+import { useIPFSContext } from "../lib/contexts/ipfsContext";
+import { useWalletContext } from "../lib/contexts/walletContext";
 import { Stage } from "../pages/home/create-survey";
 import { AnswerStage } from "../pages/home/take-survey";
 import { ButtonGhost, ButtonPrimary } from "./Button";
@@ -494,6 +496,10 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [answers, setAnswer] = useState<any[] | undefined>([]);
 
+  // IPFS Context
+  const { pushAnswersToIPFS, isPushingData } = useIPFSContext();
+  const { address } = useWalletContext();
+
   useEffect(() => console.log(answers, "The item answers"), [answers]);
 
   const MultiChoiceRender = ({ setAnswer, data, answers, questionId }) => (
@@ -757,24 +763,22 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
               icon={undefined}
               iconPosition={undefined}
               block={true}
-              onClick={(e) => {
+              onClick={async (e) => {
                 console.log(e, "Next survey");
                 if (currentQuestion < questions.length) {
                   setCurrentQuestion((current) => current + 1);
                 } else {
                   //TODO: Submit survey answers then call finish stage
+                  if (address) {
+                    await pushAnswersToIPFS(answers, surveyID);
 
-                  setStage(AnswerStage.Finish);
-                  console.log(
-                    answers,
-                    "The full answers",
-                    answers
-                      ?.find((item) => item?.questionType === "multi-choice")
-                      ?.answer.filter((v, i, a) => a.indexOf(v) === i)
-                  );
+                    setStage(AnswerStage.Finish);
+                  }
+
+                  console.log(answers, "The full answers");
                 }
               }}
-              isLoading={false}
+              isLoading={isPushingData}
             />
           </>
         )}

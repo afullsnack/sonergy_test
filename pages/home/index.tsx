@@ -118,6 +118,7 @@ function Home() {
     );
     queryClient.invalidateQueries("getMySurveys");
     queryClient.invalidateQueries("getAllSurveys");
+    queryClient.invalidateQueries("getCompletedSurveys");
   }, [address]);
 
   // Callback actions
