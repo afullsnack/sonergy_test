@@ -124,7 +124,7 @@ export function IPFSProvider({ children }: ProviderProps) {
         }
       );
 
-      const enrollReceipt = enrollTx.wait();
+      const enrollReceipt = await enrollTx.wait();
       console.log(enrollTx, enrollReceipt, "Survey contract enroll survey");
 
       // Listen for survey enroll event and get returned data
@@ -204,7 +204,7 @@ export function IPFSProvider({ children }: ProviderProps) {
         }
       );
 
-      const answerReceipt = answerTx.wait();
+      const answerReceipt = await answerTx.wait();
       console.log(answerTx, answerReceipt, "Survey contract ProvideAnswer");
 
       // Listen for survey enroll event and get returned data
