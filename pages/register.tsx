@@ -41,10 +41,7 @@ function NewAccount() {
   const [code, setCode] = useState();
 
   // DONE: setup modal
-  const [otpModal, OTPModal] = useModal({
-    title: "Enter OTP Code",
-    content: <RegisterOTPModal email={email} otpCode={code} />,
-  });
+  const [otpModal, OTPModal] = useModal();
 
   // DONE: setup useMutation
   const { mutate, isLoading, data } = useMutation(registerUser, {
@@ -55,7 +52,10 @@ function NewAccount() {
       } else {
         setCode(data?.otp);
       }
-      otpModal.show();
+      otpModal.show({
+        title: "Enter OTP Code",
+        content: <RegisterOTPModal email={email} otpCode={code} />,
+      });
     },
     onError: () => console.error("There was an error trying to register"),
     onSettled: () => queryClient.invalidateQueries("register"),
