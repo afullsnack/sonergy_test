@@ -5,12 +5,12 @@ type Icon = ReactNode | undefined | null;
 type IconPosition = "right" | "left";
 interface CustomButton {
   text: string;
-  type: BtnSize;
-  icon: Icon;
-  iconPosition: IconPosition | undefined;
-  block: boolean;
-  isLoading: boolean;
-  disabled: boolean | null;
+  type?: BtnSize;
+  icon?: Icon;
+  iconPosition?: IconPosition | undefined;
+  block?: boolean;
+  isLoading?: boolean;
+  disabled?: boolean | null;
   onClick: MouseEventHandler<HTMLButtonElement> | undefined;
 }
 
@@ -19,14 +19,14 @@ export const ButtonPrimary = ({
   type = "normal",
   icon,
   iconPosition = "left",
-  block,
+  block = true,
   isLoading = false,
   disabled = false,
   onClick,
 }: CustomButton) => {
   return (
     <button
-      className={`bg-primary ${
+      className={`bg-primary disabled:bg-gray-300 ${
         block ? "w-full" : null
       } rounded-lg flex items-center justify-center ${
         type === "normal" ? "mt-4 mb-4 py-[14px]" : "mt-2 mb-2 py-2"
@@ -93,7 +93,7 @@ export const ButtonGhost = ({
         block ? "w-full" : null
       } rounded-lg flex items-center justify-center ${
         type === "normal" ? "mt-2 mb-2 py-[14px]" : "mt-1 mb-1 py-2"
-      } border-solid border-primary border-[1px] text-primary px-4 shadow-sm active:opacity-60 hover:opacity-50 transition-all`}
+      } border border-primary text-primary disabled:border-gray-300 disabled:text-gray-300 px-4 shadow-sm active:opacity-60 hover:opacity-50 transition-all`}
       onClick={onClick}
       disabled={disabled}
     >

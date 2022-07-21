@@ -2,7 +2,6 @@ import { utils } from "ethers";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useCookies } from "react-cookie";
-import { AiFillCheckSquare } from "react-icons/ai";
 import { FaCheck } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
@@ -150,9 +149,12 @@ const SurveyPlans = ({ planId, setPlanId, setStage }: SurveyPlanProps) => {
                   setStage(Stage.Config);
                 }}
               >
-                <div className="shrink-0 p-3 rounded-md border-[1px] border-solid border-[#0059AC]">
-                  {/* <Image class="h-12 w-12" src="/Image/logo.svg" alt="User logo" /> */}
-                  <AiFillCheckSquare color="#0059AC" />
+                <div className="shrink-0 p-3 rounded-box border border-[#E2EDF6]">
+                  <img
+                    // className="h-12 w-12"
+                    src="/surveys/task-square.svg"
+                    alt="Survey plan logo"
+                  />
                 </div>
                 <div>
                   <div className="text-sm font-medium text-black">
@@ -165,7 +167,7 @@ const SurveyPlans = ({ planId, setPlanId, setStage }: SurveyPlanProps) => {
                       {plan.providerProfit}
                     </b>
                     <br />
-                    Validator profit -{" "}
+                    Validator profit % -{" "}
                     <b className="font-medium text-black">
                       {plan.validatorsProfit}
                     </b>
@@ -692,7 +694,11 @@ const SurveyReview = ({
   const [{ token }] = useCookies(["token"]);
   const { address, approveSpend, sonergyBalance } = useWalletContext();
   const router = useRouter();
-  const { pushQuestionsToIPFS, isPushingData } = useIPFSContext();
+  const {
+    pushQuestionsToIPFSForConnected,
+    pushQuestionsToIPFSForInbuilt,
+    isPushingData,
+  } = useIPFSContext();
 
   // Modal
   const [createSurveyModal, CreateSurveyModal] = useModal({
@@ -798,7 +804,8 @@ const SurveyReview = ({
             // Call ipfs context push method
             console.log(e, "Submit survey to ipfs and create", questions);
             if (address) {
-              const data = await pushQuestionsToIPFS(
+              //iF wallet is connected go this route
+              const data = await pushQuestionsToIPFSForConnected(
                 {
                   surveyTitle: surveyTopic,
                   description: surveyDescription,
@@ -815,6 +822,34 @@ const SurveyReview = ({
                       validatorFee * validatorCount
                     ).toString(),
                     18
+                  ),
+                  numberOfCommissioners: commissionerCount.toString(),
+                }
+              );
+              console.log(data, "Data");
+              createSurveyModal.show();
+            } else {
+              //USe inbuilt wallet address to create survey
+              const data = await pushQuestionsToIPFSForInbuilt(
+                {
+                  surveyTitle: surveyTopic,
+                  description: surveyDescription,
+                  dateCreated: createdAt,
+                  dateExpiration: expireAt,
+                  questions: questions,
+                },
+                {
+                  surveyPlanId: planId,
+                  numOfValidators: validatorCount.toString(),
+                  amount: utils.formatUnits(
+                    utils.parseUnits(
+                      (
+                        commissionerFee * commissionerCount +
+                        validatorFee * validatorCount
+                      ).toString(),
+                      18
+                    ),
+                    "wei"
                   ),
                   numberOfCommissioners: commissionerCount.toString(),
                 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AiFillClockCircle } from "react-icons/ai";
 import { FaFileDownload } from "react-icons/fa";
-import { useQueries, useQueryClient } from "react-query";
+import { useMutation, useQueries, useQueryClient } from "react-query";
 import {
   ButtonGhost,
   ButtonIcon,
@@ -12,9 +12,11 @@ import {
 } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import Loader from "../../components/Loader";
+import { useModal } from "../../components/Modal";
 import OnboardCard from "../../components/OnboardCard";
 import { useIPFSContext } from "../../lib/contexts/ipfsContext";
 import { useWalletContext } from "../../lib/contexts/walletContext";
+import { convertSurveyToNFT } from "../../lib/mutations";
 import { getCompletedSurveys, getMySurveys } from "../../lib/queries";
 
 enum SurveySort {
@@ -24,13 +26,13 @@ enum SurveySort {
 }
 
 function MySurveys() {
-  const { query } = useRouter();
+  const { query, push } = useRouter();
   const [{ token }] = useCookies(["token"]);
 
   const queryClient = useQueryClient();
 
   // Context
-  const { address, sonergyBalance } = useWalletContext();
+  const { address, sonergyBalance, inBuiltAddress } = useWalletContext();
   const { pullData, isPullingData } = useIPFSContext();
 
   const [sort, setSort] = useState(
@@ -39,6 +41,9 @@ function MySurveys() {
   const [commissioned, setCommissioned] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [validated, setValidated] = useState([]);
+
+  // modal
+  const [mintModal, MintModalRender] = useModal();
 
   // Setup use queries function
   const [{ isLoading: commissionedLoading }, { isLoading: completedLoading }] =
@@ -73,8 +78,9 @@ function MySurveys() {
       //   },
       // },
       {
-        queryKey: ["getMySurveys", token, address],
-        queryFn: () => getMySurveys({ token, address }),
+        queryKey: ["getMySurveys", token, address || inBuiltAddress],
+        queryFn: () =>
+          getMySurveys({ token, address: address || inBuiltAddress }),
         async onSuccess({ success, message, data }) {
           console.info(
             data,
@@ -109,8 +115,9 @@ function MySurveys() {
         },
       },
       {
-        queryKey: ["getCompletedSurveys", token, address],
-        queryFn: () => getCompletedSurveys({ token, address }),
+        queryKey: ["getCompletedSurveys", token, address || inBuiltAddress],
+        queryFn: () =>
+          getCompletedSurveys({ token, address: address || inBuiltAddress }),
         async onSuccess({ success, message, data }) {
           console.info(
             data,
@@ -257,12 +264,21 @@ function MySurveys() {
                   <div className="flex-[3]">
                     <ButtonGhost
                       text="Convert to NFT"
-                      type="normal"
-                      icon={null}
-                      iconPosition={null}
-                      block={true}
-                      onClick={(e) => console.log("Convert to NFT", e)}
-                      isLoading={false}
+                      onClick={(e) => {
+                        console.log("Convert to NFT", e);
+                        // call confirm mint modal
+                        mintModal.show({
+                          title: "Mint NFT",
+                          content: (
+                            <ConfirmMintModalContent
+                              inBuiltAddress={inBuiltAddress}
+                              surveyId={item?.surveyId}
+                              surveyUri={item?.uri}
+                              cancel={() => mintModal.hide()}
+                            />
+                          ),
+                        });
+                      }}
                       disabled={!item?.completed}
                     />
                   </div>
@@ -358,7 +374,12 @@ function MySurveys() {
                       icon={null}
                       iconPosition={null}
                       block={true}
-                      onClick={(e) => console.log("Finish up", e)}
+                      onClick={(e) => {
+                        console.log("Finish up", e);
+                        push(
+                          `/home/take-survey?surveyURI=${item?.uri}&surveyId=${item?.surveyId}&amount=${item?.amount}&validatorCount=${item?.valCount}&responseCount=${item?.responseCount}`
+                        );
+                      }}
                       isLoading={false}
                       disabled={false}
                     />
@@ -461,8 +482,77 @@ function MySurveys() {
             <Loader />
           </div>
         ))}
+      <MintModalRender />
     </div>
   );
 }
+
+const ConfirmMintModalContent = ({
+  inBuiltAddress,
+  surveyId,
+  surveyUri,
+  cancel,
+}) => {
+  const [{ token }] = useCookies(["token"]);
+  const { push } = useRouter();
+  // Mutation for convert to NFT
+  const { mutate, isLoading } = useMutation(convertSurveyToNFT, {
+    onSuccess({ data, success, message }) {
+      console.log(data, success, message, "Mint NFT with inbuilt return data");
+      if (success) push("/home/");
+    },
+    onError(err) {
+      console.error(err, "Mint NFT error");
+    },
+  });
+  const [price, setPrice] = useState<string>();
+  return (
+    <div className="w-full flex flex-col space-y-2">
+      <span className="text-sm text-gray-600 font-normal">
+        Converting your completed surveys to NFT will make them available for
+        trade on the market place when you list them. Are you sure about this?
+      </span>
+      <div className="form-control mb-2">
+        <label className="label">
+          <span className="label-text text-slate-700 font-medium">Price</span>
+        </label>
+        <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
+          {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
+                <FaEnvelope color="#B8C4CE" />
+              </span> */}
+          <input
+            type="number"
+            data-test="price"
+            placeholder="0.00"
+            className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+            value={price}
+            onChange={(e) => {
+              console.info("Email address", e.target.value);
+              setPrice(e.target.value);
+            }}
+          />
+          {/* <span>USD</span> */}
+        </label>
+      </div>
+      <ButtonPrimary
+        text="Confirm and mint"
+        onClick={async () => {
+          // COnfirm mint and call necessary contract methods to mint survey
+          if (price) {
+            mutate({
+              token,
+              surveyId,
+              address: inBuiltAddress,
+              surveyUri,
+              price,
+            });
+          }
+        }}
+        isLoading={isLoading}
+      />
+      <ButtonGhost text="Cancel" onClick={cancel} />
+    </div>
+  );
+};
 
 export default withLayout(MySurveys);

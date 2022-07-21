@@ -28,7 +28,7 @@ function Home() {
   const queryClient = useQueryClient();
 
   // Context
-  const { address, sonergyBalance } = useWalletContext();
+  const { address, inBuiltAddress, sonergyBalance } = useWalletContext();
   const { pullData, isPullingData } = useIPFSContext();
   const [availableSurveyData, setAvailableSurveyData] = useState([]);
   const [mySurveyCount, setMySurveyCount] = useState(0);
@@ -38,8 +38,9 @@ function Home() {
   // Setup use queries function
   const results = useQueries([
     {
-      queryKey: ["getAllSurveys", token],
-      queryFn: () => getAllSurveys(token),
+      queryKey: ["getAllSurveys", token || inBuiltAddress],
+      queryFn: () =>
+        getAllSurveys({ token, address: address || inBuiltAddress }),
       async onSuccess({ data, message, success }) {
         console.log(data, success, message, "Data from getAllSurveys queries");
         if (success && data.length) {
@@ -67,8 +68,9 @@ function Home() {
       },
     },
     {
-      queryKey: ["getMySurveys", token, address],
-      queryFn: () => getMySurveys({ token, address }),
+      queryKey: ["getMySurveys", token, address || inBuiltAddress],
+      queryFn: () =>
+        getMySurveys({ token, address: address || inBuiltAddress }),
       async onSuccess({ success, message, data }) {
         console.info(
           data,
@@ -87,8 +89,9 @@ function Home() {
       },
     },
     {
-      queryKey: ["getCompletedSurveys", token, address],
-      queryFn: () => getCompletedSurveys({ token, address }),
+      queryKey: ["getCompletedSurveys", token, address || inBuiltAddress],
+      queryFn: () =>
+        getCompletedSurveys({ token, address: address || inBuiltAddress }),
       async onSuccess({ success, message, data }) {
         console.info(
           data,
@@ -119,7 +122,7 @@ function Home() {
     queryClient.invalidateQueries("getMySurveys");
     queryClient.invalidateQueries("getAllSurveys");
     queryClient.invalidateQueries("getCompletedSurveys");
-  }, [address]);
+  }, [address, inBuiltAddress]);
 
   // Callback actions
   const mySurveyClicked = (sort: string) => {

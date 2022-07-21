@@ -70,8 +70,14 @@ export const getMySurveys = async ({
     },
   }).then((res) => res.json());
 
-export const getAllSurveys = async (token: string) =>
-  await fetch(`${BASE_URL}/surveys/get-all-surveys`, {
+export const getAllSurveys = async ({
+  token,
+  address,
+}: {
+  token: string;
+  address: string;
+}) =>
+  await fetch(`${BASE_URL}/surveys/get-all-surveys/${address}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -93,7 +99,7 @@ export const getCompletedSurveys = async ({
   }).then((res) => res.json());
 
 // NFT
-export const getNFTSurveysByAddress = async ({
+export const getNFTSurveys = async ({
   token,
   address,
 }: {
@@ -107,7 +113,13 @@ export const getNFTSurveysByAddress = async ({
     },
   }).then((res) => res.json());
 
-export const getMyNFTSurveys = async (token: string) =>
+export const getMyNFTSurveys = async ({
+  token,
+  address,
+}: {
+  token: string;
+  address: string;
+}) =>
   await fetch(`${BASE_URL}/surveys/get-my-nft-surveys`, {
     headers: {
       "Content-Type": "application/json",
@@ -115,7 +127,13 @@ export const getMyNFTSurveys = async (token: string) =>
     },
   }).then((res) => res.json());
 
-export const getCreatedNFTSurveys = async (token: string) =>
+export const getCreatedNFTSurveys = async ({
+  token,
+  address,
+}: {
+  token: string;
+  address: string;
+}) =>
   await fetch(`${BASE_URL}/surveys/get-created-nft-surveys`, {
     headers: {
       "Content-Type": "application/json",

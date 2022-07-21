@@ -118,7 +118,7 @@ const SurveyDetail = ({
             {details?.surveyTitle ||
               "Blockchain development and utilization in sub-saharan Africa."}
           </span>
-          <span className="text-xs text-gray-500 mb-1">Survey topic</span>
+          <span className="text-xs text-gray-500 mb-1">Survey description</span>
           <span className="text-xs font-medium text-gray-800 mb-3">
             {details?.description || "Survey description"}
           </span>

@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { useCookies } from "react-cookie";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueries, useQueryClient } from "react-query";
 import {
   CONTRACT_ABI,
   SURVEY_ABI_NEW,
@@ -17,13 +17,14 @@ import {
   SURVEY_ADDRESS_NEW,
   TOKEN_ADDRESS,
 } from "../contract/config";
-import { getSonergyBalance } from "../queries";
+import { getSonergyBalance, getUserWalletAddresses } from "../queries";
 
 export const MIN_WITHDRAW = 10;
 
 type walletContextType = {
   isFetchingBalance: boolean;
   address: string;
+  inBuiltAddress: string;
   setAddress: Dispatch<SetStateAction<string>>;
   sonergyBalance: BalanceData;
   provider: string;
@@ -51,6 +52,7 @@ export function WalletProvider({ children }: Props): JSX.Element {
 
   // States
   const [address, setAddress] = useState<string | undefined>();
+  const [inBuiltAddress, setInbuiltAddress] = useState<string | undefined>();
   const [tokenContract, setTokenContract] = useState<Contract>();
   const [surveyContract, setSurveyContract] = useState<Contract>();
   const [provider, setProvider] = useState();
@@ -63,25 +65,12 @@ export function WalletProvider({ children }: Props): JSX.Element {
     }
   );
 
-  // Wallet sonergy balance query { data, success, message }
-  const {
-    data,
-    isLoading,
-    error,
-  }: {
-    data:
-      | {
-          data: Array<BalanceData | undefined>;
-          success: boolean;
-          message: string;
-        }
-      | undefined;
-    isLoading: boolean;
-    error: object | undefined;
-  } = useQuery(
-    ["getSonergyBalance", token, address],
-    () => getSonergyBalance({ token, address }),
+  // Create queries for the In built balance and wallet return address
+  const [{ isLoading: isBalanceLoading }] = useQueries([
     {
+      //Get balance, if connected get connected balance else get inbuilt balance
+      queryKey: ["getSonergyBalance", token, address || inBuiltAddress],
+      queryFn: () => getSonergyBalance({ token, address }),
       onSuccess({ success, message, data }) {
         console.info(
           data,
@@ -98,8 +87,29 @@ export function WalletProvider({ children }: Props): JSX.Element {
       onError(err) {
         console.error(err, "Error occurred while getSonergyBalance called");
       },
-    }
-  );
+    },
+    {
+      //Get inbuilt address and return to address
+      queryKey: ["getInbuiltAddress", token],
+      queryFn: () => getUserWalletAddresses(token),
+      onSuccess({ success, message, data }) {
+        console.info(
+          data,
+          success,
+          message,
+          "Data returned from the getInbuiltUserAddress"
+        );
+
+        if (success && !address)
+          setInbuiltAddress(
+            data?.find((val) => val.walletType === "BSC").address
+          );
+      },
+      onError(err) {
+        console.error(err, "Error occurred while getSonergyBalance called");
+      },
+    },
+  ]);
 
   const approveSpend = async (amount: string) => {
     // approve spend for user
@@ -152,14 +162,20 @@ export function WalletProvider({ children }: Props): JSX.Element {
       connectTokenContract();
       connectSurveyContract();
     }
-  }, [address]);
+
+    if (!address) {
+      queryClient.invalidateQueries("getInbuiltAddress");
+      queryClient.invalidateQueries("getSonergyBalance");
+    }
+  }, [address, inBuiltAddress]);
 
   return (
     <>
       <WalletContext.Provider
         value={{
-          isFetchingBalance: isLoading,
+          isFetchingBalance: isBalanceLoading,
           address,
+          inBuiltAddress,
           provider,
           setProvider,
           setSigner,

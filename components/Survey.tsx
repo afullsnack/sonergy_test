@@ -500,8 +500,12 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
   const [answers, setAnswer] = useState<any[] | undefined>([]);
 
   // IPFS Context
-  const { pushAnswersToIPFS, isPushingData } = useIPFSContext();
-  const { address } = useWalletContext();
+  const {
+    pushAnswersToIPFSForConnected,
+    pushAnswersToIPFSForInbuilt,
+    isPushingData,
+  } = useIPFSContext();
+  const { address, inBuiltAddress } = useWalletContext();
 
   useEffect(() => console.log(answers, "The item answers"), [answers]);
 
@@ -775,8 +779,11 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
                 } else {
                   //TODO: Submit survey answers then call finish stage
                   if (address) {
-                    await pushAnswersToIPFS(answers, surveyID);
+                    await pushAnswersToIPFSForConnected(answers, surveyID);
 
+                    setStage(AnswerStage.Finish);
+                  } else {
+                    await pushAnswersToIPFSForInbuilt(answers, surveyID);
                     setStage(AnswerStage.Finish);
                   }
 

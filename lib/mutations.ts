@@ -180,21 +180,21 @@ export const addAnswerToSurvey = async ({
   token,
   surveyId,
   address,
-  cid,
+  answerUri,
 }: {
   token: string;
   surveyId: string;
   address: string;
-  cid: string;
+  answerUri: string;
 }) =>
   await fetch(`${BASE_URL}/surveys/add-survey-answer`, {
     method: "POST",
-    body: JSON.stringify({ surveyId, address, cid }),
+    body: JSON.stringify({ surveyId, address, answerUri }),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  }).then((res) => res.json());
 
 export const fetchSurveyAnswers = async ({
   token,
@@ -212,29 +212,29 @@ export const fetchSurveyAnswers = async ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  }).then((res) => res.json());
 
 export const convertSurveyToNFT = async ({
   token,
   surveyId,
   address,
-  surveyUrl,
+  surveyUri,
   price,
 }: {
   token: string;
   surveyId: string;
   address: string;
-  surveyUrl: string;
+  surveyUri: string;
   price: string;
 }) =>
   await fetch(`${BASE_URL}/surveys/convert-to-nft`, {
     method: "POST",
-    body: JSON.stringify({ surveyId, address, surveyUrl, price }),
+    body: JSON.stringify({ surveyId, address, surveyUri, price }),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  }).then((res) => res.json());
 
 export const buySurveyNFT = async ({
   token,
@@ -252,7 +252,7 @@ export const buySurveyNFT = async ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  }).then((res) => res.json());
 
 // Wallet
 export const sendSonergy = async ({
@@ -275,4 +275,4 @@ export const sendSonergy = async ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  }).then((res) => res.json());

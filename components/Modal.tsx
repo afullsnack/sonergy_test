@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
-export function useModal({ title, content }) {
+export function useModal() {
   const [visible, setVisible] = useState(false);
+  const [title, setTitle] = useState<string>();
+  const [content, setContent] = useState<ReactNode>();
 
-  const show = () => setVisible(true);
+  const show = ({ title, content }: { title: string; content: ReactNode }) => {
+    setTitle((_prev) => title);
+    setContent((_prev) => content);
+
+    setVisible((_prev) => true);
+  };
 
   const hide = () => setVisible(false);
 
   return [
     {
       visibility: visible,
-      show,
+      show: show,
       hide,
     },
     () => (
@@ -22,9 +29,9 @@ export function useModal({ title, content }) {
           visible ? null : "hidden"
         } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full`}
       >
-        <div className="relative p-4 w-full max-w-2xl h-full md:h-auto flex items-center justify-center mx-auto my-0">
+        <div className="relative p-4 w-full max-w-2xl mobile:min-w-full h-full md:h-auto flex items-center justify-center mx-auto my-0">
           {/* <!-- Modal content --> */}
-          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700 mobile w-full">
             {/* <!-- Modal header --> */}
             <div className="flex justify-between items-start p-4 rounded-t border-b bg-slate-100">
               <h3 className="text-lg font-medium text-gray-700 desktop:">
@@ -51,13 +58,17 @@ export function useModal({ title, content }) {
               </button>
             </div>
             {/* <!-- Modal body --> */}
-            <div className="p-6 space-y-6 flex flex-col">{content}</div>
+            <div className="p-6 space-y-6 flex flex-col w-full">{content}</div>
           </div>
         </div>
       </div>
     ),
   ] as [
-    { visibility: boolean; show: () => void; hide: () => void },
+    {
+      visibility: boolean;
+      show: ({ title, content }: { title: string; content: ReactNode }) => void;
+      hide: () => void;
+    },
     () => JSX.Element
   ];
 }

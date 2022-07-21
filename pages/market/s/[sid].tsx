@@ -12,10 +12,7 @@ function SingleSurvey() {
   const { sid, action } = router.query;
   console.log(sid, action, "Query params");
 
-  const [bidModal, BidModal] = useModal({
-    title: "Place bid",
-    content: <PlaceBidModalContent />,
-  });
+  const [bidModal, BidModal] = useModal();
 
   return (
     <div className="w-full">
@@ -69,7 +66,10 @@ function SingleSurvey() {
               block={true}
               onClick={(e) => {
                 console.log("Place bid on survey clicked", e);
-                bidModal.show();
+                bidModal.show({
+                  title: "Place bid",
+                  content: <PlaceBidModalContent />,
+                });
               }}
               disabled={false}
               isLoading={false}
@@ -118,7 +118,10 @@ function SingleSurvey() {
               block={true}
               onClick={(e) => {
                 console.log("confirm buy on survey clicked", e);
-                bidModal.show();
+                bidModal.show({
+                  title: "Place bid",
+                  content: <PlaceBidModalContent />,
+                });
               }}
               disabled={false}
               isLoading={false}

@@ -1,32 +1,128 @@
+import { BigNumber, utils } from "ethers";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { AiFillClockCircle } from "react-icons/ai";
 import { FaFileDownload } from "react-icons/fa";
 import { GoVerified } from "react-icons/go";
+import { useQueries, useQueryClient } from "react-query";
 import {
   ButtonGhost,
   ButtonIcon,
   ButtonPrimary,
 } from "../../components/Button";
 import withLayout from "../../components/Layout";
+import Loader from "../../components/Loader";
 import { MostPopularSlider } from "../../components/Marketplace/carousel";
 import { useModal } from "../../components/Modal";
 import OnboardCard from "../../components/OnboardCard";
+import { useIPFSContext } from "../../lib/contexts/ipfsContext";
+import { useWalletContext } from "../../lib/contexts/walletContext";
+import {
+  getCreatedNFTSurveys,
+  getMyNFTSurveys,
+  getNFTSurveys,
+} from "../../lib/queries";
 
 function Market() {
   const router = useRouter();
+  const [{ token }] = useCookies(["token"]);
   const { dSort } = router.query; //Default sort value from query param
+  const queryClient = useQueryClient();
+
+  // Conext
+  const {
+    address,
+    inBuiltAddress,
+    sonergyBalance: { symbol },
+  } = useWalletContext();
+  const { pullData, isPullingData } = useIPFSContext();
+
   const [sort, setSort] = useState<string>(
     typeof dSort === "string" ? dSort : "marketplace"
   );
-  const [mintModal, MintModal] = useModal({
-    title: "Mint NFT",
-    content: <MintModalContent />,
-  });
+  const [mintModal, MintModal] = useModal();
 
-  const [listModal, ListModal] = useModal({
-    title: "List item for sale",
-    content: <ListItemModalContent />,
-  });
+  const [listModal, ListModal] = useModal();
+
+  // States
+  const [market, setMarket] = useState([]);
+  const [myCollection, setMyCollection] = useState([]);
+  const [completed, setCompleted] = useState([]);
+
+  // useQueries fetch to get nfts and collection and completed surveys
+  const [
+    { isLoading: isMarketLoading },
+    { isLoading: isCollectionLoading },
+    { isLoading: isCompletedLoading },
+  ] = useQueries([
+    {
+      queryKey: ["getNFTSurveys", token, address || inBuiltAddress],
+      queryFn: () =>
+        getNFTSurveys({ token, address: address || inBuiltAddress }),
+      async onSuccess({ data, success, message }) {
+        console.log(data, success, message, "Get NFT data");
+        if (success && data.length) {
+          const decodedMap = data
+            .filter((f) => f.surveyTokenUrl !== "s7ujshjsjkaklauajaj")
+            .map(async (item: any) => {
+              console.log("Item", item.surveyURI);
+              const json = await pullData(item?.surveyTokenUrl);
+              console.log("Gotten json", json);
+              return {
+                ...json,
+                price: utils.formatUnits(BigNumber.from(item?.price), 18),
+                fromSurveyId: BigNumber.from(item?.fromSurveyId),
+                surveyId: BigNumber.from(item?.surveyId),
+                surveyTokenID: BigNumber.from(item?.surveyTokenID),
+                nftContract: item?.nftContract,
+                surveyTokenUrl: item?.surveyTokenUrl,
+                owner: item?.owner,
+                seller: item?.seller,
+                status: item?.status,
+              };
+            });
+
+          const awaitedDecode = await Promise.all(decodedMap);
+          setMarket(awaitedDecode);
+        }
+      },
+      onError(err) {
+        console.error(err, "Error on get NFT");
+      },
+    },
+    {
+      queryKey: ["getMyNFTSurveys", token, address || inBuiltAddress],
+      queryFn: () =>
+        getMyNFTSurveys({ token, address: address || inBuiltAddress }),
+      onSuccess({ data, success, message }) {
+        console.log(data, success, message, "Get My NFT data");
+        if (success) setMyCollection(data);
+      },
+      onError(err) {
+        console.error(err, "Error on get NFT");
+      },
+    },
+    {
+      queryKey: ["getCreatedNFTSurveys", token, address || inBuiltAddress],
+      queryFn: () =>
+        getCreatedNFTSurveys({ token, address: address || inBuiltAddress }),
+      onSuccess({ data, success, message }) {
+        console.log(data, success, message, "Get Created NFT data");
+        if (success) setCompleted(data);
+      },
+      onError(err) {
+        console.error(err, "Error on get NFT");
+      },
+    },
+  ]);
+
+  useEffect(() => {
+    console.log("useQueries result");
+    queryClient.invalidateQueries("getNFTSurveys");
+    queryClient.invalidateQueries("getMyNFTSurveys");
+    queryClient.invalidateQueries("getCreatedNFTSurveys");
+  }, [address, inBuiltAddress]);
 
   return (
     <div className="w-full">
@@ -112,26 +208,90 @@ function Market() {
           </button>
         </div>
       </div>
+
       {/* List of surveys */}
-      {sort === "marketplace" && (
-        <>
-          <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
-            <div className="w-full flex items-center justify-between">
-              <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
-                Most popular
-              </span>
-              <span
-                className="text-sm desktop:text-lg font-medium text-blue-600 mb-2 hover:cursor-pointer"
-                onClick={(e) => {
-                  console.log("See all clicked", e);
-                }}
-              >
-                See all
-              </span>
+      {sort === "marketplace" &&
+        !isMarketLoading &&
+        !isPullingData &&
+        market.length > 0 && (
+          <>
+            <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
+              <div className="w-full flex items-center justify-between">
+                <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
+                  Most popular
+                </span>
+                <span
+                  className="text-sm desktop:text-lg font-medium text-blue-600 mb-2 hover:cursor-pointer"
+                  onClick={(e) => {
+                    console.log("See all clicked", e);
+                  }}
+                >
+                  See all
+                </span>
+              </div>
+              <MostPopularSlider>
+                {market.map((item, idx) => (
+                  <div
+                    className="carousel-item mobile:min-w-full"
+                    key={idx.toString()}
+                  >
+                    <OnboardCard>
+                      <div
+                        className="w-full flex flex-col items-start justify-between mb-2"
+                        onClick={(e) => {
+                          console.log(e, "Clicked on te survey");
+                          router.push("/market/s/123?action=bid");
+                        }}
+                      >
+                        <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
+                          <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
+                          {`${item?.seller.substring(0, 9)}...` || "Username"}{" "}
+                          <GoVerified color="#0059AC" className="ml-2" />
+                        </span>
+                        <span className="text-gray-700 text-sm font-normal text-left">
+                          {item?.surveyTitle ||
+                            " Blockchain development and utilization in sub-saharanAfrica."}
+                        </span>
+                      </div>
+                      <div className="w-full flex items-center justify-between">
+                        <div className="flex flex-col flex-[3] items-start justify-center">
+                          <p className="flex items-center justify-center text-gray-700 font-medium text-[16px] mb-1">
+                            {item?.price} {symbol || "SNEGY"}
+                          </p>
+                          {item?.expirationDate && (
+                            <p className="flex items-center justify-center">
+                              {" "}
+                              <AiFillClockCircle size={14} />
+                              <span className="text-xs text-gray-500 ml-1">
+                                {new Date(
+                                  item?.expirationDate
+                                ).toLocaleString() || "2 days 11 hours"}
+                              </span>{" "}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex">
+                          <ButtonPrimary
+                            text="Buy now"
+                            type="normal"
+                            icon={null}
+                            iconPosition={null}
+                            block={true}
+                            onClick={(e) => {
+                              console.log("Buy now clicked", e);
+                              router.push("/market/s/123?action=buy");
+                            }}
+                            disabled={false}
+                            isLoading={false}
+                          />
+                        </div>
+                      </div>
+                    </OnboardCard>
+                  </div>
+                ))}
+              </MostPopularSlider>
             </div>
-            <MostPopularSlider />
-          </div>
-          <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
+            {/* <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
             <div className="w-full flex items-center justify-between">
               <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
                 New
@@ -146,11 +306,16 @@ function Market() {
               </span>
             </div>
             <MostPopularSlider />
-          </div>
-        </>
-      )}
+          </div> */}
+          </>
+        )}
 
-      {sort === "collections" && (
+      {sort === "marketplace" &&
+        isMarketLoading &&
+        isPullingData &&
+        market.length <= 0 && <Loader />}
+
+      {sort === "collections" && !isCollectionLoading && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
           {new Array(3).fill("muches").map((item, idx) => (
             <OnboardCard key={idx.toString()}>
@@ -173,7 +338,10 @@ function Market() {
                     block={true}
                     onClick={(e) => {
                       console.log("Sell survey clicked", e);
-                      listModal.show();
+                      listModal.show({
+                        title: "List item for sale",
+                        content: <ListItemModalContent />,
+                      });
                     }}
                     disabled={false}
                     isLoading={false}
@@ -193,7 +361,9 @@ function Market() {
         </div>
       )}
 
-      {sort === "completed" && (
+      {sort === "collections" && isCollectionLoading && <Loader />}
+
+      {sort === "completed" && !isCompletedLoading && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
           {new Array(3).fill("muches").map((item, idx) => (
             <OnboardCard key={idx.toString()}>
@@ -216,7 +386,10 @@ function Market() {
                     block={true}
                     onClick={(e) => {
                       console.log("Sell survey clicked", e);
-                      mintModal.show();
+                      mintModal.show({
+                        title: "Mint NFT",
+                        content: <MintModalContent />,
+                      });
                     }}
                     disabled={false}
                     isLoading={false}
@@ -235,6 +408,8 @@ function Market() {
           ))}
         </div>
       )}
+
+      {sort === "completed" && isCompletedLoading && <Loader />}
       <MintModal />
       <ListModal />
     </div>
