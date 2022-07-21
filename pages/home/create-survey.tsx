@@ -701,12 +701,7 @@ const SurveyReview = ({
   } = useIPFSContext();
 
   // Modal
-  const [createSurveyModal, CreateSurveyModal] = useModal({
-    title: "Create survey",
-    content: (
-      <SurveyCreationModalContent surveyTopic={surveyTopic} router={router} />
-    ),
-  });
+  const [createSurveyModal, CreateSurveyModal] = useModal();
 
   const { mutate, isLoading, error } = useMutation(addSurvey, {
     onSuccess: ({ data, success, message }) => {
@@ -827,7 +822,15 @@ const SurveyReview = ({
                 }
               );
               console.log(data, "Data");
-              createSurveyModal.show();
+              createSurveyModal.show({
+                title: "Create survey",
+                content: (
+                  <SurveyCreationModalContent
+                    surveyTopic={surveyTopic}
+                    router={router}
+                  />
+                ),
+              });
             } else {
               //USe inbuilt wallet address to create survey
               const data = await pushQuestionsToIPFSForInbuilt(
@@ -855,7 +858,15 @@ const SurveyReview = ({
                 }
               );
               console.log(data, "Data");
-              createSurveyModal.show();
+              createSurveyModal.show({
+                title: "Create survey",
+                content: (
+                  <SurveyCreationModalContent
+                    surveyTopic={surveyTopic}
+                    router={router}
+                  />
+                ),
+              });
             }
 
             // .map((item) => {
