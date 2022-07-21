@@ -30,7 +30,7 @@ function Deposit() {
           </span>
           <div className="flex items-center justify-center mb-4">
             {/* <img src="/qr_code_img.svg" alt="Deposit QR code" width={200} /> */}
-            <QRCode value={address || inBuiltAddress} width={200} />
+            <QRCode value={address || inBuiltAddress || "test"} width={200} />
           </div>
           {/* <div className="badge bg-green-600 text-white font-light border-none mt-0 mb-5 mx-auto">Completed</div> */}
           <div className="w-full flex flex-col p-4">
