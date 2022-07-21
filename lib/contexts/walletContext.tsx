@@ -12,8 +12,9 @@ import { useCookies } from "react-cookie";
 import { useQuery, useQueryClient } from "react-query";
 import {
   CONTRACT_ABI,
-  SURVEY_ABI,
+  SURVEY_ABI_NEW,
   SURVEY_ADDRESS,
+  SURVEY_ADDRESS_NEW,
   TOKEN_ADDRESS,
 } from "../contract/config";
 import { getSonergyBalance } from "../queries";
@@ -133,8 +134,8 @@ export function WalletProvider({ children }: Props): JSX.Element {
     // COnnect contract on wallet connect
     if (provider && typeof provider !== "undefined") {
       const surveyContract = new ethers.Contract(
-        SURVEY_ADDRESS,
-        JSON.parse(JSON.stringify(SURVEY_ABI)),
+        SURVEY_ADDRESS_NEW,
+        JSON.parse(JSON.stringify(SURVEY_ABI_NEW)),
         provider
       );
       // Configure with signer
