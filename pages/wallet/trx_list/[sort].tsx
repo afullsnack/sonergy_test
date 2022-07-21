@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { AiOutlineRight } from "react-icons/ai";
 import { FaSort } from "react-icons/fa";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
@@ -11,7 +12,10 @@ function TransactionMoreList() {
   const {
     query: { sort },
   } = router;
-  console.info(sort, "Transaction List sort");
+
+  useEffect(() => {
+    console.info(sort, "Transaction List sort");
+  }, []);
 
   return (
     <div className="w-full">
