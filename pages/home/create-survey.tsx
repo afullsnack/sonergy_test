@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FaCheck } from "react-icons/fa";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
+import { useToast } from "../../components/Alerts";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import Loader from "../../components/Loader";
@@ -12,7 +13,6 @@ import OnboardCard from "../../components/OnboardCard";
 import { SurveyQAEntry, SurveyQuestionsData } from "../../components/Survey";
 import { useIPFSContext } from "../../lib/contexts/ipfsContext";
 import { useWalletContext } from "../../lib/contexts/walletContext";
-import { addSurvey } from "../../lib/mutations";
 import { getSurveyPlans } from "../../lib/queries";
 
 export enum Stage {
@@ -702,17 +702,7 @@ const SurveyReview = ({
 
   // Modal
   const [createSurveyModal, CreateSurveyModal] = useModal();
-
-  const { mutate, isLoading, error } = useMutation(addSurvey, {
-    onSuccess: ({ data, success, message }) => {
-      console.log(data, success, message, "Returned add survey data");
-
-      if (success) {
-      }
-    },
-    onError: () => console.error("There was an error adding survey"),
-    // onSettled: () => queryClient.invalidateQueries("login"),
-  });
+  const [toast, Toast] = useToast();
 
   return (
     <>
@@ -858,15 +848,21 @@ const SurveyReview = ({
                 }
               );
               console.log(data, "Data");
-              createSurveyModal.show({
-                title: "Create survey",
-                content: (
-                  <SurveyCreationModalContent
-                    surveyTopic={surveyTopic}
-                    router={router}
-                  />
-                ),
-              });
+              if (data?.success) {
+                createSurveyModal.show({
+                  title: "Create survey",
+                  content: (
+                    <SurveyCreationModalContent
+                      surveyTopic={surveyTopic}
+                      router={router}
+                    />
+                  ),
+                });
+              } else {
+                toast.error({
+                  text: data?.message.substring(0, 36),
+                });
+              }
             }
 
             // .map((item) => {
@@ -896,6 +892,7 @@ const SurveyReview = ({
         />
       </div>
       <CreateSurveyModal />
+      <Toast />
     </>
   );
 };

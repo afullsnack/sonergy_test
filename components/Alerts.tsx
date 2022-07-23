@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
+
 export const ToastSuccess = ({ text }: { text: string }) => {
   return (
     <div
       id="toast-success"
-      className="flex items-center p-4 mb-4 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+      className="flex sticky bottom-32 z-50 right-0 left-0 items-center p-4 mb-4 mx-4 my-auto text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
       role="alert"
     >
       <div className="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
@@ -48,7 +50,7 @@ export const ToastDanger = ({ text }: { text: string }) => {
   return (
     <div
       id="toast-danger"
-      className="flex items-center p-4 mb-4 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+      className="flex sticky bottom-32 z-50 right-0 left-0 items-center p-4 mb-4 mx-4 my-auto text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
       role="alert"
     >
       <div className="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
@@ -94,7 +96,7 @@ export const ToastWarning = ({ text }: { text: string }) => {
   return (
     <div
       id="toast-warning"
-      className="flex items-center p-4 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+      className="flex sticky bottom-32 z-50 right-0 left-0 items-center p-4 mx-4 my-auto text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
       role="alert"
     >
       <div className="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
@@ -135,3 +137,81 @@ export const ToastWarning = ({ text }: { text: string }) => {
     </div>
   );
 };
+
+export function useToast() {
+  enum AlertType {
+    Error = "error",
+    Success = "success",
+    Warning = "warning",
+  }
+
+  const [visible, setVisible] = useState<boolean>(false);
+  const [displayText, setDisplayText] = useState<string | undefined>();
+  const [alertType, setAlertType] = useState<AlertType>(AlertType.Error);
+
+  const error = ({ text }: { text: string }) => {
+    setDisplayText((_prev) => text);
+    setVisible(true);
+    setAlertType(AlertType.Error);
+
+    console.error("This shit should throw damn");
+
+    // return <ToastDanger text={text} />;
+  };
+
+  const success = ({ text }: { text: string }) => {
+    setDisplayText((_prev) => text);
+    setVisible(true);
+    setAlertType(AlertType.Success);
+
+    // return <ToastSuccess text={text} />;
+  };
+  const warning = ({ text }: { text: string }) => {
+    setDisplayText((_prev) => text);
+    setVisible(true);
+    setAlertType(AlertType.Error);
+
+    // return <ToastWarning text={text} />;
+  };
+
+  useEffect(() => {
+    const toastTimeout = window.setTimeout(
+      () => setVisible((_prev) => false),
+      3000
+    );
+    console.log("Setting timeout", toastTimeout);
+
+    return () => {
+      window.clearTimeout(toastTimeout);
+      console.log("Clear timeout");
+    };
+  }, [visible]);
+
+  return [
+    {
+      error,
+      success,
+      warning,
+    },
+    () => (
+      <>
+        {alertType === AlertType.Error && visible && (
+          <ToastDanger text={displayText} />
+        )}
+        {alertType === AlertType.Success && visible && (
+          <ToastSuccess text={displayText} />
+        )}
+        {alertType === AlertType.Warning && visible && (
+          <ToastWarning text={displayText} />
+        )}
+      </>
+    ),
+  ] as [
+    {
+      error: ({ text }: { text: string }) => void;
+      success: ({ text }: { text: string }) => void;
+      warning: ({ text }: { text: string }) => void;
+    },
+    () => JSX.Element
+  ];
+}

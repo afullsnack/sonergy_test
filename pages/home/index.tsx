@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FaPlus } from "react-icons/fa";
 import { useQueries, useQueryClient } from "react-query";
+import { useToast } from "../../components/Alerts";
 import { ButtonGhost, ButtonPrimary } from "../../components/Button";
 // import { BalanceCarousel } from "../../components/Carousel";
 import withLayout from "../../components/Layout";
@@ -111,6 +112,8 @@ function Home() {
     },
   ]);
 
+  const [toast, ToastRender] = useToast();
+
   useEffect(() => {
     console.log(
       token,
@@ -194,12 +197,18 @@ function Home() {
           icon={null}
           iconPosition={null}
           type="normal"
-          onClick={(e) => console.log("Become a validator clicked")}
+          onClick={(e) => {
+            console.log("Become a validator clicked");
+            toast.error({
+              text: "Test",
+            });
+          }}
           block={true}
           isLoading={false}
           disabled={false}
         />
       </div>
+      <ToastRender />
     </div>
   );
 }

@@ -8,7 +8,7 @@ import {
   SurveyAnswersData,
   SurveyQuestionsData,
 } from "../../components/Survey";
-import { SURVEY_ADDRESS } from "../contract/config";
+import { SURVEY_ADDRESS_NEW } from "../contract/config";
 import { addAnswerToSurvey, addSurvey } from "../mutations";
 import { useWalletContext } from "./walletContext";
 
@@ -66,9 +66,7 @@ export function IPFSProvider({ children }: ProviderProps) {
   });
   const addAnswerMutation = useMutation(addAnswerToSurvey, {
     onSuccess({ data, success, message }) {
-      if (success) {
-        push("/home/"); //Go home after adding survey
-      }
+      console.log(message, success, message);
     },
     onError(err) {
       console.error(err);
@@ -94,11 +92,13 @@ export function IPFSProvider({ children }: ProviderProps) {
           authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
         },
       });
-      const cid = await ipfsClient.dag.put(json as object, {
-        storeCodec: "dag-cbor",
-        hashAlg: "sha2-256",
-      });
-      // const { cid, path } = await ipfsClient.add('json');
+      // const cid = await ipfsClient.dag.put(json as object, {
+      //   storeCodec: "dag-cbor",
+      //   hashAlg: "sha2-256",
+      // });
+      const { cid, path } = await ipfsClient.add(
+        JSON.stringify(json as object)
+      );
       console.log(cid.toString(), "CID after IPFS call");
 
       // Now call survey contract and add cid to it
@@ -130,7 +130,7 @@ export function IPFSProvider({ children }: ProviderProps) {
       //   esmG
       // );
       const approveTx = await tokenContract.approve(
-        SURVEY_ADDRESS,
+        SURVEY_ADDRESS_NEW,
         approvedSpendAmount,
         {
           gasPrice: utils.parseUnits("100", "gwei"),
@@ -142,7 +142,7 @@ export function IPFSProvider({ children }: ProviderProps) {
 
       /* Now call enroll function */
       const enrollTx = await surveyContract.enrollForSurvey(
-        cid.toString(),
+        path || cid.toString(),
         address,
         surveyData?.surveyPlanId,
         surveyData?.numOfValidators,
@@ -199,6 +199,7 @@ export function IPFSProvider({ children }: ProviderProps) {
       setIsPushingData(false);
     }
   };
+
   const pushQuestionsToIPFSForInbuilt = async (
     json: EncodeQuestionData,
     surveyData: any
@@ -210,7 +211,6 @@ export function IPFSProvider({ children }: ProviderProps) {
         process.env.IPFS_URL,
         process.env.IPFS_PROJECT_SECRET
       );
-      const userAddress = address;
       setIsPushingData(true);
       const ipfsClient = create({
         url: `${process.env.IPFS_URL}/api/v0`,
@@ -218,27 +218,29 @@ export function IPFSProvider({ children }: ProviderProps) {
           authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
         },
       });
-      const cid = await ipfsClient.dag.put(json as object, {
-        storeCodec: "dag-cbor",
-        hashAlg: "sha2-256",
-      });
-      // const { cid, path } = await ipfsClient.add('json');
-      console.log(cid.toString(), "CID after IPFS call");
+      // const cid = await ipfsClient.dag.put(json as object, {
+      //   storeCodec: "dag-cbor",
+      //   hashAlg: "sha2-256",
+      // });
+      const { cid, path } = await ipfsClient.add("json");
+      console.log(cid.toString(), "CID after IPFS call", path, "Survey path");
 
       // Now call add survey mutate function
-      await addSurveyMutation.mutateAsync({
+      const data = await addSurveyMutation.mutateAsync({
         token,
-        surveyURI: `https://ipfs.infura.io/ipfs/${cid}`,
+        surveyURI: path || `https://ipfs.infura.io/ipfs/${cid.toString()}`,
         address: inBuiltAddress,
         surveyPlanId: surveyData?.surveyPlanId as string,
         numOfValidators: surveyData?.numOfValidators,
         numberOfCommissioners: surveyData?.numberOfCommissioners,
         amount: surveyData?.amount,
       });
-      setIsPushingData(false);
+      setIsPushingData((_prev) => false);
+      return data;
     } catch (err) {
       console.error("An error occurred", err);
-      setIsPushingData(false);
+      setIsPushingData((_prev) => false);
+      return err;
     }
   };
 
@@ -261,18 +263,21 @@ export function IPFSProvider({ children }: ProviderProps) {
           authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
         },
       });
-      const cid = await ipfsClient.dag.put(json as object, {
-        storeCodec: "dag-cbor",
-        hashAlg: "sha2-256",
-      });
-      console.log(cid.toString(), "CID after IPFS answer push");
+      // const cid = await ipfsClient.dag.put(json as object, {
+      //   storeCodec: "dag-cbor",
+      //   hashAlg: "sha2-256",
+      // });
+      const { cid, path } = await ipfsClient.add(
+        JSON.stringify(json as object)
+      );
+      console.log(cid.toString(), "CID after IPFS answer push", path, "PATH");
 
       // Now call survey contract and add cid to it
 
       /* Now call enroll function */
       const answerTx = await surveyContract.provideAnswers(
         surveyID,
-        cid.toString(),
+        path || cid.toString(),
         {
           gasPrice: utils.parseUnits("100", "gwei"),
           gasLimit: 1000000,
@@ -329,18 +334,21 @@ export function IPFSProvider({ children }: ProviderProps) {
           authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
         },
       });
-      const cid = await ipfsClient.dag.put(json as object, {
-        storeCodec: "dag-cbor",
-        hashAlg: "sha2-256",
-      });
-      console.log(cid.toString(), "CID after IPFS answer push");
+      // const cid = await ipfsClient.dag.put(json as object, {
+      //   storeCodec: "dag-cbor",
+      //   hashAlg: "sha2-256",
+      // });
+      const { cid, path } = await ipfsClient.add(
+        JSON.stringify(json as object)
+      );
+      console.log(cid.toString(), "CID after IPFS answer push", path, "PATH");
 
       // Now call add survey answers mutate function
       await addAnswerMutation.mutateAsync({
         token,
         surveyId: surveyID,
         address: inBuiltAddress,
-        answerUri: `https://ipfs.infura.io/ipfs/${cid}`,
+        answerUri: path || `https://ipfs.infura.io/ipfs/${cid.toString()}`,
       });
     } catch (err) {
       console.error("An error occurred", err);
