@@ -18,6 +18,7 @@ import { useIPFSContext } from "../lib/contexts/ipfsContext";
 import { useWalletContext } from "../lib/contexts/walletContext";
 import { Stage } from "../pages/home/create-survey";
 import { AnswerStage } from "../pages/home/take-survey";
+import { useToast } from "./Alerts";
 import { ButtonGhost, ButtonPrimary } from "./Button";
 import OnboardCard from "./OnboardCard";
 
@@ -507,6 +508,9 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
   } = useIPFSContext();
   const { address, inBuiltAddress } = useWalletContext();
 
+  // Toast
+  const [toast, ToastRender] = useToast();
+
   useEffect(() => console.log(answers, "The item answers"), [answers]);
 
   const MultiChoiceRender = ({ setAnswer, data, answers, questionId }) => (
@@ -691,7 +695,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
         <OnboardCard>
           <progress
             className="progress bg-blue-300 w-full mb-2"
-            value="30"
+            value={(currentQuestion / questions.length) * 100}
             max="100"
           ></progress>
           <span className="text-xs font-medium text-gray-500 mb-4">
@@ -734,7 +738,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
         </OnboardCard>
       </div>
       <div className="flex items-center justify-center w-full space-x-4 bg-white mobile:p-3">
-        {currentQuestion === 1 && (
+        {currentQuestion === 1 && currentQuestion < questions.length && (
           <ButtonPrimary
             type="normal"
             text="Next"
@@ -744,6 +748,40 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
             onClick={(e) => {
               console.log(e, "Next survey");
               setCurrentQuestion((current) => current + 1);
+            }}
+            disabled={false}
+            isLoading={false}
+          />
+        )}
+        {currentQuestion === questions.length && (
+          <ButtonPrimary
+            type="normal"
+            text="Submit"
+            icon={undefined}
+            iconPosition={undefined}
+            block={true}
+            onClick={async (e) => {
+              console.log(e, "Submit survey answer");
+              //TODO: Submit survey answers then call finish stage
+              if (address) {
+                const result = await pushAnswersToIPFSForConnected(
+                  answers,
+                  surveyID
+                );
+                if (result)
+                  toast.success({ text: "Answer submitted successfully!" });
+                else
+                  toast.error({
+                    text: "There was an issue with submitting your answer, please try again",
+                  });
+
+                setStage(AnswerStage.Finish);
+              } else {
+                await pushAnswersToIPFSForInbuilt(answers, surveyID);
+                setStage(AnswerStage.Finish);
+              }
+
+              console.log(answers, "The full answers");
             }}
             disabled={false}
             isLoading={false}
@@ -779,7 +817,16 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
                 } else {
                   //TODO: Submit survey answers then call finish stage
                   if (address) {
-                    await pushAnswersToIPFSForConnected(answers, surveyID);
+                    const result = await pushAnswersToIPFSForConnected(
+                      answers,
+                      surveyID
+                    );
+                    if (result)
+                      toast.success({ text: "Answer submitted successfully!" });
+                    else
+                      toast.error({
+                        text: "There was an issue with submitting your answer, please try again",
+                      });
 
                     setStage(AnswerStage.Finish);
                   } else {
@@ -796,6 +843,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
           </>
         )}
       </div>
+      <ToastRender />
     </div>
   );
 };

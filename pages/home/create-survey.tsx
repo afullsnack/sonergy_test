@@ -790,7 +790,7 @@ const SurveyReview = ({
             console.log(e, "Submit survey to ipfs and create", questions);
             if (address) {
               //iF wallet is connected go this route
-              const data = await pushQuestionsToIPFSForConnected(
+              const result = await pushQuestionsToIPFSForConnected(
                 {
                   surveyTitle: surveyTopic,
                   description: surveyDescription,
@@ -811,16 +811,23 @@ const SurveyReview = ({
                   numberOfCommissioners: commissionerCount.toString(),
                 }
               );
-              console.log(data, "Data");
-              createSurveyModal.show({
-                title: "Create survey",
-                content: (
-                  <SurveyCreationModalContent
-                    surveyTopic={surveyTopic}
-                    router={router}
-                  />
-                ),
-              });
+              console.log(result, "Data");
+
+              if (result) {
+                createSurveyModal.show({
+                  title: "Create survey",
+                  content: (
+                    <SurveyCreationModalContent
+                      surveyTopic={surveyTopic}
+                      router={router}
+                    />
+                  ),
+                });
+              } else {
+                toast.error({
+                  text: "An error occurred, survey creation could not be completed. Please try again later",
+                });
+              }
             } else {
               //USe inbuilt wallet address to create survey
               const data = await pushQuestionsToIPFSForInbuilt(

@@ -158,7 +158,7 @@ export function IPFSProvider({ children }: ProviderProps) {
       console.log(enrollTx, enrollReceipt, "Survey contract enroll survey");
 
       // Listen for survey enroll event and get returned data
-      surveyContract.on(
+      return surveyContract.on(
         "SurveyItemCreated",
         (
           surveyURI: string,
@@ -191,12 +191,14 @@ export function IPFSProvider({ children }: ProviderProps) {
 
           if (userAddress === address) {
             setIsPushingData(false);
+            return true;
           }
         }
       );
     } catch (err) {
       console.error("An error occurred", err);
       setIsPushingData(false);
+      return false;
     }
   };
 
@@ -275,7 +277,7 @@ export function IPFSProvider({ children }: ProviderProps) {
       // Now call survey contract and add cid to it
 
       /* Now call enroll function */
-      const answerTx = await surveyContract.provideAnswers(
+      const answerTx = await surveyContract.provideAnswer(
         surveyID,
         path || cid.toString(),
         {
@@ -288,7 +290,7 @@ export function IPFSProvider({ children }: ProviderProps) {
       console.log(answerTx, answerReceipt, "Survey contract ProvideAnswer");
 
       // Listen for survey enroll event and get returned data
-      surveyContract.on(
+      return surveyContract.on(
         "AnswerCreated",
         (
           surveyURI: string,
@@ -313,12 +315,14 @@ export function IPFSProvider({ children }: ProviderProps) {
 
           if (userAddress === address) {
             setIsPushingData(false);
+            return true;
           }
         }
       );
     } catch (err) {
       console.error("An error occurred", err);
       setIsPushingData(false);
+      return false;
     }
   };
   const pushAnswersToIPFSForInbuilt = async (
