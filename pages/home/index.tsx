@@ -39,7 +39,7 @@ function Home() {
   // Setup use queries function
   const results = useQueries([
     {
-      queryKey: ["getAllSurveys", token || inBuiltAddress],
+      queryKey: ["getAllSurveys", token, address || inBuiltAddress],
       queryFn: () =>
         getAllSurveys({ token, address: address || inBuiltAddress }),
       async onSuccess({ data, message, success }) {

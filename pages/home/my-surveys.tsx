@@ -264,6 +264,7 @@ function MySurveys() {
                   <div className="flex-[3]">
                     <ButtonGhost
                       text="Convert to NFT"
+                      block={true}
                       onClick={(e) => {
                         console.log("Convert to NFT", e);
                         // call confirm mint modal

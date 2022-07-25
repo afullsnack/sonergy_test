@@ -46,9 +46,12 @@ export const AvailableSurveyCarousel = ({ data }: { data: any[] }) => {
   const router = useRouter();
 
   return (
-    <div className="w-full carousel max-w-full desktop:max-w-screen-desktop space-x-6 px-10 mobile:px-8 bg-transparent hover:cursor-pointer">
+    <div className="w-full carousel max-w-full desktop:max-w-screen-desktop space-x-4 px-10 mobile:px-8 bg-transparent hover:cursor-pointer">
       {data?.map((item, idx) => (
-        <div className="carousel-item mobile:min-w-full" key={idx?.toString()}>
+        <div
+          className="carousel-item mobile:min-w-full mobile:max-w-fit"
+          key={idx?.toString()}
+        >
           <OnboardCard>
             <div className="flex flex-col items-start justify-between mb-3">
               <span className="text-gray-700 text-sm font-normal text-left mb-2">
