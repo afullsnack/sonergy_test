@@ -310,10 +310,7 @@ function Market() {
           </>
         )}
 
-      {sort === "marketplace" &&
-        isMarketLoading &&
-        isPullingData &&
-        market.length <= 0 && <Loader />}
+      {sort === "marketplace" && isMarketLoading && isPullingData && <Loader />}
 
       {sort === "collections" && !isCollectionLoading && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
