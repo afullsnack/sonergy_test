@@ -93,7 +93,7 @@ export const ButtonGhost = ({
         block ? "w-full" : null
       } rounded-lg flex items-center justify-center ${
         type === "normal" ? "mt-2 mb-2 py-[14px]" : "mt-1 mb-1 py-2"
-      } border border-primary text-primary disabled:border-gray-300 disabled:text-gray-300 px-4 shadow-sm active:opacity-60 hover:opacity-50 transition-all`}
+      } border border-primary text-primary disabled:border-gray-300 disabled:text-gray-300 px-4 shadow-sm active:opacity-60 hover:opacity-50 hover:cursor-pointer disabled:hover:cursor-default transition-all`}
       onClick={onClick}
       disabled={disabled}
     >
@@ -107,7 +107,7 @@ export const ButtonGhost = ({
         {typeof icon !== "undefined" ? icon : null}
         {typeof text !== "undefined" ? (
           <span
-            className={`text-primary font-medium text-sm ${
+            className={`font-medium text-sm ${
               typeof icon !== "undefined"
                 ? iconPosition === "left"
                   ? "ml-2"
@@ -136,7 +136,7 @@ export const ButtonIcon = ({
         block ? "w-full" : null
       } rounded-lg flex items-center justify-center ${
         type === "normal" ? "mt-2 mb-2 py-[14px]" : "mt-1 mb-1 py-2"
-      } border-solid border-primary border-[1px] text-primary px-4 shadow-sm active:opacity-60 hover:opacity-50 transition-all`}
+      } border border-primary text-primary disabled:text-gray-300 disabled:border-gray-300 px-4 shadow-sm active:opacity-60 hover:opacity-50 transition-all`}
       onClick={onClick}
       disabled={disabled}
     >

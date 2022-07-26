@@ -1,0 +1,28 @@
+[{ // Question data format
+  "dateCreated": "2022-07-23T20:46",
+  "dateExpiration": "2022-08-10T20:46",
+  "description": "This is a test survey to test the muti-choice and single-choice survey question options",
+  "questions": [
+    {
+      "id": "1",
+      "question": "This a multi-choice question",
+      "questionType": "multi-choice", //Or single-choice, free-form
+      "options": [
+        {"id": 1, "choice": "Yes it is"},
+        {"id": 2, "choice": "I can pick multiple answers"},
+        {"id": 3, "choice": "Sure I can pick this too"},
+        {"id": 4, "choice": "It's multi-choice hooray!"}
+      ]
+    }
+  ]
+},
+
+{ //Answer data format
+  "questionId": "string",
+  "questionType": "multi-choice", // or single-choice or free-form
+  "answer": [ //can also be string - for free-form questionTypes or null instead of array
+    { "id": "1", "choice": "string" },
+    { "id": "2", "choice": "string" }
+  ]
+}
+]

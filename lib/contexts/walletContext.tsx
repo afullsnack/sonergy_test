@@ -15,6 +15,8 @@ import {
   SURVEY_ABI_NEW,
   SURVEY_ADDRESS,
   SURVEY_ADDRESS_NEW,
+  SURVEY_NFT_ABI,
+  SURVEY_NFT_ADDRESS,
   TOKEN_ADDRESS,
 } from "../contract/config";
 import { getSonergyBalance, getUserWalletAddresses } from "../queries";
@@ -32,6 +34,7 @@ type walletContextType = {
   setSigner: Dispatch<SetStateAction<any>>;
   tokenContract: Contract;
   surveyContract: Contract;
+  surveyNFTContract: Contract;
   approveSpend: Function;
   setSonergyBalance: Dispatch<SetStateAction<BalanceData>>;
 };
@@ -55,6 +58,7 @@ export function WalletProvider({ children }: Props): JSX.Element {
   const [inBuiltAddress, setInbuiltAddress] = useState<string | undefined>();
   const [tokenContract, setTokenContract] = useState<Contract>();
   const [surveyContract, setSurveyContract] = useState<Contract>();
+  const [surveyNFTContract, setSurveyNFTContract] = useState<Contract>();
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
   const [sonergyBalance, setSonergyBalance] = useState<BalanceData | undefined>(
@@ -67,27 +71,6 @@ export function WalletProvider({ children }: Props): JSX.Element {
 
   // Create queries for the In built balance and wallet return address
   const [{ isLoading: isBalanceLoading }] = useQueries([
-    {
-      //Get balance, if connected get connected balance else get inbuilt balance
-      queryKey: ["getSonergyBalance", token, address || inBuiltAddress],
-      queryFn: () => getSonergyBalance({ token, address }),
-      onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getSonergyBalance"
-        );
-
-        if (success)
-          setSonergyBalance(
-            data?.filter((val) => val.symbol === "SNEGYTEST")[0]
-          );
-      },
-      onError(err) {
-        console.error(err, "Error occurred while getSonergyBalance called");
-      },
-    },
     {
       //Get inbuilt address and return to address
       queryKey: ["getInbuiltAddress", token],
@@ -103,6 +86,28 @@ export function WalletProvider({ children }: Props): JSX.Element {
         if (success && !address)
           setInbuiltAddress(
             data?.find((val) => val.walletType === "BSC").address
+          );
+      },
+      onError(err) {
+        console.error(err, "Error occurred while getSonergyBalance called");
+      },
+    },
+    {
+      //Get balance, if connected get connected balance else get inbuilt balance
+      queryKey: ["getSonergyBalance", token, address || inBuiltAddress],
+      queryFn: () =>
+        getSonergyBalance({ token, address: address || inBuiltAddress }),
+      onSuccess({ success, message, data }) {
+        console.info(
+          data,
+          success,
+          message,
+          "Data returned from the getSonergyBalance"
+        );
+
+        if (success)
+          setSonergyBalance(
+            data?.filter((val) => val.symbol === "SNEGYTEST")[0]
           );
       },
       onError(err) {
@@ -155,12 +160,28 @@ export function WalletProvider({ children }: Props): JSX.Element {
       console.log(contractWithSigner, "COnnected to  contract with signer");
     }
   };
+  const connectSurveyNFTContract = async () => {
+    // COnnect contract on wallet connect
+    if (provider && typeof provider !== "undefined") {
+      const surveyNFTContract = new ethers.Contract(
+        SURVEY_NFT_ADDRESS,
+        JSON.parse(JSON.stringify(SURVEY_NFT_ABI)),
+        provider
+      );
+      // Configure with signer
+      const contractWithSigner = surveyNFTContract?.connect(signer);
+      setSurveyNFTContract(contractWithSigner);
+
+      console.log(contractWithSigner, "COnnected to  contract with signer");
+    }
+  };
 
   useEffect(() => {
     if (address) {
       queryClient.invalidateQueries("getSonergyBalance");
       connectTokenContract();
       connectSurveyContract();
+      connectSurveyNFTContract();
     }
 
     if (!address) {
@@ -181,6 +202,7 @@ export function WalletProvider({ children }: Props): JSX.Element {
           setSigner,
           tokenContract,
           surveyContract,
+          surveyNFTContract,
           setAddress,
           approveSpend,
           sonergyBalance,

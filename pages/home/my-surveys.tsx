@@ -280,7 +280,7 @@ function MySurveys() {
                           ),
                         });
                       }}
-                      disabled={!item?.completed}
+                      disabled={!!item?.completed}
                     />
                   </div>
                   <div className="flex-1">
@@ -496,7 +496,7 @@ const ConfirmMintModalContent = ({
 }) => {
   const [{ token }] = useCookies(["token"]);
   const { push } = useRouter();
-  // Mutation for convert to NFT
+  // Mutation for convert to NFT with inbuilt wallet
   const { mutate, isLoading } = useMutation(convertSurveyToNFT, {
     onSuccess({ data, success, message }) {
       console.log(data, success, message, "Mint NFT with inbuilt return data");
@@ -507,6 +507,11 @@ const ConfirmMintModalContent = ({
     },
   });
   const [price, setPrice] = useState<string>();
+  const [isContractCallLoading, setIsContractCallLoading] =
+    useState<boolean>(false);
+
+  const { surveyNFTContract, address } = useWalletContext();
+
   return (
     <div className="w-full flex flex-col space-y-2">
       <span className="text-sm text-gray-600 font-normal">
@@ -528,7 +533,7 @@ const ConfirmMintModalContent = ({
             className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
             value={price}
             onChange={(e) => {
-              console.info("Email address", e.target.value);
+              console.info("price", e.target.value);
               setPrice(e.target.value);
             }}
           />
@@ -539,17 +544,43 @@ const ConfirmMintModalContent = ({
         text="Confirm and mint"
         onClick={async () => {
           // COnfirm mint and call necessary contract methods to mint survey
-          if (price) {
+          if (price && !address) {
+            const bnPrice = utils.parseUnits(price, 18);
+            console.log(bnPrice.toString(), "String price");
             mutate({
               token,
               surveyId,
               address: inBuiltAddress,
               surveyUri,
-              price,
+              price: bnPrice.toString(),
             });
+          } else if (address) {
+            setIsContractCallLoading(true);
+            /* call createSurveyToken function */
+            const convertTx = await surveyNFTContract.createSurveyToken(
+              surveyUri,
+              {
+                gasPrice: utils.parseUnits("100", "gwei"),
+                gasLimit: 1000000,
+              }
+            );
+
+            const tx = await convertTx.wait();
+            let event = tx.events[0];
+            let value = event.args[2];
+            let tokenId = value.toNumber();
+            console.log(
+              convertTx,
+              tx,
+              event,
+              value,
+              tokenId,
+              "Convert survey to NFT"
+            );
+            setIsContractCallLoading(false);
           }
         }}
-        isLoading={isLoading}
+        isLoading={isLoading || isContractCallLoading}
       />
       <ButtonGhost text="Cancel" onClick={cancel} />
     </div>
