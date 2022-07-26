@@ -544,7 +544,7 @@ const ConfirmMintModalContent = ({
         text="Confirm and mint"
         onClick={async () => {
           // COnfirm mint and call necessary contract methods to mint survey
-          if (price && !address) {
+          if (price) {
             const bnPrice = utils.parseUnits(price, 18);
             console.log(bnPrice.toString(), "String price");
             mutate({
@@ -554,31 +554,32 @@ const ConfirmMintModalContent = ({
               surveyUri,
               price: bnPrice.toString(),
             });
-          } else if (address) {
-            setIsContractCallLoading(true);
-            /* call createSurveyToken function */
-            const convertTx = await surveyNFTContract.createSurveyToken(
-              surveyUri,
-              {
-                gasPrice: utils.parseUnits("100", "gwei"),
-                gasLimit: 1000000,
-              }
-            );
-
-            const tx = await convertTx.wait();
-            let event = tx.events[0];
-            let value = event.args[2];
-            let tokenId = value.toNumber();
-            console.log(
-              convertTx,
-              tx,
-              event,
-              value,
-              tokenId,
-              "Convert survey to NFT"
-            );
-            setIsContractCallLoading(false);
           }
+          // else if (address) {
+          //   setIsContractCallLoading(true);
+          //   /* call createSurveyToken function */
+          //   const convertTx = await surveyNFTContract.createSurveyToken(
+          //     surveyUri,
+          //     {
+          //       gasPrice: utils.parseUnits("100", "gwei"),
+          //       gasLimit: 1000000,
+          //     }
+          //   );
+
+          //   const tx = await convertTx.wait();
+          //   let event = tx.events[0];
+          //   let value = event.args[2];
+          //   let tokenId = value.toNumber();
+          //   console.log(
+          //     convertTx,
+          //     tx,
+          //     event,
+          //     value,
+          //     tokenId,
+          //     "Convert survey to NFT"
+          //   );
+          //   setIsContractCallLoading(false);
+          // }
         }}
         isLoading={isLoading || isContractCallLoading}
       />
