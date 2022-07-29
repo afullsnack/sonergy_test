@@ -25,7 +25,7 @@ function SingleSurvey() {
   const queryClient = useQueryClient();
 
   const [bidModal, BidModal] = useModal();
-  const [toast, ToastRender] = useToast();
+
   const [data, setData] = useState<any>();
 
   const {
@@ -75,7 +75,7 @@ function SingleSurvey() {
 
   useEffect(() => {
     if (sid) queryClient.invalidateQueries("getNFTSurveys");
-    console.log(data, "Data after fetch");
+    console.log(data, isPullingData, isLoading, "Data after fetch");
   }, [sid]);
 
   return (
@@ -89,7 +89,7 @@ function SingleSurvey() {
           <span className="text-sm font-medium text-gray-800">Marketplace</span>
         </div>
       </div>
-      {action === "bid" && !isPullingData && !isLoading && (
+      {action === "bid" && !isPullingData && !isLoading && data && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-2">
           <OnboardCard>
             <div className="w-full flex flex-col items-center justify-center">
@@ -139,7 +139,6 @@ function SingleSurvey() {
                     <PlaceBidModalContent
                       surveyTokenId={data?.surveyTokenID}
                       token={token}
-                      toast={toast}
                     />
                   ),
                 });
@@ -150,7 +149,7 @@ function SingleSurvey() {
           </OnboardCard>
         </div>
       )}
-      {action === "buy" && !isPullingData && !isLoading && (
+      {action === "buy" && !isPullingData && !isLoading && data && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-2">
           <OnboardCard>
             <div className="w-full flex flex-col items-center justify-center">
@@ -200,7 +199,6 @@ function SingleSurvey() {
                     <PlaceBidModalContent
                       surveyTokenId={data?.surveyTokenID}
                       token={token}
-                      toast={toast}
                     />
                   ),
                 });
@@ -212,19 +210,32 @@ function SingleSurvey() {
         </div>
       )}
       {action === "bid" ||
-        (action === "buy" && (isPullingData || isLoading) && <Loader />)}
+        (action === "buy" && (isPullingData || isLoading) && !data && (
+          <Loader />
+        ))}
       <BidModal />
-      <ToastRender />
     </div>
   );
 }
 
-const PlaceBidModalContent = ({ surveyTokenId, token, toast }) => {
+const PlaceBidModalContent = ({
+  surveyTokenId,
+  token,
+}: {
+  surveyTokenId: string;
+  token: string;
+}) => {
+  const [toast, ToastRender] = useToast();
   const { sonergyBalance } = useWalletContext();
   const { mutate, isLoading } = useMutation(buySurveyNFT, {
-    async onSuccess({ data, message, success }) {},
+    async onSuccess({ data, message, success }) {
+      console.log(data, message, success, "Return data");
+    },
     onError(err) {
       console.log(err, "Error occurred while buying NFT");
+      toast.error({
+        text: "An error occurred trying to place bid",
+      });
     },
   });
 
@@ -286,6 +297,7 @@ const PlaceBidModalContent = ({ surveyTokenId, token, toast }) => {
         isLoading={isLoading}
         disabled={false}
       />
+      <ToastRender />
     </div>
   );
 };

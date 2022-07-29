@@ -138,6 +138,11 @@ export const ToastWarning = ({ text }: { text: string }) => {
   );
 };
 
+export interface ToastType {
+  error: ({ text }: { text: string }) => void;
+  success: ({ text }: { text: string }) => void;
+  warning: ({ text }: { text: string }) => void;
+}
 export function useToast() {
   enum AlertType {
     Error = "error",
@@ -206,12 +211,5 @@ export function useToast() {
         )}
       </>
     ),
-  ] as [
-    {
-      error: ({ text }: { text: string }) => void;
-      success: ({ text }: { text: string }) => void;
-      warning: ({ text }: { text: string }) => void;
-    },
-    () => JSX.Element
-  ];
+  ] as [ToastType, () => JSX.Element];
 }
