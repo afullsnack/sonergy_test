@@ -613,7 +613,7 @@ const ConfirmMintModalContent = ({
               tokenId,
               bnPrice.toString(),
               surveyId,
-              { value: listPrice },
+              // { value: listPrice },
               {
                 gasPrice: utils.parseUnits("100", "gwei"),
                 gasLimit: 1000000,

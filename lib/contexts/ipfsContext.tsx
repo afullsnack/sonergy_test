@@ -80,6 +80,7 @@ export function IPFSProvider({ children }: ProviderProps) {
     try {
       console.log(
         json,
+        surveyData,
         process.env.IPFS_PROJEC_ID,
         process.env.IPFS_URL,
         process.env.IPFS_PROJECT_SECRET
@@ -137,7 +138,7 @@ export function IPFSProvider({ children }: ProviderProps) {
           gasLimit: 1000000,
         }
       );
-      const approveReceipt = approveTx.wait();
+      const approveReceipt = await approveTx.wait();
       console.log(approveTx, approveReceipt, "BSC sonergy approve spend");
 
       /* Now call enroll function */
@@ -365,12 +366,12 @@ export function IPFSProvider({ children }: ProviderProps) {
   const pullData = async (ipfsUri: string) => {
     // console.log(cid, "CID", CID.parse(cid));
     setIsPullingData(true);
-    const ipfsClient = create({
-      url: `${process.env.IPFS_URL}/api/v0`,
-      headers: {
-        authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
-      },
-    });
+    // const ipfsClient = create({
+    //   url: `${process.env.IPFS_URL}/api/v0`,
+    //   headers: {
+    //     authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+    //   },
+    // });
     // const json = ipfsClient.get(`/ipfs/${cid}`);
     const json = await fetch(
       ipfsUri.includes("https")

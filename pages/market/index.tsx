@@ -240,7 +240,9 @@ function Market() {
                         className="w-full flex flex-col items-start justify-between mb-2"
                         onClick={(e) => {
                           console.log(e, "Clicked on te survey");
-                          router.push("/market/s/123?action=bid");
+                          router.push(
+                            `/market/s/${item?.surveyTokenID}?action=bid`
+                          );
                         }}
                       >
                         <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
@@ -279,7 +281,9 @@ function Market() {
                             block={true}
                             onClick={(e) => {
                               console.log("Buy now clicked", e);
-                              router.push("/market/s/123?action=buy");
+                              router.push(
+                                `/market/s/${item?.surveyTokenID}?action=buy`
+                              );
                             }}
                             disabled={false}
                             isLoading={false}
@@ -310,7 +314,9 @@ function Market() {
           </>
         )}
 
-      {sort === "marketplace" && isMarketLoading && isPullingData && <Loader />}
+      {sort === "marketplace" &&
+        (isMarketLoading || isPullingData) &&
+        market.length <= 0 && <Loader />}
 
       {sort === "collections" && !isCollectionLoading && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
