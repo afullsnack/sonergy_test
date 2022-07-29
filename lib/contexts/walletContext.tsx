@@ -15,6 +15,8 @@ import {
   SURVEY_ABI_NEW,
   SURVEY_ADDRESS,
   SURVEY_ADDRESS_NEW,
+  SURVEY_MARKETPLACE_ABI,
+  SURVEY_MARKETPLACE_ADDRESS,
   SURVEY_NFT_ABI,
   SURVEY_NFT_ADDRESS,
   TOKEN_ADDRESS,
@@ -35,6 +37,7 @@ type walletContextType = {
   tokenContract: Contract;
   surveyContract: Contract;
   surveyNFTContract: Contract;
+  surveyMarketPlaceContract: Contract;
   approveSpend: Function;
   setSonergyBalance: Dispatch<SetStateAction<BalanceData>>;
 };
@@ -59,6 +62,8 @@ export function WalletProvider({ children }: Props): JSX.Element {
   const [tokenContract, setTokenContract] = useState<Contract>();
   const [surveyContract, setSurveyContract] = useState<Contract>();
   const [surveyNFTContract, setSurveyNFTContract] = useState<Contract>();
+  const [surveyMarketPlaceContract, setSurveyMarketPlaceContract] =
+    useState<Contract>();
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
   const [sonergyBalance, setSonergyBalance] = useState<BalanceData | undefined>(
@@ -172,7 +177,28 @@ export function WalletProvider({ children }: Props): JSX.Element {
       const contractWithSigner = surveyNFTContract?.connect(signer);
       setSurveyNFTContract(contractWithSigner);
 
-      console.log(contractWithSigner, "COnnected to  contract with signer");
+      console.log(
+        contractWithSigner,
+        "Connected to survey NFT contract with signer"
+      );
+    }
+  };
+  const connectSurveyMarketPlaceContract = async () => {
+    // COnnect contract on wallet connect
+    if (provider && typeof provider !== "undefined") {
+      const surveyNFTContract = new ethers.Contract(
+        SURVEY_MARKETPLACE_ADDRESS,
+        JSON.parse(JSON.stringify(SURVEY_MARKETPLACE_ABI)),
+        provider
+      );
+      // Configure with signer
+      const contractWithSigner = surveyNFTContract?.connect(signer);
+      setSurveyMarketPlaceContract(contractWithSigner);
+
+      console.log(
+        contractWithSigner,
+        "Connected to survey NFT contract with signer"
+      );
     }
   };
 
@@ -182,6 +208,7 @@ export function WalletProvider({ children }: Props): JSX.Element {
       connectTokenContract();
       connectSurveyContract();
       connectSurveyNFTContract();
+      connectSurveyMarketPlaceContract();
     }
 
     if (!address) {
@@ -203,6 +230,7 @@ export function WalletProvider({ children }: Props): JSX.Element {
           tokenContract,
           surveyContract,
           surveyNFTContract,
+          surveyMarketPlaceContract,
           setAddress,
           approveSpend,
           sonergyBalance,

@@ -1,5 +1,7 @@
 export const TOKEN_ADDRESS = "0xd22F74ffDBC19D5C882b145A0D414a43D2c49982";
 export const SURVEY_NFT_ADDRESS = "0x0bc656a9EC41618f72F19c1Eda593403135c4D33";
+export const SURVEY_MARKETPLACE_ADDRESS =
+  "0x67EB72824BEbDa2B44ACE2e76bc987D4e2A6f66B";
 export const SURVEY_ADDRESS = "0x77cc95d0df289e9FcdcEafde90182DF04E0d16e7";
 export const SURVEY_ADDRESS_NEW = "0x2f8A585d97DbC8299D2Ab81D5914264bFb5Ffa1e";
 export const SURVEY_ABI_NEW = [
@@ -1503,6 +1505,171 @@ export const SURVEY_NFT_ABI = [
     name: "transferFrom",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+export const SURVEY_MARKETPLACE_ABI = [
+  {
+    inputs: [
+      { internalType: "uint256", name: "_surveyListingFee", type: "uint256" },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "surveyId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "fromSurveyId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "nftContract",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "surveyTokenID",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address payable",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "price",
+        type: "uint256",
+      },
+      { indexed: false, internalType: "bool", name: "status", type: "bool" },
+      {
+        indexed: false,
+        internalType: "address payable",
+        name: "seller",
+        type: "address",
+      },
+    ],
+    name: "SurveyMarketItemCreated",
+    type: "event",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "price", type: "uint256" }],
+    name: "changeListingPrice",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "nftContract", type: "address" },
+      { internalType: "uint256", name: "surveyId", type: "uint256" },
+    ],
+    name: "createMarketSale",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "nftContract", type: "address" },
+      { internalType: "uint256", name: "surveyTokenID", type: "uint256" },
+      { internalType: "uint256", name: "price", type: "uint256" },
+      { internalType: "uint256", name: "surveyID", type: "uint256" },
+    ],
+    name: "createSurveyNFT",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "fetchItemsCreated",
+    outputs: [
+      {
+        components: [
+          { internalType: "uint256", name: "surveyId", type: "uint256" },
+          { internalType: "uint256", name: "fromSurveyId", type: "uint256" },
+          { internalType: "address", name: "nftContract", type: "address" },
+          { internalType: "uint256", name: "surveyTokenID", type: "uint256" },
+          { internalType: "address payable", name: "owner", type: "address" },
+          { internalType: "uint256", name: "price", type: "uint256" },
+          { internalType: "bool", name: "status", type: "bool" },
+          { internalType: "address payable", name: "seller", type: "address" },
+        ],
+        internalType: "struct surveyNFTMarket.SurveyMarketItem[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "fetchMarketItems",
+    outputs: [
+      {
+        components: [
+          { internalType: "uint256", name: "surveyId", type: "uint256" },
+          { internalType: "uint256", name: "fromSurveyId", type: "uint256" },
+          { internalType: "address", name: "nftContract", type: "address" },
+          { internalType: "uint256", name: "surveyTokenID", type: "uint256" },
+          { internalType: "address payable", name: "owner", type: "address" },
+          { internalType: "uint256", name: "price", type: "uint256" },
+          { internalType: "bool", name: "status", type: "bool" },
+          { internalType: "address payable", name: "seller", type: "address" },
+        ],
+        internalType: "struct surveyNFTMarket.SurveyMarketItem[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "fetchUsersNFTSurveys",
+    outputs: [
+      {
+        components: [
+          { internalType: "uint256", name: "surveyId", type: "uint256" },
+          { internalType: "uint256", name: "fromSurveyId", type: "uint256" },
+          { internalType: "address", name: "nftContract", type: "address" },
+          { internalType: "uint256", name: "surveyTokenID", type: "uint256" },
+          { internalType: "address payable", name: "owner", type: "address" },
+          { internalType: "uint256", name: "price", type: "uint256" },
+          { internalType: "bool", name: "status", type: "bool" },
+          { internalType: "address payable", name: "seller", type: "address" },
+        ],
+        internalType: "struct surveyNFTMarket.SurveyMarketItem[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getNFTListingPrice",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
 ];
