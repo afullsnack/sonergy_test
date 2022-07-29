@@ -218,18 +218,18 @@ export const convertSurveyToNFT = async ({
   token,
   surveyId,
   address,
-  surveyUri,
+  surveyUrl,
   price,
 }: {
   token: string;
   surveyId: string;
   address: string;
-  surveyUri: string;
+  surveyUrl: string;
   price: string;
 }) =>
   await fetch(`${BASE_URL}/surveys/convert-to-nft`, {
     method: "POST",
-    body: JSON.stringify({ surveyId, address, surveyUri, price }),
+    body: JSON.stringify({ surveyId, address, surveyUrl, price }),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
