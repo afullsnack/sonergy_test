@@ -31,11 +31,11 @@ function CreateSurvey() {
   const [planId, setPlanId] = useState<string>();
   const [surveyTopic, setSurveyTopic] = useState<string>();
   const [surveyDescription, setSurveyDescription] = useState<string>();
-  const [commissionerCount, setCommissionerCount] = useState<number>();
-  const [validatorCount, setValidatorCount] = useState<number>();
-  const [commissionerFee, setCommissionerFee] = useState<number>();
-  const [validatorFee, setValidatorFee] = useState<number>();
-  const [questionCount, setQuestionCount] = useState<number>();
+  const [commissionerCount, setCommissionerCount] = useState<number>(0);
+  const [validatorCount, setValidatorCount] = useState<number>(0);
+  const [commissionerFee, setCommissionerFee] = useState<number>(0);
+  const [validatorFee, setValidatorFee] = useState<number>(0);
+  const [questionCount, setQuestionCount] = useState<number>(0);
   const [createdAt, setCreatedAt] = useState<string>();
   const [expireAt, setExpireAt] = useState<string>();
 
@@ -756,13 +756,13 @@ const SurveyReview = ({
               Respondent rewards
             </span>
             <span className="text-xs font-medium text-gray-800 mb-3">
-              {commissionerFee.toString()} {sonergyBalance.symbol}
+              {commissionerFee?.toString()} {sonergyBalance.symbol}
             </span>
             <span className="text-xs text-gray-500 mb-1">
               Validator rewards
             </span>
             <span className="text-xs font-medium text-gray-800 mb-3">
-              {validatorFee.toString()} {sonergyBalance.symbol}
+              {validatorFee?.toString()} {sonergyBalance.symbol}
             </span>
           </div>
         </OnboardCard>
