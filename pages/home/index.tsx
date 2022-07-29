@@ -45,20 +45,26 @@ function Home() {
       async onSuccess({ data, message, success }) {
         console.log(data, success, message, "Data from getAllSurveys queries");
         if (success && data.length) {
-          const decodedMap = data.map(async (item: any) => {
-            console.log("Item", item.surveyURI);
-            const json = await pullData(item?.surveyURI);
-            console.log("Gotten json", json);
-            return {
-              ...json,
-              uri: item.surveyURI,
-              amount: item.amount,
-              symbol: sonergyBalance.symbol,
-              valCount: item?.numOfValidators,
-              responseCount: item?.numOfcommisioners,
-              surveyId: item?.surveyID,
-            };
-          });
+          const decodedMap = data
+            .filter(
+              (item) =>
+                item.surveyURI !==
+                "Qmd1KdBqjgke6FqpARZvWcoeWuWoAYpU3aNT5PgBVYFhDK"
+            )
+            .map(async (item: any) => {
+              console.log("Item", item.surveyURI);
+              const json = await pullData(item?.surveyURI);
+              console.log("Gotten json", json);
+              return {
+                ...json,
+                uri: item.surveyURI,
+                amount: item.amount,
+                symbol: sonergyBalance.symbol,
+                valCount: item?.numOfValidators,
+                responseCount: item?.numOfcommisioners,
+                surveyId: item?.surveyID,
+              };
+            });
 
           const awaitedDecode = await Promise.all(decodedMap);
           setAvailableSurveyData(awaitedDecode);
