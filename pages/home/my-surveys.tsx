@@ -16,6 +16,7 @@ import { useModal } from "../../components/Modal";
 import OnboardCard from "../../components/OnboardCard";
 import { useIPFSContext } from "../../lib/contexts/ipfsContext";
 import { useWalletContext } from "../../lib/contexts/walletContext";
+import { SURVEY_NFT_ADDRESS } from "../../lib/contract/config";
 import { convertSurveyToNFT } from "../../lib/mutations";
 import { getCompletedSurveys, getMySurveys } from "../../lib/queries";
 
@@ -90,20 +91,26 @@ function MySurveys() {
           );
 
           if (success && data.length) {
-            const decodedMap = data.map(async (item: any) => {
-              console.log("Item", item.surveyURI);
-              const json = await pullData(item?.surveyURI);
-              console.log("Gotten json", json);
-              return {
-                ...json,
-                uri: item.surveyURI,
-                amount: item.amount,
-                symbol: sonergyBalance.symbol,
-                valCount: item?.numOfValidators,
-                responseCount: item?.numOfcommisioners,
-                surveyId: item?.surveyID,
-              };
-            });
+            const decodedMap = data
+              .filter(
+                (item) =>
+                  item.surveyURI !==
+                  "Qmd1KdBqjgke6FqpARZvWcoeWuWoAYpU3aNT5PgBVYFhDK"
+              )
+              .map(async (item: any) => {
+                console.log("Item", item.surveyURI);
+                const json = await pullData(item?.surveyURI);
+                console.log("Gotten json", json);
+                return {
+                  ...json,
+                  uri: item.surveyURI,
+                  amount: item.amount,
+                  symbol: sonergyBalance.symbol,
+                  valCount: item?.numOfValidators,
+                  responseCount: item?.numOfcommisioners,
+                  surveyId: item?.surveyID,
+                };
+              });
 
             const awaitedDecode = await Promise.all(decodedMap);
             setCommissioned(awaitedDecode);
@@ -274,7 +281,7 @@ function MySurveys() {
                             <ConfirmMintModalContent
                               inBuiltAddress={inBuiltAddress}
                               surveyId={item?.surveyId}
-                              surveyUri={item?.uri}
+                              surveyUrl={item?.uri}
                               cancel={() => mintModal.hide()}
                             />
                           ),
@@ -491,7 +498,7 @@ function MySurveys() {
 const ConfirmMintModalContent = ({
   inBuiltAddress,
   surveyId,
-  surveyUri,
+  surveyUrl,
   cancel,
 }) => {
   const [{ token }] = useCookies(["token"]);
@@ -510,7 +517,12 @@ const ConfirmMintModalContent = ({
   const [isContractCallLoading, setIsContractCallLoading] =
     useState<boolean>(false);
 
-  const { surveyNFTContract, address } = useWalletContext();
+  const {
+    surveyNFTContract,
+    surveyContract,
+    surveyMarketPlaceContract,
+    address,
+  } = useWalletContext();
 
   return (
     <div className="w-full flex flex-col space-y-2">
@@ -520,7 +532,9 @@ const ConfirmMintModalContent = ({
       </span>
       <div className="form-control mb-2">
         <label className="label">
-          <span className="label-text text-slate-700 font-medium">Price</span>
+          <span className="label-text text-slate-700 font-medium">
+            Listing Price of NFT
+          </span>
         </label>
         <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
           {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -528,9 +542,9 @@ const ConfirmMintModalContent = ({
               </span> */}
           <input
             type="number"
-            data-test="price"
+            data-test="listing-price"
             placeholder="0.00"
-            className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+            className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
             value={price}
             onChange={(e) => {
               console.info("price", e.target.value);
@@ -544,42 +558,84 @@ const ConfirmMintModalContent = ({
         text="Confirm and mint"
         onClick={async () => {
           // COnfirm mint and call necessary contract methods to mint survey
-          if (price) {
+          if (price && !address) {
             const bnPrice = utils.parseUnits(price, 18);
-            console.log(bnPrice.toString(), "String price");
+            console.log(
+              bnPrice.toString(),
+              token,
+              surveyId,
+              inBuiltAddress,
+              surveyUrl,
+              "String price"
+            );
             mutate({
               token,
               surveyId,
               address: inBuiltAddress,
-              surveyUri,
+              surveyUrl,
               price: bnPrice.toString(),
             });
-          }
-          // else if (address) {
-          //   setIsContractCallLoading(true);
-          //   /* call createSurveyToken function */
-          //   const convertTx = await surveyNFTContract.createSurveyToken(
-          //     surveyUri,
-          //     {
-          //       gasPrice: utils.parseUnits("100", "gwei"),
-          //       gasLimit: 1000000,
-          //     }
-          //   );
+          } else if (price && address) {
+            setIsContractCallLoading(true);
+            /* call createSurveyToken function */
+            const convertTx = await surveyNFTContract.createSurveyToken(
+              surveyUrl,
+              {
+                gasPrice: utils.parseUnits("100", "gwei"),
+                gasLimit: 1000000,
+              }
+            );
 
-          //   const tx = await convertTx.wait();
-          //   let event = tx.events[0];
-          //   let value = event.args[2];
-          //   let tokenId = value.toNumber();
-          //   console.log(
-          //     convertTx,
-          //     tx,
-          //     event,
-          //     value,
-          //     tokenId,
-          //     "Convert survey to NFT"
-          //   );
-          //   setIsContractCallLoading(false);
-          // }
+            const tx = await convertTx.wait();
+            let event = tx.events[0];
+            let value = event.args[2];
+            let tokenId = value.toNumber();
+
+            console.log(
+              convertTx,
+              tx,
+              event,
+              value,
+              tokenId,
+              "Convert survey to NFT"
+            );
+
+            /* Get listing price */
+            const listPrice =
+              await surveyMarketPlaceContract.getNFTListingPrice();
+
+            console.log(listPrice, "Receipt for listing price");
+
+            /* List the item on market place */
+            const bnPrice = utils.parseUnits(price, 18);
+            const listTx = await surveyMarketPlaceContract.createSurveyNFT(
+              SURVEY_NFT_ADDRESS,
+              tokenId,
+              bnPrice.toString(),
+              surveyId,
+              { value: listPrice },
+              {
+                gasPrice: utils.parseUnits("100", "gwei"),
+                gasLimit: 1000000,
+              }
+            );
+            const listRcpt = await listTx.wait();
+            console.log(listTx, listRcpt, "List transaction");
+
+            /* Update survey contract */
+            const updateSurveyTx = await surveyContract.makeNFT(surveyId, {
+              gasPrice: utils.parseUnits("100", "gwei"),
+              gasLimit: 1000000,
+            });
+            const updateSurveyRcpt = await updateSurveyTx.wait();
+            console.log(
+              updateSurveyRcpt,
+              updateSurveyTx,
+              "Updaet survey contract"
+            );
+
+            setIsContractCallLoading(false);
+          }
         }}
         isLoading={isLoading || isContractCallLoading}
       />
