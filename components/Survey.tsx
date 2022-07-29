@@ -787,7 +787,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
               console.log(answers, "The full answers");
             }}
             disabled={false}
-            isLoading={false}
+            isLoading={isPushingData}
           />
         )}
         {currentQuestion > 1 && (

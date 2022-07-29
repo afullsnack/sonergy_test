@@ -291,7 +291,7 @@ const PlaceBidModalContent = ({
             mutate({
               token,
               surveyTokenId,
-              price: utils.parseUnits(price, 18).toString(),
+              price: utils.formatUnits(utils.parseUnits(price, 18), "wei"),
             });
         }}
         isLoading={isLoading}
