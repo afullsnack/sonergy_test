@@ -142,7 +142,7 @@ export function IPFSProvider({ children }: ProviderProps) {
 
       /* Now call enroll function */
       const enrollTx = await surveyContract.enrollForSurvey(
-        path || cid.toString(),
+        path || `https://ipfs.infura.io/ipfs/${cid.toString()}`,
         address,
         surveyData?.surveyPlanId,
         surveyData?.numOfValidators,
@@ -224,7 +224,9 @@ export function IPFSProvider({ children }: ProviderProps) {
       //   storeCodec: "dag-cbor",
       //   hashAlg: "sha2-256",
       // });
-      const { cid, path } = await ipfsClient.add("json");
+      const { cid, path } = await ipfsClient.add(
+        JSON.stringify(json as object)
+      );
       console.log(cid.toString(), "CID after IPFS call", path, "Survey path");
 
       // Now call add survey mutate function
@@ -279,7 +281,7 @@ export function IPFSProvider({ children }: ProviderProps) {
       /* Now call enroll function */
       const answerTx = await surveyContract.provideAnswer(
         surveyID,
-        path || cid.toString(),
+        path || `https://ipfs.infura.io/ipfs/${cid.toString()}`,
         {
           gasPrice: utils.parseUnits("100", "gwei"),
           gasLimit: 1000000,
