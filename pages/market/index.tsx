@@ -6,6 +6,7 @@ import { AiFillClockCircle } from "react-icons/ai";
 import { FaFileDownload } from "react-icons/fa";
 import { GoVerified } from "react-icons/go";
 import { useQueries, useQueryClient } from "react-query";
+import { useToast } from "../../components/Alerts";
 import {
   ButtonGhost,
   ButtonIcon,
@@ -23,6 +24,7 @@ import {
   getMyNFTSurveys,
   getNFTSurveys,
 } from "../../lib/queries";
+import { ConfirmMintModalContent } from "../home/my-surveys";
 
 function Market() {
   const router = useRouter();
@@ -162,6 +164,8 @@ function Market() {
       },
     },
   ]);
+
+  const [toast, ToastRender] = useToast();
 
   useEffect(() => {
     console.log("useQueries result");
@@ -444,7 +448,20 @@ function Market() {
                       console.log("Sell survey clicked", e);
                       mintModal.show({
                         title: "Mint NFT",
-                        content: <MintModalContent />,
+                        content: (
+                          <ConfirmMintModalContent
+                            inBuiltAddress={inBuiltAddress}
+                            surveyId={item?.surveyId}
+                            surveyUrl={item?.uri}
+                            cancel={() => mintModal.hide()}
+                            onSuccessFeedback={(message) =>
+                              toast.success({ text: message })
+                            }
+                            onFailedFeedback={(message) =>
+                              toast.error({ text: message })
+                            }
+                          />
+                        ),
                       });
                     }}
                     disabled={false}
@@ -468,6 +485,7 @@ function Market() {
       {/* {sort === "completed" && isCompletedLoading && <Loader />} */}
       <MintModal />
       <ListModal />
+      <ToastRender />
     </div>
   );
 }

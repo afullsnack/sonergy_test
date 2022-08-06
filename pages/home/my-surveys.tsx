@@ -9,7 +9,7 @@ import { useToast } from "../../components/Alerts";
 import {
   ButtonGhost,
   ButtonIcon,
-  ButtonPrimary,
+  ButtonPrimary
 } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import Loader from "../../components/Loader";
@@ -22,7 +22,7 @@ import { convertSurveyToNFT } from "../../lib/mutations";
 import {
   getAllSurveys,
   getCompletedSurveys,
-  getMySurveys,
+  getMySurveys
 } from "../../lib/queries";
 
 enum SurveySort {
@@ -571,7 +571,7 @@ function MySurveys() {
   );
 }
 
-const ConfirmMintModalContent = ({
+export const ConfirmMintModalContent = ({
   inBuiltAddress,
   surveyId,
   surveyUrl,
