@@ -533,7 +533,7 @@ const ConfirmMintModalContent = ({
       <div className="form-control mb-2">
         <label className="label">
           <span className="label-text text-slate-700 font-medium">
-            Listing Price of NFT
+            Sale Price of NFT
           </span>
         </label>
         <label className="input-group border-gray-200 border-solid border-[1px] rounded-md">
@@ -613,7 +613,7 @@ const ConfirmMintModalContent = ({
               tokenId,
               bnPrice.toString(),
               surveyId,
-              // { value: listPrice },
+              { value: listPrice.toString() },
               {
                 gasPrice: utils.parseUnits("100", "gwei"),
                 gasLimit: 1000000,

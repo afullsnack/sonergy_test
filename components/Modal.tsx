@@ -29,7 +29,7 @@ export function useModal() {
           visible ? null : "hidden"
         } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full`}
       >
-        <div className="relative p-4 w-full max-w-2xl mobile:min-w-full h-full md:h-auto flex items-center justify-center mx-auto my-0">
+        <div className="relative p-4 w-full max-w-2xl mobile:min-w-full desktop:min-w-fit h-full md:h-auto flex items-center justify-center mx-auto my-0">
           {/* <!-- Modal content --> */}
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700 mobile w-full">
             {/* <!-- Modal header --> */}

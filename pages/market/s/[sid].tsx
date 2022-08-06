@@ -14,6 +14,7 @@ import { useModal } from "../../../components/Modal";
 import OnboardCard from "../../../components/OnboardCard";
 import { useIPFSContext } from "../../../lib/contexts/ipfsContext";
 import { useWalletContext } from "../../../lib/contexts/walletContext";
+import { SURVEY_NFT_ADDRESS } from "../../../lib/contract/config";
 import { buySurveyNFT } from "../../../lib/mutations";
 import { getNFTSurveys } from "../../../lib/queries";
 
@@ -226,10 +227,16 @@ const PlaceBidModalContent = ({
   token: string;
 }) => {
   const [toast, ToastRender] = useToast();
-  const { sonergyBalance } = useWalletContext();
+  const { sonergyBalance, address, surveyMarketPlaceContract } =
+    useWalletContext();
   const { mutate, isLoading } = useMutation(buySurveyNFT, {
     async onSuccess({ data, message, success }) {
       console.log(data, message, success, "Return data");
+      if (success) {
+        return toast.success({ text: message });
+      }
+
+      return toast.error({ text: message });
     },
     onError(err) {
       console.log(err, "Error occurred while buying NFT");
@@ -240,6 +247,8 @@ const PlaceBidModalContent = ({
   });
 
   const [price, setPrice] = useState<string>();
+  const [onContractCallLoading, setContractBuyCallLoading] =
+    useState<boolean>(false);
 
   return (
     <div className="w-full flex flex-col space-y-2">
@@ -287,14 +296,35 @@ const PlaceBidModalContent = ({
             utils.parseUnits(price, 18).toString(),
             surveyTokenId
           );
-          if (price)
+          if (price && !address) {
             mutate({
               token,
               surveyTokenId,
               price: utils.formatUnits(utils.parseUnits(price, 18), "wei"),
             });
+          } else {
+            setContractBuyCallLoading(true);
+            console.log("Contract call");
+            /* Now call enroll function */
+            const buyNFTTx = await surveyMarketPlaceContract.createMarketSale(
+              utils.formatUnits(utils.parseUnits(price, 18), "wei"),
+              SURVEY_NFT_ADDRESS,
+              surveyTokenId,
+              {
+                gasPrice: utils.parseUnits("100", "gwei"),
+                gasLimit: 1000000,
+              }
+            );
+            const buyNFTReceipt = await buyNFTTx.wait();
+            console.log(
+              buyNFTTx,
+              buyNFTReceipt,
+              "Survey NFT market place buy call"
+            );
+            setContractBuyCallLoading(false);
+          }
         }}
-        isLoading={isLoading}
+        isLoading={isLoading || onContractCallLoading}
         disabled={false}
       />
       <ToastRender />
