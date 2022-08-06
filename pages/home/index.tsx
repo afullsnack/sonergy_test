@@ -52,9 +52,9 @@ function Home() {
                 "Qmd1KdBqjgke6FqpARZvWcoeWuWoAYpU3aNT5PgBVYFhDK"
             )
             .map(async (item: any) => {
-              console.log("Item", item.surveyURI);
+              // console.log("Item", item.surveyURI);
               const json = await pullData(item?.surveyURI);
-              console.log("Gotten json", json);
+              // console.log("Gotten json", json);
               return {
                 ...json,
                 uri: item.surveyURI,
@@ -79,16 +79,16 @@ function Home() {
       queryFn: () =>
         getMySurveys({ token, address: address || inBuiltAddress }),
       async onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getMySurveys"
-        );
+        // console.info(
+        //   data,
+        //   success,
+        //   message,
+        //   "Data returned from the getMySurveys"
+        // );
 
         if (success && data.length) {
           setMySurveyCount(data.length);
-          console.log(data.length, "My survey");
+          console.log(data.length, "My survey Count");
         }
       },
       onError(err) {
@@ -100,16 +100,16 @@ function Home() {
       queryFn: () =>
         getCompletedSurveys({ token, address: address || inBuiltAddress }),
       async onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getCompletedSurvey"
-        );
+        // console.info(
+        //   data,
+        //   success,
+        //   message,
+        //   "Data returned from the getCompletedSurvey"
+        // );
 
         if (success && data.length) {
           setCompletedSurveyCount(data?.length);
-          console.log(data.length, "Completed Surveys");
+          console.log(data.length, "Completed Surveys Count");
         }
       },
       onError(err) {
