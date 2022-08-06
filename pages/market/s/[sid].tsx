@@ -18,6 +18,16 @@ import { SURVEY_NFT_ADDRESS } from "../../../lib/contract/config";
 import { buySurveyNFT } from "../../../lib/mutations";
 import { getNFTSurveys } from "../../../lib/queries";
 
+interface SurveyNFTBidData {
+  owner: string;
+  price: string;
+  seller: string;
+  description: string;
+  surveyTokenID: string;
+  views?: number;
+  expiryDate?: string;
+}
+
 function SingleSurvey() {
   const router = useRouter();
   const [{ token }] = useCookies(["token"]);
@@ -27,14 +37,18 @@ function SingleSurvey() {
 
   const [bidModal, BidModal] = useModal();
 
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<SurveyNFTBidData | undefined>();
 
+  // Context
   const {
     address,
     inBuiltAddress,
     sonergyBalance: { symbol },
   } = useWalletContext();
   const { pullData, isPullingData } = useIPFSContext();
+
+  // Feedback toast reporting
+  const [toast, ToastRender] = useToast();
 
   // Query and get the
 
@@ -90,7 +104,10 @@ function SingleSurvey() {
           <span className="text-sm font-medium text-gray-800">Marketplace</span>
         </div>
       </div>
-      {action === "bid" && !isPullingData && !isLoading && data && (
+
+      {(action === "bid" || action === "buy") &&
+        (isPullingData || isLoading) && <Loader />}
+      {action === "bid" && !isPullingData && !isLoading && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-2">
           <OnboardCard>
             <div className="w-full flex flex-col items-center justify-center">
@@ -140,6 +157,16 @@ function SingleSurvey() {
                     <PlaceBidModalContent
                       surveyTokenId={data?.surveyTokenID}
                       token={token}
+                      onSuccessFeedback={(message) => {
+                        toast.success({
+                          text: message,
+                        });
+                      }}
+                      onFailedFeedback={(message) => {
+                        toast.error({
+                          text: message,
+                        });
+                      }}
                     />
                   ),
                 });
@@ -150,7 +177,7 @@ function SingleSurvey() {
           </OnboardCard>
         </div>
       )}
-      {action === "buy" && !isPullingData && !isLoading && data && (
+      {action === "buy" && !isPullingData && !isLoading && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-2">
           <OnboardCard>
             <div className="w-full flex flex-col items-center justify-center">
@@ -200,6 +227,16 @@ function SingleSurvey() {
                     <PlaceBidModalContent
                       surveyTokenId={data?.surveyTokenID}
                       token={token}
+                      onSuccessFeedback={(message) => {
+                        toast.success({
+                          text: message,
+                        });
+                      }}
+                      onFailedFeedback={(message) => {
+                        toast.error({
+                          text: message,
+                        });
+                      }}
                     />
                   ),
                 });
@@ -210,11 +247,9 @@ function SingleSurvey() {
           </OnboardCard>
         </div>
       )}
-      {action === "bid" ||
-        (action === "buy" && (isPullingData || isLoading) && !data && (
-          <Loader />
-        ))}
+
       <BidModal />
+      <ToastRender />
     </div>
   );
 }
@@ -222,27 +257,28 @@ function SingleSurvey() {
 const PlaceBidModalContent = ({
   surveyTokenId,
   token,
+  onSuccessFeedback,
+  onFailedFeedback,
 }: {
   surveyTokenId: string;
   token: string;
+  onSuccessFeedback: Function;
+  onFailedFeedback: Function;
 }) => {
-  const [toast, ToastRender] = useToast();
   const { sonergyBalance, address, surveyMarketPlaceContract } =
     useWalletContext();
   const { mutate, isLoading } = useMutation(buySurveyNFT, {
     async onSuccess({ data, message, success }) {
       console.log(data, message, success, "Return data");
       if (success) {
-        return toast.success({ text: message });
+        return onSuccessFeedback(message);
       }
 
-      return toast.error({ text: message });
+      return onFailedFeedback(message);
     },
     onError(err) {
       console.log(err, "Error occurred while buying NFT");
-      toast.error({
-        text: "An error occurred trying to place bid",
-      });
+      return onFailedFeedback(err.toString());
     },
   });
 
@@ -327,7 +363,6 @@ const PlaceBidModalContent = ({
         isLoading={isLoading || onContractCallLoading}
         disabled={false}
       />
-      <ToastRender />
     </div>
   );
 };
