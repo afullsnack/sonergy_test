@@ -81,12 +81,12 @@ export function WalletProvider({ children }: Props): JSX.Element {
       queryKey: ["getInbuiltAddress", token],
       queryFn: () => getUserWalletAddresses(token),
       onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getInbuiltUserAddress"
-        );
+        // console.info(
+        //   data,
+        //   success,
+        //   message,
+        //   "Data returned from the getInbuiltUserAddress"
+        // );
 
         if (success && !address)
           setInbuiltAddress(
@@ -103,12 +103,12 @@ export function WalletProvider({ children }: Props): JSX.Element {
       queryFn: () =>
         getSonergyBalance({ token, address: address || inBuiltAddress }),
       onSuccess({ success, message, data }) {
-        console.info(
-          data,
-          success,
-          message,
-          "Data returned from the getSonergyBalance"
-        );
+        // console.info(
+        //   data,
+        //   success,
+        //   message,
+        //   "Data returned from the getSonergyBalance"
+        // );
 
         if (success)
           setSonergyBalance(

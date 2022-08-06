@@ -46,7 +46,7 @@ interface EncodeAnswerData {
 export function IPFSProvider({ children }: ProviderProps) {
   const [{ token }] = useCookies(["token"]);
   const [isPushingData, setIsPushingData] = useState<boolean>(false);
-  const [isPullingData, setIsPullingData] = useState<boolean>(false);
+  const [isPullingData, setIsPullingData] = useState<boolean>(true);
   const [pushReturnData, setPushReturnData] = useState<object>();
   const { surveyContract, tokenContract, address, inBuiltAddress } =
     useWalletContext();
@@ -380,13 +380,10 @@ export function IPFSProvider({ children }: ProviderProps) {
     ).then((res) => res.json());
     // const { value } = await ipfsClient.dag.get(CID.parse(cid));
     // const jsonString = new TextDecoder("utf-8").decode(json.value.Data);
-    console.log(
-      json,
-      // json.value,
-      // jsonString,
-      // JSON.parse(jsonString),
-      "JSON after IPFS call"
-    );
+    // console.log(
+    //   json,
+    //   "JSON after IPFS call"
+    // );
     setIsPullingData(false);
     return json;
   };
