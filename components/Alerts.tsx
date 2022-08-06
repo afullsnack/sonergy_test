@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 
-export const ToastSuccess = ({ text }: { text: string }) => {
+export const ToastSuccess = ({
+  text,
+  close,
+}: {
+  text: string;
+  close: MouseEventHandler<HTMLButtonElement>;
+}) => {
   return (
     <div
       id="toast-success"
@@ -27,6 +33,7 @@ export const ToastSuccess = ({ text }: { text: string }) => {
         className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
         data-dismiss-target="#toast-success"
         aria-label="Close"
+        onClick={close}
       >
         <span className="sr-only">Close</span>
         <svg
@@ -46,7 +53,13 @@ export const ToastSuccess = ({ text }: { text: string }) => {
   );
 };
 
-export const ToastDanger = ({ text }: { text: string }) => {
+export const ToastDanger = ({
+  text,
+  close,
+}: {
+  text: string;
+  close: MouseEventHandler<HTMLButtonElement>;
+}) => {
   return (
     <div
       id="toast-danger"
@@ -73,6 +86,7 @@ export const ToastDanger = ({ text }: { text: string }) => {
         className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
         data-dismiss-target="#toast-danger"
         aria-label="Close"
+        onClick={close}
       >
         <span className="sr-only">Close</span>
         <svg
@@ -92,7 +106,13 @@ export const ToastDanger = ({ text }: { text: string }) => {
   );
 };
 
-export const ToastWarning = ({ text }: { text: string }) => {
+export const ToastWarning = ({
+  text,
+  close,
+}: {
+  text: string;
+  close: MouseEventHandler<HTMLButtonElement>;
+}) => {
   return (
     <div
       id="toast-warning"
@@ -119,6 +139,7 @@ export const ToastWarning = ({ text }: { text: string }) => {
         className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
         data-dismiss-target="#toast-warning"
         aria-label="Close"
+        onClick={close}
       >
         <span className="sr-only">Close</span>
         <svg
@@ -182,7 +203,7 @@ export function useToast() {
   useEffect(() => {
     const toastTimeout = window.setTimeout(
       () => setVisible((_prev) => false),
-      3000
+      6000
     );
     console.log("Setting timeout", toastTimeout);
 
@@ -201,13 +222,22 @@ export function useToast() {
     () => (
       <>
         {alertType === AlertType.Error && visible && (
-          <ToastDanger text={displayText} />
+          <ToastDanger
+            text={displayText}
+            close={() => setVisible((_prev) => false)}
+          />
         )}
         {alertType === AlertType.Success && visible && (
-          <ToastSuccess text={displayText} />
+          <ToastSuccess
+            text={displayText}
+            close={() => setVisible((_prev) => false)}
+          />
         )}
         {alertType === AlertType.Warning && visible && (
-          <ToastWarning text={displayText} />
+          <ToastWarning
+            text={displayText}
+            close={() => setVisible((_prev) => false)}
+          />
         )}
       </>
     ),
