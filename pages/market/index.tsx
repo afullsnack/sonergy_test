@@ -46,9 +46,9 @@ function Market() {
   const [listModal, ListModal] = useModal();
 
   // States
-  const [market, setMarket] = useState([]);
-  const [myCollection, setMyCollection] = useState([]);
-  const [completed, setCompleted] = useState([]);
+  const [market, setMarket] = useState<Array<any> | undefined>();
+  const [myCollection, setMyCollection] = useState<Array<any> | undefined>();
+  const [completed, setCompleted] = useState<Array<any> | undefined>();
 
   // useQueries fetch to get nfts and collection and completed surveys
   const [
@@ -95,9 +95,32 @@ function Market() {
       queryKey: ["getMyNFTSurveys", token, address || inBuiltAddress],
       queryFn: () =>
         getMyNFTSurveys({ token, address: address || inBuiltAddress }),
-      onSuccess({ data, success, message }) {
+      async onSuccess({ data, success, message }) {
         console.log(data, success, message, "Get My NFT data");
-        if (success) setMyCollection(data);
+        if (success && data?.length) {
+          const decodedMap = data
+            .filter((f) => f.surveyTokenUrl !== "s7ujshjsjkaklauajaj")
+            .map(async (item: any) => {
+              // console.log("Item", item.surveyURI);
+              const json = await pullData(item?.surveyTokenUrl);
+              // console.log("Gotten json", json);
+              return {
+                ...json,
+                price: utils.formatUnits(BigNumber.from(item?.price), 18),
+                fromSurveyId: BigNumber.from(item?.fromSurveyId),
+                surveyId: BigNumber.from(item?.surveyId),
+                surveyTokenID: BigNumber.from(item?.surveyTokenID),
+                nftContract: item?.nftContract,
+                surveyTokenUrl: item?.surveyTokenUrl,
+                owner: item?.owner,
+                seller: item?.seller,
+                status: item?.status,
+              };
+            });
+
+          const awaitedDecode = await Promise.all(decodedMap);
+          setMyCollection(awaitedDecode);
+        }
       },
       onError(err) {
         console.error(err, "Error on get NFT");
@@ -107,9 +130,32 @@ function Market() {
       queryKey: ["getCreatedNFTSurveys", token, address || inBuiltAddress],
       queryFn: () =>
         getCreatedNFTSurveys({ token, address: address || inBuiltAddress }),
-      onSuccess({ data, success, message }) {
+      async onSuccess({ data, success, message }) {
         console.log(data, success, message, "Get Created NFT data");
-        if (success) setCompleted(data);
+        if (success && data?.length) {
+          const decodedMap = data
+            .filter((f) => f.surveyTokenUrl !== "s7ujshjsjkaklauajaj")
+            .map(async (item: any) => {
+              // console.log("Item", item.surveyURI);
+              const json = await pullData(item?.surveyTokenUrl);
+              // console.log("Gotten json", json);
+              return {
+                ...json,
+                price: utils.formatUnits(BigNumber.from(item?.price), 18),
+                fromSurveyId: BigNumber.from(item?.fromSurveyId),
+                surveyId: BigNumber.from(item?.surveyId),
+                surveyTokenID: BigNumber.from(item?.surveyTokenID),
+                nftContract: item?.nftContract,
+                surveyTokenUrl: item?.surveyTokenUrl,
+                owner: item?.owner,
+                seller: item?.seller,
+                status: item?.status,
+              };
+            });
+
+          const awaitedDecode = await Promise.all(decodedMap);
+          setCompleted(awaitedDecode);
+        }
       },
       onError(err) {
         console.error(err, "Error on get NFT");
@@ -209,93 +255,100 @@ function Market() {
         </div>
       </div>
 
+      {/* Loading component */}
+      {(sort === "marketplace" ||
+        sort === "collections" ||
+        sort === "completed") &&
+        (isMarketLoading ||
+          isCollectionLoading ||
+          isCompletedLoading ||
+          isPullingData) &&
+        !market && <Loader />}
+
       {/* List of surveys */}
-      {sort === "marketplace" &&
-        !isMarketLoading &&
-        !isPullingData &&
-        market.length > 0 && (
-          <>
-            <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
-              <div className="w-full flex items-center justify-between">
-                <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
-                  Most popular
-                </span>
-                <span
-                  className="text-sm desktop:text-lg font-medium text-blue-600 mb-2 hover:cursor-pointer"
-                  onClick={(e) => {
-                    console.log("See all clicked", e);
-                  }}
-                >
-                  See all
-                </span>
-              </div>
-              <MostPopularSlider>
-                {market.map((item, idx) => (
-                  <div
-                    className="carousel-item mobile:min-w-full"
-                    key={idx.toString()}
-                  >
-                    <OnboardCard>
-                      <div
-                        className="w-full flex flex-col items-start justify-between mb-2"
-                        onClick={(e) => {
-                          console.log(e, "Clicked on te survey");
-                          router.push(
-                            `/market/s/${item?.surveyTokenID}?action=bid`
-                          );
-                        }}
-                      >
-                        <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
-                          <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
-                          {`${item?.seller.substring(0, 9)}...` || "Username"}{" "}
-                          <GoVerified color="#0059AC" className="ml-2" />
-                        </span>
-                        <span className="text-gray-700 text-sm font-normal text-left">
-                          {item?.surveyTitle ||
-                            " Blockchain development and utilization in sub-saharanAfrica."}
-                        </span>
-                      </div>
-                      <div className="w-full flex items-center justify-between">
-                        <div className="flex flex-col flex-[3] items-start justify-center">
-                          <p className="flex items-center justify-center text-gray-700 font-medium text-[16px] mb-1">
-                            {item?.price} {symbol || "SNEGY"}
-                          </p>
-                          {item?.expirationDate && (
-                            <p className="flex items-center justify-center">
-                              {" "}
-                              <AiFillClockCircle size={14} />
-                              <span className="text-xs text-gray-500 ml-1">
-                                {new Date(
-                                  item?.expirationDate
-                                ).toLocaleString() || "2 days 11 hours"}
-                              </span>{" "}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex">
-                          <ButtonPrimary
-                            text="Buy now"
-                            type="normal"
-                            icon={null}
-                            iconPosition={null}
-                            block={true}
-                            onClick={(e) => {
-                              console.log("Buy now clicked", e);
-                              router.push(
-                                `/market/s/${item?.surveyTokenID}?action=buy`
-                              );
-                            }}
-                            disabled={false}
-                            isLoading={false}
-                          />
-                        </div>
-                      </div>
-                    </OnboardCard>
-                  </div>
-                ))}
-              </MostPopularSlider>
+      {sort === "marketplace" && !isMarketLoading && !isPullingData && market && (
+        <>
+          <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
+            <div className="w-full flex items-center justify-between">
+              <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
+                New Listings
+              </span>
+              <span
+                className="text-sm desktop:text-lg font-medium text-blue-600 mb-2 hover:cursor-pointer"
+                onClick={(e) => {
+                  console.log("See all clicked", e);
+                }}
+              >
+                See all
+              </span>
             </div>
-            {/* <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
+            <MostPopularSlider>
+              {market?.map((item, idx) => (
+                <div
+                  className="carousel-item mobile:min-w-full"
+                  key={idx.toString()}
+                >
+                  <OnboardCard>
+                    <div
+                      className="w-full flex flex-col items-start justify-between mb-2"
+                      onClick={(e) => {
+                        console.log(e, "Clicked on te survey");
+                        router.push(
+                          `/market/s/${item?.surveyTokenID}?action=bid`
+                        );
+                      }}
+                    >
+                      <span className="text-gray-700 text-xs text-ellipses font-light flex items-center justify-center mb-2">
+                        <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
+                        {`${item?.seller}` || "Username"}{" "}
+                        <GoVerified color="#0059AC" className="ml-2" />
+                      </span>
+                      <span className="text-gray-700 text-sm font-normal text-left">
+                        {item?.surveyTitle ||
+                          " Blockchain development and utilization in sub-saharanAfrica."}
+                      </span>
+                    </div>
+                    <div className="w-full flex items-center justify-between">
+                      <div className="flex flex-col flex-[3] items-start justify-center">
+                        <p className="flex items-center justify-center text-gray-700 font-medium text-[16px] mb-1">
+                          {item?.price} {symbol || "SNEGY"}
+                        </p>
+                        {item?.expirationDate && (
+                          <p className="flex items-center justify-center">
+                            {" "}
+                            <AiFillClockCircle size={14} />
+                            <span className="text-xs text-gray-500 ml-1">
+                              {new Date(
+                                item?.expirationDate
+                              ).toLocaleString() || "2 days 11 hours"}
+                            </span>{" "}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex">
+                        <ButtonPrimary
+                          text="Buy now"
+                          type="normal"
+                          icon={null}
+                          iconPosition={null}
+                          block={true}
+                          onClick={(e) => {
+                            console.log("Buy now clicked", e);
+                            router.push(
+                              `/market/s/${item?.surveyTokenID}?action=buy`
+                            );
+                          }}
+                          disabled={false}
+                          isLoading={false}
+                        />
+                      </div>
+                    </div>
+                  </OnboardCard>
+                </div>
+              ))}
+            </MostPopularSlider>
+          </div>
+          {/* <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
             <div className="w-full flex items-center justify-between">
               <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
                 New
@@ -311,24 +364,22 @@ function Market() {
             </div>
             <MostPopularSlider />
           </div> */}
-          </>
-        )}
-
-      {sort === "marketplace" &&
-        (isMarketLoading || isPullingData) &&
-        market.length <= 0 && <Loader />}
+        </>
+      )}
 
       {sort === "collections" && !isCollectionLoading && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
-          {new Array(3).fill("muches").map((item, idx) => (
+          {myCollection?.map((item, idx) => (
             <OnboardCard key={idx.toString()}>
               <div className="flex flex-col items-start justify-between mb-2">
-                <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
+                <span className="text-gray-700 text-xs text-ellipsis font-light flex items-center justify-center mb-2">
                   <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
-                  Username <GoVerified color="#0059AC" className="ml-2" />
+                  {item?.owner || "Username"}{" "}
+                  <GoVerified color="#0059AC" className="ml-2" />
                 </span>
                 <span className="text-gray-700 text-sm font-normal text-left">
-                  Blockchain development and utilization in sub-saharan Africa.
+                  {item?.description ||
+                    "Blockchain development and utilization in sub-saharan Africa."}
                 </span>
               </div>
               <div className="flex items-center justify-between space-x-4">
@@ -364,19 +415,21 @@ function Market() {
         </div>
       )}
 
-      {sort === "collections" && isCollectionLoading && <Loader />}
+      {/* {sort === "collections" && isCollectionLoading && <Loader />} */}
 
       {sort === "completed" && !isCompletedLoading && (
         <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3 space-y-4">
-          {new Array(3).fill("muches").map((item, idx) => (
+          {completed.map((item, idx) => (
             <OnboardCard key={idx.toString()}>
               <div className="flex flex-col items-start justify-between mb-2">
-                <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
+                <span className="text-gray-700 text-xs text-ellipsis font-light flex items-center justify-center mb-2">
                   <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
-                  Username <GoVerified color="#0059AC" className="ml-2" />
+                  {item?.owner || "Username"}{" "}
+                  <GoVerified color="#0059AC" className="ml-2" />
                 </span>
                 <span className="text-gray-700 text-sm font-normal text-left">
-                  Blockchain development and utilization in sub-saharan Africa.
+                  {item?.description ||
+                    "Blockchain development and utilization in sub-saharan Africa."}
                 </span>
               </div>
               <div className="flex items-center justify-between space-x-4">
@@ -412,7 +465,7 @@ function Market() {
         </div>
       )}
 
-      {sort === "completed" && isCompletedLoading && <Loader />}
+      {/* {sort === "completed" && isCompletedLoading && <Loader />} */}
       <MintModal />
       <ListModal />
     </div>
