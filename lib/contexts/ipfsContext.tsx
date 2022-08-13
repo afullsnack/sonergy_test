@@ -376,7 +376,12 @@ export function IPFSProvider({ children }: ProviderProps) {
     const json = await fetch(
       ipfsUri.includes("https")
         ? ipfsUri
-        : `https://ipfs.infura.io/ipfs/${ipfsUri}`
+        : `https://ipfs.infura.io:5001/ipfs/${ipfsUri}`,
+      {
+        headers: {
+          authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+        },
+      }
     ).then((res) => res.json());
     // const { value } = await ipfsClient.dag.get(CID.parse(cid));
     // const jsonString = new TextDecoder("utf-8").decode(json.value.Data);
