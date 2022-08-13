@@ -9,35 +9,35 @@ import {
   FaUserAlt,
   FaWallet,
 } from "react-icons/fa";
-import resolveConfig from "tailwindcss/resolveConfig";
+// import resolveConfig from "tailwindcss/resolveConfig";
 import { useWalletContext } from "../lib/contexts/walletContext";
-import tailwindConfig from "../tailwind.config"; // Fix the path
+// import tailwindConfig from "../tailwind.config"; // Fix the path
 import { ButtonGhost, ButtonPrimary } from "./Button";
 import Logo from "./Logo";
 
-const fullConfig = resolveConfig(tailwindConfig);
+// const fullConfig = resolveConfig(tailwindConfig);
 
-export const getBreakpointValue = (value: string): number =>
-  +fullConfig.theme.screens[value].slice(
-    0,
-    fullConfig.theme.screens[value].indexOf("px")
-  );
+// export const getBreakpointValue = (value: string): number =>
+//   +fullConfig.theme.screens[value].slice(
+//     0,
+//     fullConfig.theme.screens[value].indexOf("px")
+//   );
 
-export const getCurrentBreakpoint = (): string | undefined => {
-  let currentBreakpoint: string | undefined;
-  let biggestBreakpointValue = 0;
-  for (const breakpoint of Object.keys(fullConfig.theme.screens)) {
-    const breakpointValue = getBreakpointValue(breakpoint);
-    if (
-      breakpointValue > biggestBreakpointValue &&
-      window.innerWidth >= breakpointValue
-    ) {
-      biggestBreakpointValue = breakpointValue;
-      currentBreakpoint = breakpoint;
-    }
-  }
-  return currentBreakpoint;
-};
+// export const getCurrentBreakpoint = (): string | undefined => {
+//   let currentBreakpoint: string | undefined;
+//   let biggestBreakpointValue = 0;
+//   for (const breakpoint of Object.keys(fullConfig.theme.screens)) {
+//     const breakpointValue = getBreakpointValue(breakpoint);
+//     if (
+//       breakpointValue > biggestBreakpointValue &&
+//       window.innerWidth >= breakpointValue
+//     ) {
+//       biggestBreakpointValue = breakpointValue;
+//       currentBreakpoint = breakpoint;
+//     }
+//   }
+//   return currentBreakpoint;
+// };
 
 export default function withLayout(BaseComp: React.ElementType) {
   const Page: React.FunctionComponent = (props) => {
@@ -47,23 +47,23 @@ export default function withLayout(BaseComp: React.ElementType) {
     // wallet context
     const { address, setAddress, setProvider, setSigner } = useWalletContext();
 
-    const [isMobile, setIsMobile] = useState(false);
+    // const [isMobile, setIsMobile] = useState(false);
     const [shouldConnect, setShouldConnect] = useState(false);
     // const [address, setAddress] = useState<string | undefined | null>();
-    useEffect(() => {
-      console.log(getCurrentBreakpoint(), "Break point value");
-      setIsMobile(getCurrentBreakpoint() === "mobile");
+    // useEffect(() => {
+    //   console.log(getCurrentBreakpoint(), "Break point value");
+    //   setIsMobile(getCurrentBreakpoint() === "mobile");
 
-      function handleResize() {
-        setIsMobile(getCurrentBreakpoint() === "mobile");
-      }
-      // Add event listener
-      window.addEventListener("resize", handleResize);
-      // Call handler right away so state gets updated with initial window size
-      handleResize();
-      // Remove event listener on cleanup
-      return () => window.removeEventListener("resize", handleResize);
-    }, []); //Call once
+    //   function handleResize() {
+    //     setIsMobile(getCurrentBreakpoint() === "mobile");
+    //   }
+    //   // Add event listener
+    //   window.addEventListener("resize", handleResize);
+    //   // Call handler right away so state gets updated with initial window size
+    //   handleResize();
+    //   // Remove event listener on cleanup
+    //   return () => window.removeEventListener("resize", handleResize);
+    // }, []); //Call once
 
     const connectWallet = async () => {
       const provider = new ethers.providers.Web3Provider(
@@ -96,8 +96,8 @@ export default function withLayout(BaseComp: React.ElementType) {
       <>
         <div className="w-[100%] mobile:bg-white desktop:bg-white flex items-center justify-between desktop:pr-6 desktop:pl-3 pr-4 mb-2">
           <Logo />
-          {!isMobile && (
-            <div className="w-[100%] max-w-xl h-20 flex py-1 items-stretch justify-center rounded-sm bg-transparent">
+          {
+            <div className="w-[100%] mobile:hidden max-w-xl h-20 flex py-1 items-stretch justify-center rounded-sm bg-transparent">
               <div
                 className="flex-1 flex items-center justify-center px-2 hover:cursor-pointer"
                 onClick={(e) => router.push("/home/")}
@@ -171,7 +171,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                 </span>
               </div>
             </div>
-          )}
+          }
           <div className="rounded-md w-auto h-8 flex items-center justify-center">
             <div className="flex items-center justify-center py-2 px-2 rounded-md border-solid border-[#E2EDF6] border-[1px] bg-transparent mr-2">
               <div className="indicator">
@@ -179,11 +179,11 @@ export default function withLayout(BaseComp: React.ElementType) {
                 <FaBell color="#8895A7" size={"14px"} />
               </div>
             </div>
-            {!isMobile && (
-              <div className="flex items-center justify-center py-2 px-2 rounded-md border-solid border-[#E2EDF6] border-[1px] bg-transparent mr-2">
+            {
+              <div className="flex items-center justify-center mobile:hidden py-2 px-2 rounded-md border-solid border-[#E2EDF6] border-[1px] bg-transparent mr-2">
                 <FaMoon color="#8895A7" size={"14px"} />
               </div>
-            )}
+            }
             {address ? (
               <ButtonGhost
                 text={`${address.substring(0, 6)}...${address.substring(
@@ -221,7 +221,7 @@ export default function withLayout(BaseComp: React.ElementType) {
           <div className="w-full mobile:pb-[112px] p-0 h-auto flex flex-col items-start justify-center my-0 mx-auto scroll-smooth">
             <BaseComp {...props} />
           </div>
-          {isMobile && (
+          {
             <div className="w-[100%] bg-white desktop:hidden flex items-center mobile:justify-between justify-center py-4 px-2 fixed bottom-0 left-0 right-0">
               <div className="w-[100%] h-20 flex py-1 items-stretch justify-center rounded-sm bg-transparent">
                 <div
@@ -298,7 +298,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                 </div>
               </div>
             </div>
-          )}
+          }
         </div>
       </>
     );
