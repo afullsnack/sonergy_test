@@ -73,6 +73,10 @@ export function IPFSProvider({ children }: ProviderProps) {
     },
   });
 
+  const ipfsAuth = `Basic ${Buffer.from(
+    process.env.IPFS_PROJEC_ID + ":" + process.env.IPFS_PROJECT_SECRET
+  ).toString("base64")}`;
+
   const pushQuestionsToIPFSForConnected = async (
     json: EncodeQuestionData,
     surveyData: any
@@ -88,9 +92,13 @@ export function IPFSProvider({ children }: ProviderProps) {
       const userAddress = address;
       setIsPushingData(true);
       const ipfsClient = create({
-        url: `${process.env.IPFS_URL}/api/v0`,
+        // url: `${process.env.IPFS_URL}/api/v0`,
+        host: "ipfs.infura.io",
+        port: 5001,
+        protocol: "https",
+        apiPath: "/api/v0",
         headers: {
-          authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+          authorization: `Basic ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
         },
       });
       // const cid = await ipfsClient.dag.put(json as object, {
@@ -216,9 +224,13 @@ export function IPFSProvider({ children }: ProviderProps) {
       );
       setIsPushingData(true);
       const ipfsClient = create({
-        url: `${process.env.IPFS_URL}/api/v0`,
+        // url: `${process.env.IPFS_URL}/api/v0`,
+        host: "ipfs.infura.io",
+        port: 5001,
+        protocol: "https",
+        apiPath: "/api/v0",
         headers: {
-          authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+          authorization: `Basic ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
         },
       });
       // const cid = await ipfsClient.dag.put(json as object, {
@@ -263,9 +275,13 @@ export function IPFSProvider({ children }: ProviderProps) {
       const userAddress = address;
       setIsPushingData(true);
       const ipfsClient = create({
-        url: `${process.env.IPFS_URL}/api/v0`,
+        // url: `${process.env.IPFS_URL}/api/v0`,
+        host: "ipfs.infura.io",
+        port: 5001,
+        protocol: "https",
+        apiPath: "/api/v0",
         headers: {
-          authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+          authorization: `Basic ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
         },
       });
       // const cid = await ipfsClient.dag.put(json as object, {
@@ -336,9 +352,13 @@ export function IPFSProvider({ children }: ProviderProps) {
       const userAddress = address;
       setIsPushingData(true);
       const ipfsClient = create({
-        url: `${process.env.IPFS_URL}/api/v0`,
+        // url: `${process.env.IPFS_URL}/api/v0`,
+        host: "ipfs.infura.io",
+        port: 5001,
+        protocol: "https",
+        apiPath: "/api/v0",
         headers: {
-          authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+          Authorization: `Basic ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
         },
       });
       // const cid = await ipfsClient.dag.put(json as object, {
@@ -376,12 +396,16 @@ export function IPFSProvider({ children }: ProviderProps) {
     const json = await fetch(
       ipfsUri.includes("https")
         ? ipfsUri
-        : `https://ipfs.infura.io:5001/ipfs/${ipfsUri}`,
-      {
-        headers: {
-          authorization: `Bearer ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
-        },
-      }
+        : `https://sonergy.infura-ipfs.io/ipfs/${ipfsUri}`
+      // : `https://ipfs.infura.io/ipfs/${ipfsUri}`,
+      // {
+      //   headers: {
+      //     "User-Agent": "_",
+      //     Authorization: `Basic ${Buffer.from(
+      //       process.env.IPFS_PROJEC_ID + ":" + process.env.IPFS_PROJECT_SECRET
+      //     ).toString("base64")}`,
+      //   },
+      // }
     ).then((res) => res.json());
     // const { value } = await ipfsClient.dag.get(CID.parse(cid));
     // const jsonString = new TextDecoder("utf-8").decode(json.value.Data);

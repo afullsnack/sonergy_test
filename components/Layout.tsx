@@ -97,7 +97,7 @@ export default function withLayout(BaseComp: React.ElementType) {
         <div className="w-[100%] mobile:bg-white desktop:bg-white flex items-center justify-between desktop:pr-6 desktop:pl-3 pr-4 mb-2">
           <Logo />
           {
-            <div className="w-[100%] mobile:hidden max-w-xl h-20 flex py-1 items-stretch justify-center rounded-sm bg-transparent">
+            <div className="w-[100%] hidden desktop:visible max-w-xl h-20 desktop:flex py-1 items-stretch justify-center rounded-sm bg-transparent">
               <div
                 className="flex-1 flex items-center justify-center px-2 hover:cursor-pointer"
                 onClick={(e) => router.push("/home/")}
@@ -180,7 +180,7 @@ export default function withLayout(BaseComp: React.ElementType) {
               </div>
             </div>
             {
-              <div className="flex items-center justify-center mobile:hidden py-2 px-2 rounded-md border-solid border-[#E2EDF6] border-[1px] bg-transparent mr-2">
+              <div className="desktop:flex items-center justify-center hidden desktop:visible py-2 px-2 rounded-md border-solid border-[#E2EDF6] border-[1px] bg-transparent mr-2">
                 <FaMoon color="#8895A7" size={"14px"} />
               </div>
             }
