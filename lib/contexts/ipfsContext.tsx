@@ -98,7 +98,7 @@ export function IPFSProvider({ children }: ProviderProps) {
         protocol: "https",
         apiPath: "/api/v0",
         headers: {
-          authorization: `Basic ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+          authorization: ipfsAuth,
         },
       });
       // const cid = await ipfsClient.dag.put(json as object, {
@@ -230,7 +230,7 @@ export function IPFSProvider({ children }: ProviderProps) {
         protocol: "https",
         apiPath: "/api/v0",
         headers: {
-          authorization: `Basic ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+          authorization: ipfsAuth,
         },
       });
       // const cid = await ipfsClient.dag.put(json as object, {
@@ -281,7 +281,7 @@ export function IPFSProvider({ children }: ProviderProps) {
         protocol: "https",
         apiPath: "/api/v0",
         headers: {
-          authorization: `Basic ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+          authorization: ipfsAuth,
         },
       });
       // const cid = await ipfsClient.dag.put(json as object, {
@@ -358,7 +358,7 @@ export function IPFSProvider({ children }: ProviderProps) {
         protocol: "https",
         apiPath: "/api/v0",
         headers: {
-          Authorization: `Basic ${process.env.IPFS_PROJEC_ID}:${process.env.IPFS_PROJECT_SECRET}`,
+          Authorization: ipfsAuth,
         },
       });
       // const cid = await ipfsClient.dag.put(json as object, {
@@ -375,7 +375,8 @@ export function IPFSProvider({ children }: ProviderProps) {
         token,
         surveyId: surveyID,
         address: inBuiltAddress,
-        answerUri: path || `https://ipfs.infura.io/ipfs/${cid.toString()}`,
+        answerUri:
+          path || `https://sonergy.infura-ipfs.io/ipfs/${cid.toString()}`,
       });
     } catch (err) {
       console.error("An error occurred", err);
@@ -385,6 +386,7 @@ export function IPFSProvider({ children }: ProviderProps) {
 
   const pullData = async (ipfsUri: string) => {
     // console.log(cid, "CID", CID.parse(cid));
+    const GATEWAY = "https://sonergy.infura-ipfs.io/ipfs";
     setIsPullingData(true);
     // const ipfsClient = create({
     //   url: `${process.env.IPFS_URL}/api/v0`,
@@ -393,19 +395,21 @@ export function IPFSProvider({ children }: ProviderProps) {
     //   },
     // });
     // const json = ipfsClient.get(`/ipfs/${cid}`);
+    ipfsUri = ipfsUri.includes("https")
+      ? ipfsUri.slice(ipfsUri.lastIndexOf("/") + 1, ipfsUri.length)
+      : ipfsUri;
+    console.log(ipfsUri, "Sorted URI");
     const json = await fetch(
-      ipfsUri.includes("https")
-        ? ipfsUri
-        : `https://sonergy.infura-ipfs.io/ipfs/${ipfsUri}`
+      `${GATEWAY}/${ipfsUri}`,
       // : `https://ipfs.infura.io/ipfs/${ipfsUri}`,
-      // {
-      //   headers: {
-      //     "User-Agent": "_",
-      //     Authorization: `Basic ${Buffer.from(
-      //       process.env.IPFS_PROJEC_ID + ":" + process.env.IPFS_PROJECT_SECRET
-      //     ).toString("base64")}`,
-      //   },
-      // }
+      {
+        headers: {
+          "User-Agent": "_",
+          Authorization: `Basic ${Buffer.from(
+            process.env.IPFS_PROJEC_ID + ":" + process.env.IPFS_PROJECT_SECRET
+          ).toString("base64")}`,
+        },
+      }
     ).then((res) => res.json());
     // const { value } = await ipfsClient.dag.get(CID.parse(cid));
     // const jsonString = new TextDecoder("utf-8").decode(json.value.Data);

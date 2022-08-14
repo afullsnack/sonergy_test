@@ -12,7 +12,6 @@ import {
 // import resolveConfig from "tailwindcss/resolveConfig";
 import { useWalletContext } from "../lib/contexts/walletContext";
 // import tailwindConfig from "../tailwind.config"; // Fix the path
-import { ButtonGhost, ButtonPrimary } from "./Button";
 import Logo from "./Logo";
 
 // const fullConfig = resolveConfig(tailwindConfig);
@@ -184,7 +183,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                 <FaMoon color="#8895A7" size={"14px"} />
               </div>
             }
-            {address ? (
+            {/* {address ? (
               <ButtonGhost
                 text={`${address.substring(0, 6)}...${address.substring(
                   address.length - 4,
@@ -214,7 +213,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                 disabled={false}
                 isLoading={false}
               />
-            )}
+            )} */}
           </div>
         </div>
         <div className="container">
