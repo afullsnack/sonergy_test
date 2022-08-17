@@ -27,6 +27,10 @@ a {
   .container {
     @apply w-screen desktop:max-w-screen-desktop mobile:max-w-full mx-auto my-0;
   }
+
+  .landing_container {
+    @apply w-screen desktop:max-w-screen-landingDesktop mobile:max-w-full mx-auto my-0
+  }
   /* w-[100vw] min-w-ful min-h-screen mobile:w-[100vw] mobile:min-w-full flex flex-col items-center justify-start my-0 mx-autol */
   
   .btn-active {

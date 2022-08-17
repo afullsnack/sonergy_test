@@ -9,18 +9,18 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { useMutation, useQueryClient } from "react-query";
-import { ButtonPrimary } from "../components/Button";
-import Logo from "../components/Logo";
-import { useModal } from "../components/Modal";
-import OnboardCard from "../components/OnboardCard";
-import OTPInput from "../components/OTPInput";
+import { ButtonPrimary } from "../../components/Button";
+import Logo from "../../components/Logo";
+import { useModal } from "../../components/Modal";
+import OnboardCard from "../../components/OnboardCard";
+import OTPInput from "../../components/OTPInput";
 import {
   RegisterData,
   registerUser,
   resendEmailOTP,
   verifyEmailOTP,
   VerifyEmailOTPData,
-} from "../lib/mutations";
+} from "../../lib/mutations";
 // import {Modal} from "flowbite-react/lib/esm/components/Modal";
 
 function NewAccount() {
@@ -64,7 +64,11 @@ function NewAccount() {
   return (
     <div className="container">
       <div className="w-[100%] mobile:bg-white desktop:bg-transparent flex items-center mobile:justify-between desktop:justify-center justify-center pr-4 mb-2">
-        <Logo />
+        <Link href="/">
+          <a>
+            <Logo />
+          </a>
+        </Link>
         <div className="bg-primary rounded-md w-8 h-8 desktop:hidden"></div>
       </div>
       <div className="w-[100%] desktop:max-w-screen-desktop mobile:max-w-screen-mobile mobile:p-2 h-auto flex flex-col items-start justify-center my-0 mx-auto">
@@ -268,7 +272,7 @@ function NewAccount() {
             Already have an account?
           </span>
           <span className="text-primary text-sm font-bold">
-            <Link href="/login" passHref>
+            <Link href="/onboarding/login" passHref>
               <a>Log in</a>
             </Link>
           </span>
@@ -376,7 +380,7 @@ const RegisterOTPModal = ({ email, otpCode }) => {
             data
           );
           console.log(success, message, "Verify OTP response data");
-          push("/login");
+          push("/onboarding/login");
         }}
         isLoading={confirmOTPMutation.isLoading}
         type={"normal"}

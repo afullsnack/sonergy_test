@@ -7,6 +7,7 @@ interface CustomButton {
   text: string;
   type?: BtnSize;
   icon?: Icon;
+  color?: string;
   iconPosition?: IconPosition | undefined;
   block?: boolean;
   isLoading?: boolean;
@@ -18,8 +19,9 @@ export const ButtonPrimary = ({
   text = "Default Text",
   type = "normal",
   icon,
+  color = "white",
   iconPosition = "left",
-  block = true,
+  block = false,
   isLoading = false,
   disabled = false,
   onClick,
@@ -43,7 +45,7 @@ export const ButtonPrimary = ({
           <>
             {typeof icon !== "undefined" ? icon : null}
             <span
-              className={`text-white font-medium text-sm ${
+              className={`text-${color} font-medium text-sm ${
                 typeof icon !== "undefined"
                   ? iconPosition === "left"
                     ? "ml-2"
@@ -82,18 +84,19 @@ export const ButtonGhost = ({
   text,
   type = "normal",
   icon,
+  color = "primary",
   iconPosition,
-  block,
+  block = false,
   disabled = false,
   onClick,
 }: CustomButton) => {
   return (
     <button
       className={`bg-transparent ${
-        block ? "w-full" : null
+        block ? "w-full" : "w-auto"
       } rounded-lg flex items-center justify-center ${
         type === "normal" ? "mt-2 mb-2 py-[14px]" : "mt-1 mb-1 py-2"
-      } border border-primary text-primary disabled:border-gray-300 disabled:text-gray-300 px-4 shadow-sm active:opacity-60 hover:opacity-50 hover:cursor-pointer disabled:hover:cursor-default transition-all`}
+      } border border-primary text-${color} disabled:border-gray-300 disabled:text-gray-300 px-4 shadow-sm active:opacity-60 hover:opacity-50 hover:cursor-pointer disabled:hover:cursor-default transition-all`}
       onClick={onClick}
       disabled={disabled}
     >
