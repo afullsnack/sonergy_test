@@ -191,7 +191,7 @@ function Account() {
             // TODO: Clear cookie and redirect to the login screen
             console.log(e, "Logout clicked");
             removeCookie("token");
-            router.push("/login");
+            router.push("/onboarding/login");
           }}
           disabled={false}
           isLoading={false}
