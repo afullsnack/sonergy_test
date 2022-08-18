@@ -117,8 +117,8 @@ export default function LandingPage() {
         </div>
       </div>
       <div className="landing_container desktop:px-2 flex flex-col">
-        <div className="flex items-center justify-center space-x-6 py-24">
-          <div className="flex flex-col items-start justify-center space-y-6">
+        <div className="flex flex-col desktop:flex-row items-center justify-center  space-y-6 desktop:space-x-6 py-24">
+          <div className="flex flex-col items-center desktop:items-start justify-center space-y-6 px-6 w-full">
             <h1 className="text-black text-left font-bold text-5xl">
               Get verifiable, reliable and decentralized research data.
             </h1>
@@ -195,7 +195,7 @@ export default function LandingPage() {
               />
             </div>
           </div>
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end p-6 desktop:p-0">
             <img
               src="/hero_img.png"
               // width={900}
@@ -205,7 +205,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div
-          className="flex items-center justify-center space-x-6 py-20"
+          className="flex mobile:flex-col desktop:flex-row items-center justify-center space-x-6 mobile:space-y-6 py-20 w-full mobile:px-6"
           id="about"
         >
           <div className="w-auto">
@@ -236,8 +236,8 @@ export default function LandingPage() {
         </div>
       </div>
       <div className="w-full bg-[#0F4079]" id="solution">
-        <div className="landing_container desktop:py-32 flex space-x-2">
-          <div className="flex flex-col space-y-8">
+        <div className="landing_container desktop:py-32 flex mobile:flex-col desktop:flex-row mobile:space-y-2 space-x-2">
+          <div className="flex flex-col space-y-8 mobile:w-full mobile:p-12">
             <div className="flex items-center justify-start w-full space-x-4">
               <h1 className="text-white text-left font-bold text-5xl">
                 The solution
@@ -328,7 +328,7 @@ export default function LandingPage() {
               />
             </div>
           </div>
-          <div className="flex flex-col items-end justify-center">
+          <div className="flex flex-col desktop:items-end mobile:items-center justify-center mobile:w-full mobile:p-12">
             <img
               src="/solution_hero_img.svg"
               // width={1800}
@@ -338,8 +338,8 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
-      <div className="w-full bg-white p-16" id="how_it_works">
-        <div className="rounded-box bg-[#F7FCFF]">
+      <div className="w-full bg-white p-16 mobile:p-6" id="how_it_works">
+        <div className="rounded-box bg-[#F7FCFF] mobile:p-10">
           <div className="landing_container desktop:py-32 flex flex-col space-y-16">
             <div className="flex flex-col space-y-8">
               <div className="flex items-center justify-start w-full space-x-4">
@@ -360,13 +360,15 @@ export default function LandingPage() {
                 validate data to earn Sonergy tokens.
               </span>
             </div>
-            <div className="flex space-x-16">
-              <img
-                src="/ecosystem_hero_img.svg"
-                alt="Sonergy ecosystem"
-                className="w-[1200]"
-              />
-              <div className="bg-white p-6 flex flex-col rounded-lg space-y-8">
+            <div className="flex mobile:flex-col desktop:flex-row desktop:space-x-8 mobile:space-y-8">
+              <div className="flex flex-col desktop:items-start mobile:items-center justify-center mobile:w-full mobile:p-12">
+                <img
+                  src="/ecosystem_hero_img.svg"
+                  alt="Sonergy ecosystem"
+                  className="w-[1200px] mobile:w-full mx-auto"
+                />
+              </div>
+              <div className="bg-white p-6 flex flex-col flex-grow-0 rounded-lg space-y-8 mobile:w-full desktop:w-auto">
                 <div className="bg-ecoVar1 flex flex-col items-start justify-center p-4 border-b border-[#57CAEB]">
                   <h3 className="text-black text-lg font-medium">
                     Research Commissioners
@@ -401,7 +403,7 @@ export default function LandingPage() {
         </div>
       </div>
       <div
-        className="landing_container desktop:px-2 desktop:py-32 flex flex-col"
+        className="landing_container desktop:px-2 desktop:py-32 flex flex-col overflow-x-hidden"
         id="roadmap"
       >
         <div className="flex flex-col items-center justify-center space-y-8 mb-8">
@@ -418,7 +420,7 @@ export default function LandingPage() {
             business relationships.
           </span>
         </div>
-        <div className="flex flex-col items-center justify-center space-y-8 mt-8 mb-8">
+        <div className="flex flex-col desktop:items-center mobile:items-start justify-start space-y-8 mt-8 mb-8 w-full mobile:p-4">
           <Timeline>
             <Timeline.Item>
               <Timeline.Point />
@@ -540,8 +542,8 @@ export default function LandingPage() {
             prospective project partner tokens.
           </span>
         </div>
-        <div className="flex flex-col items-center justify-center space-y-8 mt-8 mb-8 w-full">
-          <Table>
+        <div className="flex flex-col desktop:items-center mobile:items-start justify-start space-y-8 mt-8 mb-8 w-full mobile:p-4 overflow-x-scroll">
+          <Table hoverable={true}>
             <Table.Head>
               <Table.HeadCell>Total token supply</Table.HeadCell>
               <Table.HeadCell>21,000,000</Table.HeadCell>
@@ -557,7 +559,7 @@ export default function LandingPage() {
                 <Table.Cell>30%</Table.Cell>
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white flex items-center justify-start">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white flex items-center justify-start truncate">
                   <div className="flex w-6 h-6 bg-blue-700 mr-2 rounded-md"></div>
                   Ecosystem development, Operations, Liquidity and Airdrop
                 </Table.Cell>
@@ -608,8 +610,8 @@ export default function LandingPage() {
           </Table>
         </div>
       </div>
-      <div className="w-full bg-[#F7FAFC80] p-16">
-        <div className="landing_container desktop:px-2 desktop:py-32 flex flex-col items-center justify-center">
+      <div className="w-full bg-[#F7FAFC80] desktop:p-16 mobile:p-4">
+        <div className="landing_container desktop:px-2 desktop:py-32 flex flex-col items-center justify-center w-full">
           <div className="flex flex-col items-center justify-center space-y-8 mb-20">
             <div className="flex flex-col items-center justify-center w-full space-y-6">
               <h1 className="text-gray-900 text-left font-bold text-5xl">
@@ -618,101 +620,105 @@ export default function LandingPage() {
               <div className="w-32 h-2 rounded-sm bg-[#01AAF0]"></div>
             </div>
           </div>
-          <Accordion>
-            <Accordion.Panel>
-              <Accordion.Title>What is Sonergy ?</Accordion.Title>
-              <Accordion.Content>
-                <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
-                  <p className="text-left text-lg text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Ullamcorper ultrices faucibus libero purus ut. In senectus
-                    lectus in nunc mattis risus, pulvinar semper. Nisi quis
-                    ultricies felis faucibus etiam.
-                  </p>
-                </div>
-              </Accordion.Content>
-            </Accordion.Panel>
-            <Accordion.Panel>
-              <Accordion.Title>How can I commission a survey?</Accordion.Title>
-              <Accordion.Content>
-                <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
-                  <p className="text-left text-lg text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Ullamcorper ultrices faucibus libero purus ut. In senectus
-                    lectus in nunc mattis risus, pulvinar semper. Nisi quis
-                    ultricies felis faucibus etiam.
-                  </p>
-                </div>
-              </Accordion.Content>
-            </Accordion.Panel>
-            <Accordion.Panel>
-              <Accordion.Title>How can I earn on sonergy?</Accordion.Title>
-              <Accordion.Content>
-                <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
-                  <p className="text-left text-lg text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Ullamcorper ultrices faucibus libero purus ut. In senectus
-                    lectus in nunc mattis risus, pulvinar semper. Nisi quis
-                    ultricies felis faucibus etiam.
-                  </p>
-                </div>
-              </Accordion.Content>
-            </Accordion.Panel>
-            <Accordion.Panel>
-              <Accordion.Title>How can I provide data?</Accordion.Title>
-              <Accordion.Content>
-                <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
-                  <p className="text-left text-lg text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Ullamcorper ultrices faucibus libero purus ut. In senectus
-                    lectus in nunc mattis risus, pulvinar semper. Nisi quis
-                    ultricies felis faucibus etiam.
-                  </p>
-                </div>
-              </Accordion.Content>
-            </Accordion.Panel>
-            <Accordion.Panel>
-              <Accordion.Title>How can I validate data?</Accordion.Title>
-              <Accordion.Content>
-                <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
-                  <p className="text-left text-lg text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Ullamcorper ultrices faucibus libero purus ut. In senectus
-                    lectus in nunc mattis risus, pulvinar semper. Nisi quis
-                    ultricies felis faucibus etiam.
-                  </p>
-                </div>
-              </Accordion.Content>
-            </Accordion.Panel>
-            <Accordion.Panel>
-              <Accordion.Title>
-                How can I mint data to NFT on the marketplace?
-              </Accordion.Title>
-              <Accordion.Content>
-                <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
-                  <p className="text-left text-lg text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Ullamcorper ultrices faucibus libero purus ut. In senectus
-                    lectus in nunc mattis risus, pulvinar semper. Nisi quis
-                    ultricies felis faucibus etiam.
-                  </p>
-                </div>
-              </Accordion.Content>
-            </Accordion.Panel>
-            <Accordion.Panel>
-              <Accordion.Title>How can I sell my data?</Accordion.Title>
-              <Accordion.Content>
-                <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
-                  <p className="text-left text-lg text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Ullamcorper ultrices faucibus libero purus ut. In senectus
-                    lectus in nunc mattis risus, pulvinar semper. Nisi quis
-                    ultricies felis faucibus etiam.
-                  </p>
-                </div>
-              </Accordion.Content>
-            </Accordion.Panel>
-          </Accordion>
+          <div className="overflow-x-scroll w-full mobile:px-4 mobile:min-w-full">
+            <Accordion>
+              <Accordion.Panel>
+                <Accordion.Title>What is Sonergy ?</Accordion.Title>
+                <Accordion.Content>
+                  <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
+                    <p className="text-left text-lg text-gray-700">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Ullamcorper ultrices faucibus libero purus ut. In senectus
+                      lectus in nunc mattis risus, pulvinar semper. Nisi quis
+                      ultricies felis faucibus etiam.
+                    </p>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Panel>
+              <Accordion.Panel>
+                <Accordion.Title>
+                  How can I commission a survey?
+                </Accordion.Title>
+                <Accordion.Content>
+                  <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
+                    <p className="text-left text-lg text-gray-700">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Ullamcorper ultrices faucibus libero purus ut. In senectus
+                      lectus in nunc mattis risus, pulvinar semper. Nisi quis
+                      ultricies felis faucibus etiam.
+                    </p>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Panel>
+              <Accordion.Panel>
+                <Accordion.Title>How can I earn on sonergy?</Accordion.Title>
+                <Accordion.Content>
+                  <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
+                    <p className="text-left text-lg text-gray-700">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Ullamcorper ultrices faucibus libero purus ut. In senectus
+                      lectus in nunc mattis risus, pulvinar semper. Nisi quis
+                      ultricies felis faucibus etiam.
+                    </p>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Panel>
+              <Accordion.Panel>
+                <Accordion.Title>How can I provide data?</Accordion.Title>
+                <Accordion.Content>
+                  <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
+                    <p className="text-left text-lg text-gray-700">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Ullamcorper ultrices faucibus libero purus ut. In senectus
+                      lectus in nunc mattis risus, pulvinar semper. Nisi quis
+                      ultricies felis faucibus etiam.
+                    </p>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Panel>
+              <Accordion.Panel>
+                <Accordion.Title>How can I validate data?</Accordion.Title>
+                <Accordion.Content>
+                  <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
+                    <p className="text-left text-lg text-gray-700">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Ullamcorper ultrices faucibus libero purus ut. In senectus
+                      lectus in nunc mattis risus, pulvinar semper. Nisi quis
+                      ultricies felis faucibus etiam.
+                    </p>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Panel>
+              <Accordion.Panel>
+                <Accordion.Title>
+                  How can I mint data to NFT on the marketplace?
+                </Accordion.Title>
+                <Accordion.Content>
+                  <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
+                    <p className="text-left text-lg text-gray-700">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Ullamcorper ultrices faucibus libero purus ut. In senectus
+                      lectus in nunc mattis risus, pulvinar semper. Nisi quis
+                      ultricies felis faucibus etiam.
+                    </p>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Panel>
+              <Accordion.Panel>
+                <Accordion.Title>How can I sell my data?</Accordion.Title>
+                <Accordion.Content>
+                  <div className="border-l-4 border-[#01AAF0] pl-4 py-4">
+                    <p className="text-left text-lg text-gray-700">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Ullamcorper ultrices faucibus libero purus ut. In senectus
+                      lectus in nunc mattis risus, pulvinar semper. Nisi quis
+                      ultricies felis faucibus etiam.
+                    </p>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Panel>
+            </Accordion>
+          </div>
         </div>
       </div>
       <div className="w-full bg-[#FFF] p-16">
@@ -758,7 +764,7 @@ export default function LandingPage() {
               </h1>
               <div className="w-32 h-2 rounded-sm bg-[#01AAF0]"></div>
             </div>
-            <div className="w-full flex items-center justify-evenly">
+            <div className="w-full flex mobile:flex-col desktop:flex-row mobile:space-y-8 desktop:items-center mobile:items-center desktop:justify-evenly mobile:justify-center">
               <div className="w-64 h-64 relative">
                 <img
                   src="/team/ceo.png"
@@ -813,7 +819,7 @@ export default function LandingPage() {
       </div>
       <div className="w-full bg-[#051B30] p-16">
         <div className="w-full landing_container desktop:px-2 desktop:py-32 flex flex-col items-center justify-center">
-          <div className="flex w-full items-start justify-between">
+          <div className="flex mobile:flex-col desktop:flex-row mobile:space-y-8 w-full desktop:items-start justify-between">
             <div>
               <Footer.Brand
                 href="/"
@@ -822,8 +828,8 @@ export default function LandingPage() {
               />
               <span>copyright © 2022 - sonergy.io</span>
             </div>
-            <div className="w-full flex items-start justify-evenly">
-              <div>
+            <div className="w-full flex mobile:flex-col desktop:flex-row mobile:space-y-10 desktop:space-x-0 desktop:items-start justify-evenly">
+              <div className="my-0">
                 <Footer.Title title="Quick links" />
                 <Footer.LinkGroup col={true}>
                   <Footer.Link href="#">Marketplace</Footer.Link>
@@ -832,7 +838,7 @@ export default function LandingPage() {
                   <Footer.Link href="#">Privacy policy</Footer.Link>
                 </Footer.LinkGroup>
               </div>
-              <div>
+              <div className="mt-0">
                 <Footer.Title title="Contact" />
                 <Footer.LinkGroup col={true}>
                   <Footer.Link href="mailto:support@sonergy.io">
@@ -873,7 +879,7 @@ export default function LandingPage() {
             </div>
           </div>
           <Footer.Divider />
-          <div className="w-full mobile:flex mobile:items-center mobile:justify-between">
+          <div className="w-full flex mobile:flex-col desktop:flex-row mobile:items-center mobile:justify-between">
             {/* <Footer.Copyright href="#" by="Sonergy™" year={2022} /> */}
             <span className="flex items-center justify-start">
               Smart contract audited by{" "}

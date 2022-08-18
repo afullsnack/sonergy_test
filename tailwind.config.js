@@ -11,12 +11,12 @@ module.exports = {
   ],
   darkMode: "class",
   theme: {
-    screens: {
-      mobile: "375px",
-      desktop: "744px",
-      landingDesktop: "1224px",
-    },
     extend: {
+      screens: {
+        mobile: "375px",
+        desktop: "744px",
+        landingDesktop: "1224px",
+      },
       colors: {
         primary: "rgba(0, 89, 172, 1)",
         secondary: "rgba(247, 250, 252, 1)",
