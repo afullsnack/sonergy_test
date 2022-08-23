@@ -146,7 +146,7 @@ function Home() {
       </div>
       {/* Available surveys section */}
       <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-3">
-        <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-3">
+        <span className="text-[16px] desktop:text-lg font-medium text-slate-800 dark:text-gray-300 mb-3">
           Available surveys
         </span>
         {!!availableSurveyData.length ? (
@@ -158,7 +158,7 @@ function Home() {
 
       {/* My Surveys section */}
       <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
-        <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-3">
+        <span className="text-[16px] desktop:text-lg font-medium text-slate-800 dark:text-gray-300 mb-3">
           My surveys
         </span>
         <OnboardCard>
@@ -184,7 +184,7 @@ function Home() {
       </div>
 
       {/* Survey actions */}
-      <div className="w-full flex flex-col mobile:p-3 bg-white">
+      <div className="w-full flex flex-col mobile:p-3 bg-white dark:bg-slate-900">
         <ButtonPrimary
           text="Create a survey"
           icon={<FaPlus color="white" size={12} />}

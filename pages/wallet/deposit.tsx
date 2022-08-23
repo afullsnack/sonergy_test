@@ -25,7 +25,7 @@ function Deposit() {
     <div className="w-full">
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-10">
         <OnboardCard>
-          <span className="text-lg text-center text-slate-800 font-light mb-2">
+          <span className="text-lg text-center text-slate-800 dark:text-gray-300 font-light mb-2">
             Deposit SNEGY
           </span>
           <div className="flex items-center justify-center mb-4">
@@ -34,16 +34,20 @@ function Deposit() {
           </div>
           {/* <div className="badge bg-green-600 text-white font-light border-none mt-0 mb-5 mx-auto">Completed</div> */}
           <div className="w-full flex flex-col p-4">
-            <span className="text-[16px] text-gray-600 mb-1">Network</span>
-            <span className="text-[16px] font-medium text-gray-800 mb-3">
+            <span className="text-[16px] text-gray-600 dark:text-gray-400 mb-1">
+              Network
+            </span>
+            <span className="text-[16px] font-medium text-gray-800 dark:text-gray-300 mb-3">
               Binance (BSC)
             </span>
-            <span className="text-sm text-gray-600 mb-1">Sonergy Address</span>
-            <span className="text-[16px] font-medium text-gray-800 mb-3 flex items-center justify-between">
+            <span className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              Sonergy Address
+            </span>
+            <span className="text-[16px] font-medium text-gray-800 dark:text-gray-300 mb-3 flex items-center justify-between">
               <span className="truncate">{address || inBuiltAddress}</span>{" "}
               <FaCopy color="#8895A7" />
             </span>
-            <span className="text-xs text-gray-500 mb-1">
+            <span className="text-xs text-gray-500 dark:text-gray-300 mb-1">
               Should arrive after 15 network confirmations
             </span>
           </div>

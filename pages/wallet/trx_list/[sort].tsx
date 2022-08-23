@@ -56,7 +56,7 @@ function TransactionMoreList() {
 const TransactionsList = ({ router, data }) => {
   const TransactionIn = ({ title, subText, amount, onClick }) => (
     <div
-      className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer"
+      className="w-full mx-auto bg-white dark:bg-slate-900 rounded-lg flex items-center space-x-4 hover:cursor-pointer"
       onClick={onClick}
     >
       <div className="shrink-0 rounded-xl border-solid bg-green-50 p-3">
@@ -68,21 +68,28 @@ const TransactionsList = ({ router, data }) => {
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex-[4]">
-          <div className="text-sm font-medium text-gray-700">{title}</div>
-          <p className="text-xs text-gray-400 font-light">{subText}</p>
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {title}
+          </div>
+          <p className="text-xs text-gray-400 dark:text-gray-300 font-light">
+            {subText}
+          </p>
         </div>
-        <span className="text-[14px] text-gray-700 font-medium mr-2">
+        <span className="text-[14px] text-gray-700 dark:text-gray-300 font-medium mr-2">
           {" "}
           +{amount}{" "}
         </span>
-        <AiOutlineRight size={16} color="black" />
+        <AiOutlineRight
+          size={16}
+          className="text-gray-800 dark:text-gray-300"
+        />
       </div>
     </div>
   );
 
   const TransactionOut = ({ title, subText, amount, onClick }) => (
     <div
-      className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer"
+      className="w-full mx-auto bg-white dark:bg-slate-900 rounded-lg flex items-center space-x-4 hover:cursor-pointer"
       onClick={onClick}
     >
       <div className="shrink-0 rounded-xl bg-red-50 p-3">
@@ -94,14 +101,21 @@ const TransactionsList = ({ router, data }) => {
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex-[4]">
-          <div className="text-sm font-medium text-gray-700">{title}</div>
-          <p className="text-xs text-gray-400 font-light">{subText}</p>
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {title}
+          </div>
+          <p className="text-xs text-gray-400 dark:text-gray-300 font-light">
+            {subText}
+          </p>
         </div>
-        <span className="text-[14px] text-gray-700 font-medium mr-2">
+        <span className="text-[14px] text-gray-700 dark:text-gray-300 font-medium mr-2">
           {" "}
           -{amount}{" "}
         </span>
-        <AiOutlineRight size={16} color="black" />
+        <AiOutlineRight
+          size={16}
+          className="text-gray-800 dark:text-gray-300"
+        />
       </div>
     </div>
   );

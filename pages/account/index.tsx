@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { AiOutlineRight } from "react-icons/ai";
 import { useQuery, useQueryClient } from "react-query";
@@ -17,6 +18,24 @@ function Account() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies();
+  const [mode, setMode] = useState<"light" | "dark" | undefined>();
+  useEffect(() => {
+    const userTheme = localStorage.getItem("theme");
+    const systemTheme = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    // Initial theme check
+    const themeCheck = () => {
+      if (userTheme === "dark" || (!userTheme && systemTheme)) {
+        document.documentElement.classList.add("dark");
+        return "dark";
+      } else {
+        return "light";
+      }
+    };
+
+    setMode(themeCheck());
+  }, [mode]);
 
   // DONE: Setup query and render data from returned data
   const { token } = cookies;
@@ -38,7 +57,7 @@ function Account() {
     <div className="w-full">
       <div
         style={{ backgroundImage: `url('${data?.data?.cover}')` }}
-        className="flex flex-col items-start justify-start w-full bg-white mobile:p-3 mb-5 bg-cover bg-center bg-no-repeat"
+        className="flex flex-col items-start justify-start w-full bg-white dark:bg-slate-900 mobile:p-3 mb-5 bg-cover bg-center bg-no-repeat"
       >
         <div
           className={`w-full mx-auto bg-transparent rounded-lg flex items-center space-x-4`}
@@ -71,7 +90,7 @@ function Account() {
       </div>
       <div className="flex flex-col items-start justify-start w-full bg-transparent mobile:p-3 mb-5">
         <div className="w-full mb-4">
-          <span className="text-gray-700 text-left text-lg font-medium">
+          <span className="text-gray-700 dark:text-gray-300 text-left text-lg font-medium">
             Profile
           </span>
           <OnboardCard>
@@ -130,7 +149,7 @@ function Account() {
           </OnboardCard>
         </div>
         <div className="w-full mb-4">
-          <span className="text-gray-700 text-left text-lg font-medium">
+          <span className="text-gray-700 dark:text-gray-300 text-left text-lg font-medium">
             Settings
           </span>
           <OnboardCard>
@@ -152,7 +171,7 @@ function Account() {
               subText="Set theme"
               extra={
                 <span className="text-xs text-center text-gray-600 font-light mr-2">
-                  Light mode
+                  {mode} mode
                 </span>
               }
               icon={<img src="/settings/theme_icon.svg" alt="Theme icon" />}
@@ -204,21 +223,26 @@ function Account() {
 const MenuItem = ({ onClick, title, subText, icon, extra }) => {
   return (
     <div
-      className="w-full mx-auto bg-white rounded-lg flex items-center space-x-4 hover:cursor-pointer"
+      className="w-full mx-auto bg-white dark:bg-slate-900 rounded-lg flex items-center space-x-4 hover:cursor-pointer"
       onClick={onClick}
     >
-      <div className="shrink-0 rounded-xl border-solid bg-gray-100 p-3">
+      <div className="shrink-0 rounded-xl border-solid bg-gray-100 dark:bg-slate-700 p-3">
         {icon}
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex-[4]">
-          <div className="text-[16px] font-medium text-gray-700 mb-2">
+          <div className="text-[16px] font-medium text-gray-700 dark:text-gray-300 mb-2">
             {title}
           </div>
-          <p className="text-sm text-gray-600 font-[400]">{subText}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300 font-[400]">
+            {subText}
+          </p>
         </div>
         {extra}
-        <AiOutlineRight size={16} color="black" />
+        <AiOutlineRight
+          size={16}
+          className="text-gray-800 dark:text-gray-300"
+        />
       </div>
     </div>
   );

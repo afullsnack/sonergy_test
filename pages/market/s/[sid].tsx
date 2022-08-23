@@ -95,13 +95,15 @@ function SingleSurvey() {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col items-start justify-center w-full bg-white p-3 mb-3">
+      <div className="flex flex-col items-start justify-center w-full bg-white dark:bg-slate-900 p-3 mb-3">
         <div
           className="flex items-center justify-start space-x-2 hover:cursor-pointer"
           onClick={(e) => router.back()}
         >
           <AiFillLeftCircle />
-          <span className="text-sm font-medium text-gray-800">Marketplace</span>
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-300">
+            Marketplace
+          </span>
         </div>
       </div>
 
@@ -126,19 +128,19 @@ function SingleSurvey() {
               </span>
               <span className="w-full flex items-center justify-start text-sm text-gray-400 font-light mb-5">
                 Top bid:{" "}
-                <b className="font-medium text-lg text-gray-700 mx-2">
+                <b className="font-medium text-lg text-gray-700 dark:text-gray-300 mx-2">
                   {data?.price || "650"} {symbol || "SNEGY"}
                 </b>{" "}
                 {/* ($2,145.60) */}
               </span>
             </div>
             <div className="flex flex-col items-start justify-between mb-2">
-              <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
+              <span className="text-gray-700 dark:text-gray-300 text-xs font-light flex items-center justify-center mb-2">
                 <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
                 {data?.seller.substring(0, 8) || "Username"}{" "}
                 <GoVerified color="#0059AC" className="ml-2" />
               </span>
-              <span className="text-gray-700 text-sm font-normal text-left">
+              <span className="text-gray-700 dark:text-gray-300 text-sm font-normal text-left">
                 {data?.description ||
                   "Blockchain development and utilization in sub-saharan Africa."}
               </span>
@@ -196,19 +198,19 @@ function SingleSurvey() {
               </span>
               <span className="w-full flex items-center justify-start text-sm text-gray-400 font-light mb-5">
                 Top bid:{" "}
-                <b className="font-medium text-lg text-gray-700 mx-2">
+                <b className="font-medium text-lg text-gray-700 dark:text-gray-300 mx-2">
                   {data?.price || "650"} {symbol || "SNEGY"}
                 </b>{" "}
                 {/* ($2,145.60) */}
               </span>
             </div>
             <div className="flex flex-col items-start justify-between mb-2">
-              <span className="text-gray-700 text-xs font-light flex items-center justify-center mb-2">
+              <span className="text-gray-700 dark:text-gray-300 text-xs font-light flex items-center justify-center mb-2">
                 <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
                 {data?.seller.substring(0, 8) || "Username"}{" "}
                 <GoVerified color="#0059AC" className="ml-2" />
               </span>
-              <span className="text-gray-700 text-sm font-normal text-left">
+              <span className="text-gray-700 dark:text-gray-300 text-sm font-normal text-left">
                 {data?.description ||
                   "Blockchain development and utilization in sub-saharan Africa."}
               </span>

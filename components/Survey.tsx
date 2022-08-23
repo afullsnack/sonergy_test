@@ -25,18 +25,22 @@ import OnboardCard from "./OnboardCard";
 export const MySurveyList = ({ title, count, onClick, icon }) => {
   return (
     <div
-      className="w-full p-3 mx-auto bg-white rounded-lg flex items-center space-x-4 border-[#E2EDF6] border-[0.5px] mb-3 hover:cursor-pointer"
+      className="w-full p-3 mx-auto bg-white dark:bg-slate-900 rounded-lg flex items-center space-x-4 border-[#E2EDF6] border-[0.5px] mb-3 hover:cursor-pointer"
       onClick={onClick}
     >
-      <div className="shrink-0 rounded-2xl border-solid border-[#E2EDF6] border-[.9px] p-3">
+      <div className="shrink-0 rounded-2xl border-solid border-[#E2EDF6] dark:border-slate-500 border-[.9px] p-3">
         <img src={icon} alt="My Survey logos" />
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex-[4]">
-          <div className="text-sm font-light text-gray-600">{title}</div>
-          <p className="text-[16px] text-gray-700 font-medium">{count}</p>
+          <div className="text-sm font-light text-gray-600 dark:text-gray-200">
+            {title}
+          </div>
+          <p className="text-[16px] text-gray-700 dark:text-gray-200 font-medium">
+            {count}
+          </p>
         </div>
-        <AiOutlineRight color="black" />
+        <AiOutlineRight className="text-gray-700 dark:text-gray-200" />
       </div>
     </div>
   );
@@ -54,14 +58,14 @@ export const AvailableSurveyCarousel = ({ data }: { data: any[] }) => {
         >
           <OnboardCard>
             <div className="flex flex-col items-start justify-between mb-3">
-              <span className="text-gray-700 text-sm font-normal text-left mb-2">
+              <span className="text-gray-700 dark:text-gray-200 text-sm font-normal text-left mb-2">
                 {item?.description ||
                   "Blockchain development and utilisation in sub-saharan Africa."}
               </span>
-              <p className="flex items-center justify-center">
+              <p className="flex items-center justify-center ">
                 {" "}
                 <AiFillDollarCircle size={14} />{" "}
-                <b className="text-gray-700 text-xs mr-1 ml-1">
+                <b className="text-gray-700 dark:text-gray-200 text-xs mr-1 ml-1">
                   {utils.formatUnits(item?.amount, 18) || "200"}
                 </b>
                 <span className="text-xs">{item?.symbol || "SNEGY"}</span>{" "}
@@ -69,7 +73,7 @@ export const AvailableSurveyCarousel = ({ data }: { data: any[] }) => {
               <p className="flex items-center justify-center">
                 {" "}
                 <AiFillClockCircle size={14} />
-                <span className="text-xs text-gray-500 ml-1">
+                <span className="text-xs text-gray-500 dark:text-gray-200 ml-1">
                   Expires on{" "}
                   {`${new Date(
                     item.dateExpiration
@@ -108,10 +112,10 @@ export const EmptySurveyList = () => {
         <div className="p-4 rounded-full bg-slate-100 mb-2">
           <img src="/empty_state_icon.svg" width={70} alt="No transaction" />
         </div>
-        <h2 className="text-gray-700 text-sm desktop:text-md font-semibold mb-1">
+        <h2 className="text-gray-700 dark:text-gray-300 text-sm desktop:text-md font-semibold mb-1">
           No surveys at this time
         </h2>
-        <span className="text-gray-500 text-xs text-center">
+        <span className="text-gray-500 dark:text-gray-200 text-xs text-center">
           There are currently no surveys, we’ll notify you when a new survey is
           available.
         </span>
@@ -346,7 +350,7 @@ export const SurveyQAEntry = ({
     <>
       <div className="form-control mb-5">
         <label className="label">
-          <span className="label-text text-slate-700 font-medium">
+          <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
             Question
           </span>
         </label>
@@ -357,7 +361,7 @@ export const SurveyQAEntry = ({
           <input
             type="text"
             placeholder="Enter question"
-            className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+            className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
@@ -424,7 +428,7 @@ export const SurveyQAEntry = ({
             {a.map((item, idx) => (
               <div className="form-control mb-5" key={idx.toString()}>
                 <label className="label">
-                  <span className="label-text text-slate-700 font-medium">
+                  <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                     Answer {idx + 1}
                   </span>
                 </label>
@@ -434,7 +438,7 @@ export const SurveyQAEntry = ({
                 </span> */}
                   <input
                     placeholder="Enter answer"
-                    className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                    className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                     value={item}
                     onChange={(e) => setAnswer(e.target.value, idx)}
                   />
@@ -459,13 +463,13 @@ export const SurveyQAEntry = ({
         {typeof a === null &&
           typeof a === "undefined" &&
           type === "free-form" && (
-            <span className="label-text text-slate-700 font-medium text-center">
+            <span className="label-text text-slate-700 dark:text-gray-300 font-medium text-center">
               The user can enter any length of text they want, no need to
               pre-fill answers
             </span>
           )}
       </div>
-      <div className="flex flex-row items-center justify-center space-x-3 bg-white w-full mobile:p-3">
+      <div className="flex flex-row items-center justify-center space-x-3 bg-white dark:bg-slate-900 w-full mobile:p-3">
         <ButtonGhost
           type="normal"
           text="Previous"
@@ -641,7 +645,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
   const FreeFormRender = ({ answers, setAnswer, questionId }) => (
     <div className="form-control mb-5">
       <label className="label">
-        <span className="label-text text-slate-700 font-medium">
+        <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
           Enter answer
         </span>
       </label>
@@ -652,7 +656,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
         <input
           type="text"
           placeholder="Enter topic"
-          className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+          className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
           value={
             answers.find((item: any) => item?.questionId === questionId)?.answer
           }
@@ -701,14 +705,14 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
             value={(currentQuestion / questions.length) * 100}
             max="100"
           ></progress>
-          <span className="text-xs font-medium text-gray-500 mb-4">
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-300 mb-4">
             Questions {currentQuestion} of {questions.length}
           </span>
           {questions.map((item: any, idx: number) => (
             <>
               {currentQuestion === idx + 1 && (
                 <>
-                  <span className="text-md font-medium text-gray-800 mb-5">
+                  <span className="text-md font-medium text-gray-800 dark:text-gray-300 mb-5">
                     {item.question}
                   </span>
                   {item?.questionType === QuestionType.FreeForm && (
@@ -740,7 +744,7 @@ export const SurveyAnswerEntry = ({ setStage, questions, surveyID }) => {
           ))}
         </OnboardCard>
       </div>
-      <div className="flex items-center justify-center w-full space-x-4 bg-white mobile:p-3">
+      <div className="flex items-center justify-center w-full space-x-4 bg-white dark:bg-slate-900 mobile:p-3">
         {currentQuestion === 1 && currentQuestion < questions.length && (
           <ButtonPrimary
             type="normal"

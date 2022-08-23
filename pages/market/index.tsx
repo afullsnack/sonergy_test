@@ -176,7 +176,7 @@ function Market() {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col items-start justify-start w-full bg-white p-3 mb-2">
+      <div className="flex flex-col items-start justify-start w-full bg-white dark:bg-slate-900 p-3 mb-2">
         {/* Search action */}
         <form className="form-control mb-4 w-full">
           {/* <label
@@ -274,7 +274,7 @@ function Market() {
         <>
           <div className="flex flex-col items-start justify-start w-full bg-transparent p-3 mb-3">
             <div className="w-full flex items-center justify-between">
-              <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
+              <span className="text-[16px] desktop:text-lg font-medium text-slate-800 dark:text-gray-300 mb-2">
                 New Listings
               </span>
               <span
@@ -302,19 +302,19 @@ function Market() {
                         );
                       }}
                     >
-                      <span className="text-gray-700 text-xs text-ellipses font-light flex items-center justify-center mb-2">
+                      <span className="text-gray-700 dark:text-gray-300 text-xs text-ellipses font-light flex items-center justify-center mb-2">
                         <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
                         {`${item?.seller}` || "Username"}{" "}
                         <GoVerified color="#0059AC" className="ml-2" />
                       </span>
-                      <span className="text-gray-700 text-sm font-normal text-left">
+                      <span className="text-gray-700 dark:text-gray-300 text-sm font-normal text-left">
                         {item?.surveyTitle ||
                           " Blockchain development and utilization in sub-saharanAfrica."}
                       </span>
                     </div>
                     <div className="w-full flex items-center justify-between">
                       <div className="flex flex-col flex-[3] items-start justify-center">
-                        <p className="flex items-center justify-center text-gray-700 font-medium text-[16px] mb-1">
+                        <p className="flex items-center justify-center text-gray-700 dark:text-gray-300 font-medium text-[16px] mb-1">
                           {item?.price} {symbol || "SNEGY"}
                         </p>
                         {item?.expirationDate && (
@@ -376,12 +376,12 @@ function Market() {
           {myCollection?.map((item, idx) => (
             <OnboardCard key={idx.toString()}>
               <div className="flex flex-col items-start justify-between mb-2">
-                <span className="text-gray-700 text-xs text-ellipsis font-light flex items-center justify-center mb-2">
+                <span className="text-gray-700 dark:text-gray-300 text-xs text-ellipsis font-light flex items-center justify-center mb-2">
                   <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
                   {item?.owner || "Username"}{" "}
                   <GoVerified color="#0059AC" className="ml-2" />
                 </span>
-                <span className="text-gray-700 text-sm font-normal text-left">
+                <span className="text-gray-700 dark:text-gray-300 text-sm font-normal text-left">
                   {item?.description ||
                     "Blockchain development and utilization in sub-saharan Africa."}
                 </span>
@@ -426,12 +426,12 @@ function Market() {
           {completed.map((item, idx) => (
             <OnboardCard key={idx.toString()}>
               <div className="flex flex-col items-start justify-between mb-2">
-                <span className="text-gray-700 text-xs text-ellipsis font-light flex items-center justify-center mb-2">
+                <span className="text-gray-700 dark:text-gray-300 text-xs text-ellipsis font-light flex items-center justify-center mb-2">
                   <div className="w-4 h-4 rounded-full bg-primary mr-1"></div>{" "}
                   {item?.owner || "Username"}{" "}
                   <GoVerified color="#0059AC" className="ml-2" />
                 </span>
-                <span className="text-gray-700 text-sm font-normal text-left">
+                <span className="text-gray-700 dark:text-gray-300 text-sm font-normal text-left">
                   {item?.description ||
                     "Blockchain development and utilization in sub-saharan Africa."}
                 </span>

@@ -22,16 +22,16 @@ function TrxDetail() {
           onClick={(e) => router.back()}
         >
           <AiFillLeftCircle />
-          <span className="text-sm font-medium text-gray-800">
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-300">
             Transaction details
           </span>
         </div>
         <OnboardCard>
-          <span className="text-xs text-center text-slate-800 font-light mb-2">
+          <span className="text-xs text-center text-slate-800 dark:text-gray-300 font-light mb-2">
             Amount
           </span>
           <p className="flex items-center justify-center mb-2">
-            <b className="text-md text-slate-800 font-medium">
+            <b className="text-md text-slate-800 dark:text-gray-300 font-medium">
               200.
               <small className="text-xs">
                 00 <span className="text-2xs font-light ml-1">SNEGY</span>

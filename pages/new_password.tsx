@@ -50,8 +50,10 @@ function SetNewPassword() {
       </div>
       <div className="w-[100%] desktop:max-w-screen-desktop mobile:max-w-screen-mobile mobile:p-2 h-auto flex flex-col items-start justify-center my-0 mx-auto">
         <OnboardCard>
-          <h3 className="text-black text-lg font-medium">Set new password</h3>
-          <p className="text-slate-500 font-normal text-sm">
+          <h3 className="text-black dark:text-gray-300 text-lg font-medium">
+            Set new password
+          </h3>
+          <p className="text-slate-500 dark:text-gray-300 font-normal text-sm">
             Enter your new password. Should be something you could easily
             remember.
           </p>
@@ -59,7 +61,7 @@ function SetNewPassword() {
 
           <div className="form-control mb-2">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 New Password
               </span>
             </label>
@@ -70,7 +72,7 @@ function SetNewPassword() {
               <input
                 type="text"
                 placeholder="Enter new password"
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
                 value={newPassword}
                 onChange={(e) => {
                   console.log("New password", e.target.value);
@@ -87,7 +89,7 @@ function SetNewPassword() {
           </div>
           <div className="form-control mb-2">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 Confirm Password
               </span>
             </label>
@@ -98,7 +100,7 @@ function SetNewPassword() {
               <input
                 type="text"
                 placeholder="Confirm new password"
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
                 value={confirmPassword}
                 onChange={(e) => {
                   console.log("Confirm password", e.target.value);
@@ -134,7 +136,7 @@ function SetNewPassword() {
           />
         </OnboardCard>
         <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
-          <span className="text-slate-500 text-sm">
+          <span className="text-slate-500 dark:text-gray-300 text-sm">
             Remember your password?
           </span>
           <span className="text-primary text-sm font-bold">
@@ -151,10 +153,10 @@ function SetNewPassword() {
         </a>
       </div> */}
         <div className="w-[100%] flex flex-col items-center justify-end mt-14">
-          <span className="text-gray-600 text-xs font-normal mb-2">
+          <span className="text-gray-600 dark:text-gray-300 text-xs font-normal mb-2">
             © 2022 - Sonergy.io
           </span>
-          <span className="text-gray-600 text-xs font-normal mb-2">
+          <span className="text-gray-600 dark:text-gray-300 text-xs font-normal mb-2">
             Terms & conditions - Privacy policy
           </span>
         </div>

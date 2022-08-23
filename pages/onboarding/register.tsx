@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaCaretRight,
   FaEnvelope,
@@ -42,6 +42,22 @@ function NewAccount() {
 
   // DONE: setup modal
   const [otpModal, OTPModal] = useModal();
+  useEffect(() => {
+    const userTheme = localStorage.getItem("theme");
+    const systemTheme = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    // Initial theme check
+    const themeCheck = () => {
+      if (userTheme === "dark" || (!userTheme && systemTheme)) {
+        document.documentElement.classList.add("dark");
+        return "dark";
+      } else {
+        return "light";
+      }
+    };
+    themeCheck();
+  }, []);
 
   // DONE: setup useMutation
   const { mutate, isLoading, data } = useMutation(registerUser, {
@@ -73,17 +89,17 @@ function NewAccount() {
       </div>
       <div className="w-[100%] desktop:max-w-screen-desktop mobile:max-w-screen-mobile mobile:p-2 h-auto flex flex-col items-start justify-center my-0 mx-auto">
         <OnboardCard>
-          <h3 className="text-black text-lg font-medium">
+          <h3 className="text-black dark:text-gray-300 text-lg font-medium">
             Create your account
           </h3>
-          <p className="text-slate-500 font-normal text-sm">
+          <p className="text-slate-500 dark:text-gray-300 font-normal text-sm">
             Welcome, provide your details below to create your account.
           </p>
           <br />
 
           <div className="form-control mb-2">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 Full Name
               </span>
             </label>
@@ -94,7 +110,7 @@ function NewAccount() {
               <input
                 type="text"
                 placeholder="James Doe"
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
                 value={fullName}
                 onChange={(e) => {
                   console.info("Full name", e.target.value);
@@ -106,7 +122,7 @@ function NewAccount() {
           </div>
           <div className="form-control mb-2">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 Username
               </span>
             </label>
@@ -117,7 +133,7 @@ function NewAccount() {
               <input
                 type="text"
                 placeholder="Username"
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
                 value={username}
                 onChange={(e) => {
                   console.info("Username", e.target.value);
@@ -129,7 +145,7 @@ function NewAccount() {
           </div>
           <div className="form-control mb-2">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 Email Address
               </span>
             </label>
@@ -140,7 +156,7 @@ function NewAccount() {
               <input
                 type="email"
                 placeholder="example@gmail.com"
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
                 value={email}
                 onChange={(e) => {
                   console.info("Email address", e.target.value);
@@ -152,7 +168,7 @@ function NewAccount() {
           </div>
           <div className="form-control mb-2">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 Password
               </span>
             </label>
@@ -163,7 +179,7 @@ function NewAccount() {
               <input
                 type={`${isHidden ? "password" : "text"}`}
                 placeholder="Enter password"
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-1 w-[100%]"
                 value={password}
                 onChange={(e) => {
                   console.info("Password", e.target.value);
@@ -268,7 +284,7 @@ function NewAccount() {
           />
         </OnboardCard>
         <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
-          <span className="text-slate-500 text-sm">
+          <span className="text-slate-500 dark:text-gray-300 text-sm">
             Already have an account?
           </span>
           <span className="text-primary text-sm font-bold">
@@ -278,10 +294,10 @@ function NewAccount() {
           </span>
         </div>
         <div className="w-[100%] flex flex-col items-center justify-end mt-14">
-          <span className="text-gray-600 text-xs font-normal mb-2">
+          <span className="text-gray-600 dark:text-gray-300 text-xs font-normal mb-2">
             © 2022 - Sonergy.io
           </span>
-          <span className="text-gray-600 text-xs font-normal mb-2">
+          <span className="text-gray-600 dark:text-gray-300 text-xs font-normal mb-2">
             Terms & conditions - Privacy policy
           </span>
         </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ButtonPrimary } from "../../components/Button";
 import Logo from "../../components/Logo";
 import OnboardCard from "../../components/OnboardCard";
@@ -10,10 +10,26 @@ export default function Home() {
   // Params
   const { query } = router;
   const [accountType, setAccountType] = useState();
+  useEffect(() => {
+    const userTheme = localStorage.getItem("theme");
+    const systemTheme = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    // Initial theme check
+    const themeCheck = () => {
+      if (userTheme === "dark" || (!userTheme && systemTheme)) {
+        document.documentElement.classList.add("dark");
+        return "dark";
+      } else {
+        return "light";
+      }
+    };
+    themeCheck();
+  }, []);
 
   return (
     <div className="container">
-      <div className="w-[100%] mobile:bg-white desktop:bg-transparent flex items-center mobile:justify-between desktop:justify-center justify-center pr-4 mb-2">
+      <div className="w-[100%] bg-transparent flex items-center mobile:justify-between desktop:justify-center justify-center pr-4 mb-2">
         <Link href="/">
           <a>
             <Logo />
@@ -29,10 +45,10 @@ export default function Home() {
         />
 
         <div className="w-[100%] flex flex-col items-center justify-end mt-14">
-          <span className="text-gray-600 text-xs font-normal mb-2">
+          <span className="text-gray-600 dark:text-gray-300 text-xs font-normal mb-2">
             © 2022 - Sonergy.io
           </span>
-          <span className="text-gray-600 text-xs font-normal mb-2">
+          <span className="text-gray-600 dark:text-gray-300 text-xs font-normal mb-2">
             Terms & conditions - Privacy policy
           </span>
         </div>
@@ -44,14 +60,16 @@ export default function Home() {
 const AccountType = ({ accountType, setAccountType, router }) => (
   <>
     <OnboardCard>
-      <h3 className="text-black text-lg font-medium">Select account type</h3>
-      <p className="text-slate-500 font-normal text-sm">
+      <h3 className="text-black dark:text-gray-300 text-lg font-medium">
+        Select account type
+      </h3>
+      <p className="text-slate-500 dark:text-gray-300 font-normal text-sm">
         Choose an account type that best fits your current needs for Sonergy.
       </p>
       <br />
 
       <div
-        className={`w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] ${
+        className={`w-full p-6 mx-auto my-1 bg-white dark:bg-slate-900 rounded-lg flex items-start space-x-4 border-[1px] ${
           accountType === "researcher" ? "border-[#0059AC]" : "border-[#E2EDF6]"
         } border-solid hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all`}
         onClick={(e) => {
@@ -67,17 +85,17 @@ const AccountType = ({ accountType, setAccountType, router }) => (
           />
         </div>
         <div>
-          <div className="text-sm font-medium text-black">
+          <div className="text-sm font-medium text-black dark:text-gray-300">
             Researcher / Respondent
           </div>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 dark:text-gray-300 text-sm">
             I am an individual, I intend to use Sonergy to create, provide
             survey data and earn rewards.
           </p>
         </div>
       </div>
       <div
-        className={`w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid ${
+        className={`w-full p-6 mx-auto my-1 bg-white dark:bg-slate-900 rounded-lg flex items-start space-x-4 border-[1px] border-solid ${
           accountType === "merchant" ? "border-[#0059AC]" : "border-[#E2EDF6]"
         } hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all`}
         onClick={(e) => {
@@ -93,8 +111,10 @@ const AccountType = ({ accountType, setAccountType, router }) => (
           />
         </div>
         <div>
-          <div className="text-sm font-medium text-black">Merchant</div>
-          <p className="text-slate-500 text-sm">
+          <div className="text-sm font-medium text-black dark:text-gray-300">
+            Merchant
+          </div>
+          <p className="text-slate-500 dark:text-gray-300 text-sm">
             I am an institution / organization, I want to integrate Sonergy’s
             API on my application.
           </p>
@@ -115,7 +135,9 @@ const AccountType = ({ accountType, setAccountType, router }) => (
       />
     </OnboardCard>
     <div className="flex items-center justify-between px-10 mt-6 w-[100%]">
-      <span className="text-slate-500 text-sm">Already have an account?</span>
+      <span className="text-slate-500 dark:text-gray-300 text-sm">
+        Already have an account?
+      </span>
       <span className="text-primary text-sm">
         <Link href="/onboarding/login" passHref>
           <a>Log in</a>

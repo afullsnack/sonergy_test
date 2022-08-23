@@ -67,7 +67,7 @@ function Wallet() {
   return (
     <div className="w-full">
       {/* Available balance */}
-      <div className="flex flex-col items-start justify-start w-full bg-white mobile:p-3 mb-8">
+      <div className="flex flex-col items-start justify-start w-full bg-white dark:bg-slate-900 mobile:p-3 mb-8">
         <WalletBalance />
         <div className="w-full flex flex-row items-center justify-center space-x-8 px-6">
           <div
@@ -77,7 +77,9 @@ function Wallet() {
             <div className="shrink-0 rounded-xl border-solid border-green-200 border-[.9px] p-3 mb-2">
               <FaArrowCircleUp size={18} color="#27C079" />
             </div>
-            <span className="text-xs text-slate-800 font-medium">Deposit</span>
+            <span className="text-xs text-slate-800 dark:text-gray-300 font-medium">
+              Deposit
+            </span>
           </div>
           <div
             className="flex flex-col items-center justify-evenly hover:cursor-pointer"
@@ -86,7 +88,9 @@ function Wallet() {
             <div className="shrink-0 rounded-xl border-solid border-red-200 border-[.9px] p-3 mb-2">
               <FaArrowCircleDown size={18} color="red" />
             </div>
-            <span className="text-xs text-slate-800 font-medium">Withdraw</span>
+            <span className="text-xs text-slate-800 dark:text-gray-300 font-medium">
+              Withdraw
+            </span>
           </div>
           <div
             className="flex flex-col items-center justify-evenly hover:cursor-pointer"
@@ -95,7 +99,9 @@ function Wallet() {
             <div className="shrink-0 rounded-xl border-solid border-orange-200 border-[.9px] p-3 mb-2">
               <FaTag size={18} color="orange" />
             </div>
-            <span className="text-xs text-slate-800 font-medium">Buy</span>
+            <span className="text-xs text-slate-800 dark:text-gray-300 font-medium">
+              Buy
+            </span>
           </div>
           <div
             className="flex flex-col items-center justify-evenly hover:cursor-pointer"
@@ -104,7 +110,9 @@ function Wallet() {
             <div className="shrink-0 rounded-xl border-solid border-blue-200 border-[.9px] p-3 mb-2">
               <FaPercentage size={18} color="#62B2FD" />
             </div>
-            <span className="text-xs text-slate-800 font-medium">Stake</span>
+            <span className="text-xs text-slate-800 dark:text-gray-300 font-medium">
+              Stake
+            </span>
           </div>
         </div>
       </div>
@@ -112,7 +120,7 @@ function Wallet() {
       {/* Transactions states */}
       <div className="flex flex-col items-center justify-center w-full bg-transparent mobile:p-3 mb-10">
         <div className="w-full flex items-center justify-between">
-          <span className="text-[16px] desktop:text-lg font-medium text-slate-800 mb-2">
+          <span className="text-[16px] desktop:text-lg font-medium text-slate-800 dark:text-gray-300 mb-2">
             Wallet transactions
           </span>
           <span
@@ -140,10 +148,10 @@ const NoTransaction = () => (
       <div className="p-4 rounded-full bg-slate-100 mb-4">
         <img src="/empty_state_icon.svg" width={70} alt="No transaction" />
       </div>
-      <h2 className="text-gray-700 text-md desktop:text-md font-semibold mb-1">
+      <h2 className="text-gray-700 dark:text-gray-300 text-md desktop:text-md font-semibold mb-1">
         You’ve not made any transactions
       </h2>
-      <span className="text-gray-500 text-sm text-center">
+      <span className="text-gray-500 dark:text-gray-200 text-sm text-center">
         No transactions yet, your transactions will show up here once you’ve got
         any.
       </span>

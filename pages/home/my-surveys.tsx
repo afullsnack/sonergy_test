@@ -9,7 +9,7 @@ import { useToast } from "../../components/Alerts";
 import {
   ButtonGhost,
   ButtonIcon,
-  ButtonPrimary
+  ButtonPrimary,
 } from "../../components/Button";
 import withLayout from "../../components/Layout";
 import Loader from "../../components/Loader";
@@ -22,7 +22,7 @@ import { convertSurveyToNFT } from "../../lib/mutations";
 import {
   getAllSurveys,
   getCompletedSurveys,
-  getMySurveys
+  getMySurveys,
 } from "../../lib/queries";
 
 enum SurveySort {
@@ -224,7 +224,7 @@ function MySurveys() {
   return (
     <div className="w-full">
       {/* Sort actions */}
-      <div className="flex flex-col items-start justify-start w-full bg-white mobile:p-3 mb-7">
+      <div className="flex flex-col items-start justify-start w-full bg-white dark:bg-slate-900 mobile:p-3 mb-7">
         <div className="flex items-center justify-center w-[100%] mb-2">
           <button
             className={`flex-1 mx-1 p-2 rounded-md border-solid border-[1px] ${
@@ -304,21 +304,21 @@ function MySurveys() {
                         Ongoing
                       </div>
                     )}
-                    <span className="text-gray-700 text-sm font-normal text-left mb-2">
+                    <span className="text-gray-700 dark:text-gray-300 text-sm font-normal text-left mb-2">
                       {item.surveyTitle}
                     </span>
-                    <span className="text-gray-700 text-xs font-normal text-left mb-2">
+                    <span className="text-gray-700 dark:text-gray-300 text-xs font-normal text-left mb-2">
                       {item.description}
                     </span>
                     <p className="flex items-center justify-center">
-                      <b className="text-gray-700 text-mf font-medium">
+                      <b className="text-gray-700 dark:text-gray-300 text-mf font-medium">
                         {utils.formatUnits(item?.amount, 18)} {item?.symbol}
                       </b>{" "}
                     </p>
                     <p className="flex items-center justify-center">
                       {" "}
                       <AiFillClockCircle size={14} />
-                      <span className="text-xs text-gray-500 ml-1">
+                      <span className="text-xs text-gray-500 dark:text-gray-300 ml-1">
                         Expires on{" "}
                         {new Date(item?.dateExpiration).toLocaleString()}
                       </span>{" "}
@@ -368,7 +368,7 @@ function MySurveys() {
               ))}
             </OnboardCard>
             {/* Analyze action buttn */}
-            <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3 mt-6">
+            <div className="flex flex-col items-start justify-start bg-white dark:bg-slate-900 w-full mobile:p-3 mt-6">
               <ButtonPrimary
                 type="normal"
                 text="Analyze survey"
@@ -397,7 +397,7 @@ function MySurveys() {
         !commissionedLoading && (
           <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
             <OnboardCard>
-              <span className="text-slate-800 text-2xl font-normal text-center">
+              <span className="text-slate-800 dark:text-gray-300 text-2xl font-normal text-center">
                 You have not commissioned any surveys yet
               </span>
             </OnboardCard>
@@ -426,21 +426,21 @@ function MySurveys() {
                         Ongoing
                       </div>
                     )}
-                    <span className="text-gray-700 text-sm font-normal text-left mb-2">
+                    <span className="text-gray-700 dark:text-gray-300 text-sm font-normal text-left mb-2">
                       {item.surveyTitle}
                     </span>
-                    <span className="text-gray-700 text-xs font-normal text-left mb-2">
+                    <span className="text-gray-700 dark:text-gray-300 text-xs font-normal text-left mb-2">
                       {item.description}
                     </span>
                     <p className="flex items-center justify-center">
-                      <b className="text-gray-700 text-mf font-medium">
+                      <b className="text-gray-700 dark:text-gray-300 text-mf font-medium">
                         {utils.formatUnits(item?.amount, 18)} {item?.symbol}
                       </b>{" "}
                     </p>
                     <p className="flex items-center justify-center">
                       {" "}
                       <AiFillClockCircle size={14} />
-                      <span className="text-xs text-gray-500 ml-1">
+                      <span className="text-xs text-gray-500 dark:text-gray-300 ml-1">
                         Expires on{" "}
                         {new Date(item?.dateExpiration).toLocaleString()}
                       </span>{" "}
@@ -477,7 +477,7 @@ function MySurveys() {
         !isPullingData && (
           <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
             <OnboardCard>
-              <span className="text-slate-800 text-2xl font-normal">
+              <span className="text-slate-800 dark:text-gray-300 text-2xl font-normal">
                 You have not completed any surveys!
               </span>
             </OnboardCard>
@@ -512,21 +512,21 @@ function MySurveys() {
                         Ongoing
                       </div>
                     )}
-                    <span className="text-gray-700 text-sm font-normal text-left mb-2">
+                    <span className="text-gray-700 dark:text-gray-300 text-sm font-normal text-left mb-2">
                       {item.surveyTitle}
                     </span>
-                    <span className="text-gray-700 text-xs font-normal text-left mb-2">
+                    <span className="text-gray-700 dark:text-gray-300 text-xs font-normal text-left mb-2">
                       {item.description}
                     </span>
                     <p className="flex items-center justify-center">
-                      <b className="text-gray-700 text-mf font-medium">
+                      <b className="text-gray-700 dark:text-gray-300 text-mf font-medium">
                         {utils.formatUnits(item?.amount, 18)} {item?.symbol}
                       </b>{" "}
                     </p>
                     <p className="flex items-center justify-center">
                       {" "}
                       <AiFillClockCircle size={14} />
-                      <span className="text-xs text-gray-500 ml-1">
+                      <span className="text-xs text-gray-500 dark:text-gray-300 ml-1">
                         Expires on{" "}
                         {new Date(item?.dateExpiration).toLocaleString()}
                       </span>{" "}
@@ -558,7 +558,7 @@ function MySurveys() {
         !isPullingData && (
           <div className="flex flex-col items-start justify-start w-full mobile:p-3 mb-10">
             <OnboardCard>
-              <span className="text-slate-800 text-2xl font-normal">
+              <span className="text-slate-800 dark:text-gray-300 text-2xl font-normal">
                 You have not validated any surveys yet!
               </span>
             </OnboardCard>
@@ -610,13 +610,13 @@ export const ConfirmMintModalContent = ({
 
   return (
     <div className="w-full flex flex-col space-y-2">
-      <span className="text-sm text-gray-600 font-normal">
+      <span className="text-sm text-gray-600 dark:text-gray-300 font-normal">
         Converting your completed surveys to NFT will make them available for
         trade on the market place when you list them. Are you sure about this?
       </span>
       <div className="form-control mb-2">
         <label className="label">
-          <span className="label-text text-slate-700 font-medium">
+          <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
             Sale Price of NFT
           </span>
         </label>
@@ -628,7 +628,7 @@ export const ConfirmMintModalContent = ({
             type="number"
             data-test="listing-price"
             placeholder="0.00"
-            className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+            className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
             value={price}
             onChange={(e) => {
               console.info("price", e.target.value);

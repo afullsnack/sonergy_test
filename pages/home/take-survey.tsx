@@ -88,16 +88,16 @@ const SurveyDetail = ({
         onClick={(e) => back()}
       >
         <AiFillLeftCircle />
-        <span className="text-sm font-medium text-gray-800">
+        <span className="text-sm font-medium text-gray-800 dark:text-gray-300">
           Survey details
         </span>
       </div>
       <OnboardCard>
-        <span className="text-xs text-center text-slate-800 font-light mb-2">
+        <span className="text-xs text-center text-slate-800 dark:text-gray-300 font-light mb-2">
           Survey rewards
         </span>
         <p className="flex items-center justify-center mb-4">
-          <b className="text-md text-slate-800 font-medium">
+          <b className="text-md text-slate-800 dark:text-gray-300 font-medium">
             {Number(utils.formatUnits(details?.amount || "2000000", 18))
               .toFixed(2)
               .split(".")[0] || "0"}
@@ -146,7 +146,7 @@ const SurveyDetail = ({
         </div>
       </OnboardCard>
     </div>
-    <div className="flex flex-col items-start justify-start w-full bg-white mobile:p-3">
+    <div className="flex flex-col items-start justify-start w-full bg-white dark:bg-slate-900 mobile:p-3">
       <ButtonPrimary
         type="normal"
         text="Answer survey"
@@ -190,12 +190,12 @@ const SurveyFinished = ({ surveyReward = "500", push, symbol }) => {
         <OnboardCard>
           <div className="py-24 flex flex-col items-center justify-center">
             <img src="/surveys/completed-survey.svg" alt="Survey done" />
-            <span className="text-center text-slate-800 text-lg font-semibold mb-2">
+            <span className="text-center text-slate-800 dark:text-gray-300 text-lg font-semibold mb-2">
               Congratulations!
             </span>
-            <span className="text-center text-slate-400 text-sm font-light">
+            <span className="text-center text-slate-400 dark:text-gray-300 text-sm font-light">
               Your survey is complete and you will earn{" "}
-              <b className="text-slate-800 font-medium">
+              <b className="text-slate-800 dark:text-gray-300 font-medium">
                 {Number(utils.formatUnits(surveyReward, 18)).toFixed()}
               </b>{" "}
               {symbol || "SNEGY"} once your answers have been verified if
@@ -204,7 +204,7 @@ const SurveyFinished = ({ surveyReward = "500", push, symbol }) => {
           </div>
         </OnboardCard>
       </div>
-      <div className="flex flex-col items-start justify-start w-full bg-white mobile:p-3">
+      <div className="flex flex-col items-start justify-start w-full bg-white dark:bg-slate-900 mobile:p-3">
         <ButtonPrimary
           type="normal"
           text="Let’s do more"

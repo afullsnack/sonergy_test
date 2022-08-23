@@ -6,6 +6,7 @@ import {
   FaBell,
   FaMoon,
   FaShoppingBag,
+  FaSun,
   FaUserAlt,
   FaWallet,
 } from "react-icons/fa";
@@ -48,6 +49,37 @@ export default function withLayout(BaseComp: React.ElementType) {
 
     // const [isMobile, setIsMobile] = useState(false);
     const [shouldConnect, setShouldConnect] = useState(false);
+    const [mode, setMode] = useState<"light" | "dark" | undefined>();
+
+    // Toggle theme function
+    const toggleSwitch = () => {
+      if (document.documentElement.classList.contains("dark")) {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+        return;
+      }
+
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    };
+
+    useEffect(() => {
+      const userTheme = localStorage.getItem("theme");
+      const systemTheme = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      // Initial theme check
+      const themeCheck = () => {
+        if (userTheme === "dark" || (!userTheme && systemTheme)) {
+          document.documentElement.classList.add("dark");
+          return "dark";
+        } else {
+          return "light";
+        }
+      };
+
+      setMode(themeCheck());
+    }, [mode]);
     // const [address, setAddress] = useState<string | undefined | null>();
     // useEffect(() => {
     //   console.log(getCurrentBreakpoint(), "Break point value");
@@ -92,8 +124,8 @@ export default function withLayout(BaseComp: React.ElementType) {
     }, [shouldConnect]);
 
     return (
-      <>
-        <div className="w-[100%] mobile:bg-white desktop:bg-white flex items-center justify-between desktop:pr-6 desktop:pl-3 pr-4 mb-2">
+      <div className="w-screen min-h-screen dark:bg-slate-800">
+        <div className="w-[100%] mobile:bg-white desktop:bg-white dark:bg-slate-900 flex items-center justify-between desktop:pr-6 desktop:pl-3 pr-4 mb-2">
           <Logo />
           {
             <div className="w-[100%] hidden desktop:visible max-w-xl h-20 desktop:flex py-1 items-stretch justify-center rounded-sm bg-transparent">
@@ -109,7 +141,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                   className={`text-md font-medium ml-2 ${
                     pathname.includes("home")
                       ? "text-primary"
-                      : "text-slate-600"
+                      : "text-slate-600 dark:text-gray-300"
                   }`}
                 >
                   Home
@@ -127,7 +159,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                   className={`text-md font-medium  ml-2 ${
                     pathname.includes("wallet")
                       ? "text-primary"
-                      : "text-slate-600"
+                      : "text-slate-600 dark:text-gray-300"
                   }`}
                 >
                   Wallet
@@ -145,7 +177,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                   className={`text-md font-medium  ml-2 ${
                     pathname.includes("market")
                       ? "text-primary"
-                      : "text-slate-600"
+                      : "text-slate-600 dark:text-gray-300"
                   }`}
                 >
                   Market
@@ -163,7 +195,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                   className={`text-md font-medium  ml-2 ${
                     pathname.includes("account")
                       ? "text-primary"
-                      : "text-slate-600"
+                      : "text-slate-600 dark:text-gray-300"
                   }`}
                 >
                   Account
@@ -179,8 +211,15 @@ export default function withLayout(BaseComp: React.ElementType) {
               </div>
             </div>
             {
-              <div className="desktop:flex items-center justify-center hidden desktop:visible py-2 px-2 rounded-md border-solid border-[#E2EDF6] border-[1px] bg-transparent mr-2">
-                <FaMoon color="#8895A7" size={"14px"} />
+              <div
+                className="desktop:flex items-center justify-center hidden desktop:visible py-2 px-2 rounded-md border-solid border-[#E2EDF6] border-[1px] bg-transparent dark:bg-slate-800 mr-2 hover:cursor-pointer"
+                onClick={() => {
+                  setMode((_prev) => (_prev === "light" ? "dark" : "light"));
+                  toggleSwitch();
+                }}
+              >
+                {mode === "dark" && <FaSun size={"14px"} />}
+                {mode === "light" && <FaMoon size={"14px"} />}
               </div>
             }
             {/* {address ? (
@@ -221,7 +260,7 @@ export default function withLayout(BaseComp: React.ElementType) {
             <BaseComp {...props} />
           </div>
           {
-            <div className="w-[100%] bg-white desktop:hidden flex items-center mobile:justify-between justify-center py-4 px-2 fixed bottom-0 left-0 right-0">
+            <div className="w-[100%] bg-white dark:bg-slate-900 desktop:hidden flex items-center mobile:justify-between justify-center py-4 px-2 fixed bottom-0 left-0 right-0">
               <div className="w-[100%] h-20 flex py-1 items-stretch justify-center rounded-sm bg-transparent">
                 <div
                   className="flex-1 flex flex-col items-center justify-between py-2 hover:cursor-pointer"
@@ -235,7 +274,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                     className={`text-md ${
                       pathname.includes("home")
                         ? "text-primary"
-                        : "text-slate-600"
+                        : "text-slate-600 dark:text-gray-300"
                     }`}
                   >
                     Home
@@ -253,7 +292,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                     className={`text-md ${
                       pathname.includes("wallet")
                         ? "text-primary"
-                        : "text-slate-600"
+                        : "text-slate-600 dark:text-gray-300"
                     }`}
                   >
                     Wallet
@@ -271,7 +310,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                     className={`"text-md" ${
                       pathname.includes("market")
                         ? "text-primary"
-                        : "text-slate-600"
+                        : "text-slate-600 dark:text-gray-300"
                     }`}
                   >
                     Market
@@ -289,7 +328,7 @@ export default function withLayout(BaseComp: React.ElementType) {
                     className={`text-md ${
                       pathname.includes("account")
                         ? "text-primary"
-                        : "text-slate-600"
+                        : "text-slate-600 dark:text-gray-300"
                     }`}
                   >
                     Account
@@ -299,7 +338,7 @@ export default function withLayout(BaseComp: React.ElementType) {
             </div>
           }
         </div>
-      </>
+      </div>
     );
   };
 

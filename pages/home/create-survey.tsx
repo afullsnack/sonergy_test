@@ -143,13 +143,13 @@ const SurveyPlans = ({ planId, setPlanId, setStage }: SurveyPlanProps) => {
             .map((plan) => (
               <div
                 key={plan.planID}
-                className="w-full p-6 mx-auto my-1 bg-white rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all"
+                className="w-full p-6 mx-auto my-1 bg-white dark:bg-slate-900 rounded-lg flex items-start space-x-4 border-[1px] border-solid border-slate-200 hover:border-[#0059AC] hover:cursor-pointer active:ring-4 active:ring-offset-1 active:ring-blue-300 transition-all"
                 onClick={() => {
                   setPlanId(plan?.planID);
                   setStage(Stage.Config);
                 }}
               >
-                <div className="shrink-0 p-3 rounded-box border border-[#E2EDF6]">
+                <div className="shrink-0 p-3 rounded-box border border-[#E2EDF6] dark:border-gray-300">
                   <img
                     // className="h-12 w-12"
                     src="/surveys/task-square.svg"
@@ -157,25 +157,25 @@ const SurveyPlans = ({ planId, setPlanId, setStage }: SurveyPlanProps) => {
                   />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-black">
+                  <div className="text-sm font-medium text-black dark:text-gray-300">
                     {plan?.planName}
                   </div>
-                  <p className="text-slate-500 text-sm">
+                  <p className="text-slate-500 dark:text-gray-300 text-sm">
                     {/* Max. response - <b className="font-medium text-black">15</b> */}
                     Commissioner profit % -{" "}
-                    <b className="font-medium text-black">
+                    <b className="font-medium text-black dark:text-gray-300">
                       {plan.providerProfit}
                     </b>
                     <br />
                     Validator profit % -{" "}
-                    <b className="font-medium text-black">
+                    <b className="font-medium text-black dark:text-gray-300">
                       {plan.validatorsProfit}
                     </b>
                     {/* Max. validated response -{" "}
               <b className="font-medium text-black">0</b> */}
                     <br />
                     Min Amount -{" "}
-                    <b className="font-medium text-black">
+                    <b className="font-medium text-black dark:text-gray-300">
                       {utils.formatUnits(plan.minAmount, 18)} SNEGYTEST
                     </b>
                     <br />
@@ -265,19 +265,19 @@ const SurveyConfigs = ({
             value="30"
             max="100"
           ></progress>
-          <span className="text-xs font-medium text-gray-500 mb-4">
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-300 mb-4">
             Step 1 of 4
           </span>
-          <span className="text-md font-medium text-gray-800 mb-8">
+          <span className="text-md font-medium text-gray-800 dark:text-gray-300 mb-8">
             Survey configuration
           </span>
 
-          <span className="text-sm font-medium text-gray-800 mb-3">
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-300 mb-3">
             Survey Topic
           </span>
           <div className="form-control mb-5">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 Topic
               </span>
             </label>
@@ -288,7 +288,7 @@ const SurveyConfigs = ({
               <input
                 type="text"
                 placeholder="Enter topic"
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                 value={surveyTopic}
                 onChange={(e) => setSurveyTopic(e.target.value)}
               />
@@ -297,7 +297,7 @@ const SurveyConfigs = ({
           </div>
           <div className="form-control mb-5">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 Description
               </span>
             </label>
@@ -308,20 +308,20 @@ const SurveyConfigs = ({
               <textarea
                 placeholder="Enter description"
                 rows={3}
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                 value={surveyDescription}
                 onChange={(e) => setSurveyDescription(e.target.value)}
               />
               {/* <span>USD</span> */}
             </label>
           </div>
-          <span className="text-sm font-medium text-gray-800 mb-3">
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-300 mb-3">
             Duration of survey
           </span>
           <div className="form-control mb-5 flex flex-row items-center justify-center space-x-4">
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">
+                <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                   From
                 </span>
               </label>
@@ -332,7 +332,7 @@ const SurveyConfigs = ({
                 <input
                   type="datetime-local"
                   placeholder="DD/MM/YYYY"
-                  className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                   onChange={(e) => setCreatedAt(e.target.value)}
                 />
                 {/* <span className="flex items-center justify-center pl-4 pr-1 bg-transparent">
@@ -342,7 +342,7 @@ const SurveyConfigs = ({
             </div>
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">
+                <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                   To
                 </span>
               </label>
@@ -353,7 +353,7 @@ const SurveyConfigs = ({
                 <input
                   type="datetime-local"
                   placeholder="DD/MM/YYYY"
-                  className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                   onChange={(e) => setExpireAt(e.target.value)}
                 />
                 {/* <span>USD</span> */}
@@ -397,7 +397,7 @@ const SurveyConfigs = ({
           </div> */}
         </OnboardCard>
       </div>
-      <div className="flex flex-col items-start justify-start bg-white w-full mobile:p-3">
+      <div className="flex flex-col items-start justify-start bg-white dark:bg-slate-900 w-full mobile:p-3">
         <ButtonPrimary
           type="normal"
           text="Continue"
@@ -448,20 +448,20 @@ const SurveyRewards = ({
             value="50"
             max="100"
           ></progress>
-          <span className="text-xs font-medium text-gray-500 mb-4">
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-300 mb-4">
             Step 2 of 4
           </span>
-          <span className="text-md font-medium text-gray-800 mb-8">
+          <span className="text-md font-medium text-gray-800 dark:text-gray-300 mb-8">
             Responses, validation and rewards
           </span>
 
-          <span className="text-sm font-medium text-gray-800 mb-3">
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-300 mb-3">
             Responses
           </span>
           <div className="form-control mb-5 flex flex-row items-center justify-center space-x-3">
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">
+                <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                   Required response
                 </span>
               </label>
@@ -472,7 +472,7 @@ const SurveyRewards = ({
                 <input
                   type="number"
                   placeholder="0"
-                  className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                   value={commissionerCount}
                   onChange={(e) => setCommissionerCount(Number(e.target.value))}
                 />
@@ -483,7 +483,7 @@ const SurveyRewards = ({
             </div>
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">
+                <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                   Reward per response
                 </span>
               </label>
@@ -494,7 +494,7 @@ const SurveyRewards = ({
                 <input
                   type="number"
                   placeholder="0 SNEGY"
-                  className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                   value={commissionerFee}
                   onChange={(e) => setCommissionerFee(Number(e.target.value))}
                 />
@@ -502,13 +502,13 @@ const SurveyRewards = ({
               </label>
             </div>
           </div>
-          <span className="text-sm font-medium text-gray-800 mb-3">
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-300 mb-3">
             Validations
           </span>
           <div className="form-control mb-5 flex flex-row items-center justify-center space-x-3">
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">
+                <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                   Required validators
                 </span>
               </label>
@@ -519,7 +519,7 @@ const SurveyRewards = ({
                 <input
                   type="number"
                   placeholder="0"
-                  className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                   value={validatorCount}
                   onChange={(e) => setValidatorCount(Number(e.target.value))}
                 />
@@ -530,7 +530,7 @@ const SurveyRewards = ({
             </div>
             <div className="flex-1">
               <label className="label">
-                <span className="label-text text-slate-700 font-medium">
+                <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                   Reward per validator
                 </span>
               </label>
@@ -541,7 +541,7 @@ const SurveyRewards = ({
                 <input
                   type="number"
                   placeholder="0 SNEGY"
-                  className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                  className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                   value={validatorFee}
                   onChange={(e) => setValidatorFee(Number(e.target.value))}
                 />
@@ -549,12 +549,12 @@ const SurveyRewards = ({
               </label>
             </div>
           </div>
-          <span className="text-sm font-medium text-gray-800 mb-3">
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-300 mb-3">
             Number of questions
           </span>
           <div className="form-control mb-5">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">
+              <span className="label-text text-slate-700 dark:text-gray-300 font-medium">
                 Number of survey questions
               </span>
             </label>
@@ -567,7 +567,7 @@ const SurveyRewards = ({
                 placeholder="0"
                 // value="0"
                 step="1"
-                className="input input-bordered bg-transparent text-black outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
+                className="input input-bordered bg-transparent text-black dark:text-gray-300 outline-none border-none after:ring-0 before:ring-0 before:ring-offset-0 after:ring-offset-0 pl-3 w-[100%]"
                 value={questionCount}
                 onChange={(e) => setQuestionCount(Number(e.target.value))}
               />
@@ -576,7 +576,7 @@ const SurveyRewards = ({
           </div>
         </OnboardCard>
       </div>
-      <div className="flex flex-row items-center justify-center space-x-3 bg-white w-full mobile:p-3">
+      <div className="flex flex-row items-center justify-center space-x-3 bg-white dark:bg-slate-900 w-full mobile:p-3">
         <ButtonGhost
           type="normal"
           text="Previous"
@@ -626,13 +626,13 @@ const SurveyQuestions = ({
             value="70"
             max="100"
           ></progress>
-          <span className="text-xs font-medium text-gray-500 mb-4">
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-300 mb-4">
             Step 3 of 4
           </span>
-          <span className="text-md font-medium text-gray-800 mb-8">
+          <span className="text-md font-medium text-gray-800 dark:text-gray-300 mb-8">
             Add survey questions
           </span>
-          <span className="text-base font-medium text-gray-800 mb-4">
+          <span className="text-base font-medium text-gray-800 dark:text-gray-300 mb-4">
             Question {currentQuestion} of {questionCount}
           </span>
 
@@ -713,10 +713,10 @@ const SurveyReview = ({
             value="100"
             max="100"
           ></progress>
-          <span className="text-xs font-medium text-gray-500 mb-4">
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-300 mb-4">
             Step 4 of 4
           </span>
-          <span className="text-md font-medium text-gray-800 mb-8">
+          <span className="text-md font-medium text-gray-800 dark:text-gray-300 mb-8">
             Preview and commission survey
           </span>
 
@@ -767,7 +767,7 @@ const SurveyReview = ({
           </div>
         </OnboardCard>
       </div>
-      <div className="flex flex-row items-center justify-center space-x-3 bg-white w-full mobile:p-3">
+      <div className="flex flex-row items-center justify-center space-x-3 bg-white dark:bg-slate-900 w-full mobile:p-3">
         <ButtonGhost
           type="normal"
           text="Previous"
