@@ -126,7 +126,7 @@ const AccountType = ({ accountType, setAccountType, router }) => (
         iconPosition={null}
         onClick={(e) => {
           console.info("Button comp clicked", e);
-          router.push("/register");
+          router.push("/onboarding/register");
         }}
         isLoading={null}
         type={"normal"}
